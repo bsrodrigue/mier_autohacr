@@ -13,6 +13,10 @@
 #define CELL_COUNT (int)(WIN_HEIGHT / CELL_SIZE)
 #define CELL_PADDING 5
 
+#define CELL_OFFSET(x) (x * CELL_SIZE)
+
+#define BREAKABLE_WALL_HEALTH 5
+
 typedef enum {
   UNKNOWN = -1,
   MENU = 0,
@@ -28,6 +32,7 @@ float velocity = 5;
 float shooting_range = 25 * 5;
 float last_enemy_shoot = 0;
 float shooting_interval = 1;
+float player_bullet_damage = 1;
 
 typedef struct {
   WallType type;
@@ -36,6 +41,15 @@ typedef struct {
 } Wall;
 
 std::vector<Wall> walls;
+
+Wall create_breakable_wall(Vector2 position) {
+  Wall wall;
+  wall.type = BREAKABLE;
+  wall.health = BREAKABLE_WALL_HEALTH;
+  wall.position = position;
+
+  return wall;
+}
 
 Wall create_ubreakable_wall(Vector2 position) {
   Wall wall;
@@ -47,7 +61,7 @@ Wall create_ubreakable_wall(Vector2 position) {
 }
 
 void draw_cell(float x, float y, Color color) {
-  DrawRectangle(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE - CELL_PADDING,
+  DrawRectangle(CELL_OFFSET(x), CELL_OFFSET(y), CELL_SIZE - CELL_PADDING,
                 CELL_SIZE - CELL_PADDING, color);
 }
 
@@ -67,12 +81,18 @@ void generate_walls() {
   }
 }
 
-void load_level() { generate_walls(); }
+void load_level() {
+  generate_walls();
+
+  walls.push_back(create_breakable_wall({5, 5}));
+  walls.push_back(create_breakable_wall({10, 8}));
+  walls.push_back(create_breakable_wall({2, 12}));
+}
 
 void draw_arena() {
   for (int i = 0; i < walls.size(); i++) {
     Vector2 position = walls[i].position;
-    draw_cell(position.x, position.y, WHITE);
+    draw_cell(position.x, position.y, walls[i].type == BREAKABLE ? RED : WHITE);
   }
 }
 
@@ -153,7 +173,7 @@ void handle_single_press_input(int pressed_key) {
     player_shoot(pressed_key);
 }
 
-bool check_wall_collision(Vector2 position) {
+int check_wall_collision(Vector2 position) {
   for (int i = 0; i < walls.size(); i++) {
     Wall wall = walls[i];
     Rectangle rect;
@@ -170,11 +190,11 @@ bool check_wall_collision(Vector2 position) {
     if (CheckCollisionPointRec(position, rect)) {
       // DEBUG:
       // TraceLog(LOG_INFO, "WALL_COLLISION");
-      return true;
+      return i;
     }
   }
 
-  return false;
+  return -1;
 }
 
 void handle_player_movement() {
@@ -199,14 +219,14 @@ void handle_player_movement() {
   Vector2 next_vertical_position =
       Vector2Add(player.position, vertical_movement);
 
-  if (check_wall_collision(next_vertical_position)) {
+  if (check_wall_collision(next_vertical_position) != -1) {
     can_move_vertical = false;
   }
 
   Vector2 next_horizontal_position =
       Vector2Add(player.position, horizontal_movement);
 
-  if (check_wall_collision(next_horizontal_position)) {
+  if (check_wall_collision(next_horizontal_position) != -1) {
     can_move_horizontal = false;
   }
 
@@ -242,19 +262,70 @@ void handle_input(int pressed_key) {
   }
 }
 
+void damage_wall(int index) {
+  if ((walls[index].health - player_bullet_damage) <= 0) {
+    walls.erase(walls.begin() + index);
+  }
+
+  walls.at(index).health = walls.at(index).health - player_bullet_damage;
+  TraceLog(LOG_INFO, "Wall ID: %d", index);
+  TraceLog(LOG_INFO, "Wall HEALTH: %f", walls[index].health);
+}
+
 void update_projectiles() {
   for (int i = 0; i < projectiles.size(); i++) {
+
+    // Recycle in object pool for optimal memory usage
+    // Find better way to check many-to-many collisions
+    int touched = check_wall_collision(projectiles[i].pos);
+
+    if (touched != -1) {
+      switch (walls[touched].type) {
+      case BREAKABLE:
+        // It seems not safe to change the vector's size while looping
+        damage_wall(touched);
+        break;
+      case UNBREAKABLE:
+        break;
+      }
+
+      projectiles.erase(projectiles.begin() + i);
+      continue;
+    }
+
     Vector2 projectile_pos =
         Vector2Add(projectiles[i].pos,
                    Vector2Multiply(projectiles[i].direction,
                                    {projectile_speed, projectile_speed}));
-    DrawCircleV(projectile_pos, 10, BLUE);
     projectiles[i].pos = projectile_pos;
+  }
+}
+
+void update_positions() { update_projectiles(); }
+
+void handle_updates() {
+  switch (current_screen) {
+  case UNKNOWN:
+    break;
+  case MENU:
+    break;
+  case GAME:
+    update_positions();
+    break;
+  case LEVEL_EDITOR:
+    break;
+  }
+}
+
+void draw_projectiles() {
+  for (int i = 0; i < projectiles.size(); i++) {
+    DrawCircleV(projectiles[i].pos, 15, RED);
   }
 }
 
 void render_game() {
   draw_arena();
+  draw_projectiles();
   draw_game_obj(player, WHITE);
 }
 
@@ -289,6 +360,7 @@ int main() {
     int pressed_key = GetKeyPressed();
 
     handle_input(pressed_key);
+    handle_updates();
 
     render();
     update_shape(&player);
