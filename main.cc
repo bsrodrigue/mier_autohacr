@@ -1,30 +1,13 @@
+#include "config.h"
+#include "entities.h"
+#include "game.h"
+#include "level_editor.h"
+#include "save.h"
 #include <cstdio>
 #include <cstdlib>
 #include <raylib.h>
 #include <raymath.h>
-#include <vector>
-
-#define FPS 60
-
-#define WIN_WIDTH 1000
-#define WIN_HEIGHT 1000
-
-#define CELL_SIZE 25
-#define CELL_COUNT (int)(WIN_HEIGHT / CELL_SIZE)
-#define CELL_PADDING 5
-
-#define CELL_OFFSET(x) (x * CELL_SIZE)
-
-#define BREAKABLE_WALL_HEALTH 5
-
-typedef enum {
-  UNKNOWN = -1,
-  MENU = 0,
-  GAME,
-  LEVEL_EDITOR,
-} Screen;
-
-typedef enum { BREAKABLE, UNBREAKABLE } WallType;
+#include <string.h>
 
 Screen current_screen = GAME;
 
@@ -34,81 +17,9 @@ float last_enemy_shoot = 0;
 float shooting_interval = 1;
 float player_bullet_damage = 1;
 
-typedef struct {
-  WallType type;
-  float health;
-  Vector2 position;
-} Wall;
+static int level_grid[CELL_COUNT][CELL_COUNT];
 
 std::vector<Wall> walls;
-
-Wall create_breakable_wall(Vector2 position) {
-  Wall wall;
-  wall.type = BREAKABLE;
-  wall.health = BREAKABLE_WALL_HEALTH;
-  wall.position = position;
-
-  return wall;
-}
-
-Wall create_ubreakable_wall(Vector2 position) {
-  Wall wall;
-  wall.type = UNBREAKABLE;
-  wall.health = 0;
-  wall.position = position;
-
-  return wall;
-}
-
-void draw_cell(float x, float y, Color color) {
-  DrawRectangle(CELL_OFFSET(x), CELL_OFFSET(y), CELL_SIZE - CELL_PADDING,
-                CELL_SIZE - CELL_PADDING, color);
-}
-
-void generate_walls() {
-  for (float i = 0; i < CELL_COUNT; i++) {
-    Wall wall_up = create_ubreakable_wall({i, 0});
-    Wall wall_down = create_ubreakable_wall({i, CELL_COUNT - 1});
-    walls.push_back(wall_up);
-    walls.push_back(wall_down);
-  }
-
-  for (float i = 0; i < CELL_COUNT; i++) {
-    Wall wall_up = create_ubreakable_wall({0, i});
-    Wall wall_down = create_ubreakable_wall({CELL_COUNT - 1, i});
-    walls.push_back(wall_up);
-    walls.push_back(wall_down);
-  }
-}
-
-void load_level() {
-  generate_walls();
-
-  walls.push_back(create_breakable_wall({5, 5}));
-  walls.push_back(create_breakable_wall({10, 8}));
-  walls.push_back(create_breakable_wall({2, 12}));
-}
-
-void draw_arena() {
-  for (int i = 0; i < walls.size(); i++) {
-    Vector2 position = walls[i].position;
-    draw_cell(position.x, position.y, walls[i].type == BREAKABLE ? RED : WHITE);
-  }
-}
-
-typedef struct {
-  Vector2 position;
-  Vector2 velocity;
-  Vector2 direction;
-  std::vector<Vector2> shape;
-} GameObject;
-
-typedef struct {
-  int id;
-  Vector2 pos;
-  Vector2 direction;
-  bool is_shooting;
-} Projectile;
 
 float half_len = 15;
 float projectile_speed = 12.5;
@@ -258,6 +169,7 @@ void handle_input(int pressed_key) {
     handle_game_input(pressed_key);
     break;
   case LEVEL_EDITOR:
+    handle_level_input(pressed_key);
     break;
   }
 }
@@ -268,8 +180,6 @@ void damage_wall(int index) {
   }
 
   walls.at(index).health = walls.at(index).health - player_bullet_damage;
-  TraceLog(LOG_INFO, "Wall ID: %d", index);
-  TraceLog(LOG_INFO, "Wall HEALTH: %f", walls[index].health);
 }
 
 void update_projectiles() {
@@ -311,6 +221,7 @@ void handle_updates() {
     break;
   case GAME:
     update_positions();
+    update_shape(&player);
     break;
   case LEVEL_EDITOR:
     break;
@@ -324,7 +235,7 @@ void draw_projectiles() {
 }
 
 void render_game() {
-  draw_arena();
+  draw_arena(walls);
   draw_projectiles();
   draw_game_obj(player, WHITE);
 }
@@ -333,6 +244,28 @@ void render_game_debug() {
   Vector2 mouse = GetMousePosition();
   DrawLineV(player.position, mouse, BLUE);
 }
+
+const char *get_current_screen_title() {
+  switch (current_screen) {
+  case UNKNOWN:
+    return "unkown";
+  case MENU:
+    return "menu";
+  case GAME:
+    return "game";
+  case LEVEL_EDITOR:
+    return "level-editor";
+    break;
+  default:
+    return "unkown";
+  }
+}
+
+void render_current_screen() {
+  DrawText(get_current_screen_title(), TEXT_POS(1), TEXT_POS(1), 14, WHITE);
+}
+
+void render_global() { render_current_screen(); }
 
 void render() {
   switch (current_screen) {
@@ -345,13 +278,29 @@ void render() {
     render_game();
     break;
   case LEVEL_EDITOR:
+    render_level_editor();
     break;
+  }
+
+  render_global();
+}
+
+void select_screen(const char *screen_name) {
+  if (strcmp(screen_name, "editor\n")) {
+    load_level_editor();
+    current_screen = LEVEL_EDITOR;
   }
 }
 
-int main() {
+int main(int argc, char *argv[]) {
+  if (argc == 2) {
+    char *screen_name = argv[1];
+    select_screen(screen_name);
+  }
+
   init();
-  load_level();
+  load_level_file("level.hacc", level_grid);
+  load_walls(walls, level_grid);
   define_shape(&player);
 
   while (!WindowShouldClose()) {
@@ -363,7 +312,6 @@ int main() {
     handle_updates();
 
     render();
-    update_shape(&player);
     EndDrawing();
   }
 

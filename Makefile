@@ -1,2 +1,2 @@
-autohacka: main.cc
-	gcc main.cc -o autohacka -lraylib -lstdc++ -lm
+autohacka: *.cc
+	gcc *.cc -o autohacka -lraylib -lstdc++ -lm
