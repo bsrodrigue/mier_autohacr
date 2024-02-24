@@ -13,6 +13,8 @@ void load_level_file(const char *name, int level[CELL_COUNT][CELL_COUNT]) {
     return;
   }
 
+  TraceLog(LOG_INFO, "Level data loaded with success");
+
   int *data_section = (int *)(loaded_data + LEVEL_DATA_OFFSET);
 
   for (int i = 0; i < CELL_COUNT; i++) {
@@ -24,7 +26,7 @@ void load_level_file(const char *name, int level[CELL_COUNT][CELL_COUNT]) {
 }
 
 void save_level_file(const char *name, int level[CELL_COUNT][CELL_COUNT]) {
-  char *data = (char *)malloc(1024);
+  char *data = (char *)malloc(LEVEL_FILE_SIZE);
 
   strncpy((data + LEVEL_NAME_OFFSET), name, LEVEL_NAME_SIZE);
 

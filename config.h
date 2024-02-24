@@ -4,13 +4,15 @@
 #define FPS 60
 
 // TODO: Handle heterogenous screen sizes
+#define LEVEL_WIDTH 2500
+#define LEVEL_HEIGHT 2500
 #define WIN_WIDTH 800
 #define WIN_HEIGHT 800
 
 #define TEXT_POS(x) x * 5
 
-#define CELL_COUNT 25
-#define CELL_SIZE (int)(WIN_HEIGHT / CELL_COUNT)
+#define CELL_SIZE 25
+#define CELL_COUNT (int)(LEVEL_WIDTH / CELL_SIZE)
 #define CELL_PADDING 5
 
 #define CELL_OFFSET(x) (x * (CELL_SIZE))

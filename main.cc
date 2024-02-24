@@ -21,6 +21,8 @@ float player_bullet_damage = 1;
 
 static int level_grid[CELL_COUNT][CELL_COUNT];
 
+Camera2D camera;
+
 std::vector<Wall> walls;
 
 typedef enum {
@@ -61,9 +63,7 @@ void enemy_shoot(Enemy *enemy, Vector2 player_position) {
 float half_len = 15;
 float projectile_speed = 10.5;
 
-GameObject player = {.position{(float)WIN_WIDTH / 2, (float)WIN_HEIGHT / 2},
-                     .velocity{0, 0},
-                     .direction{0, 0}};
+GameObject player;
 
 Enemy enemy = create_enemy({350, 350}, BASE);
 
@@ -100,6 +100,12 @@ void init() {
   SetTargetFPS(FPS);
 
   ShowCursor();
+
+  camera = {0};
+  camera.target = player.position;
+  camera.offset = {(float)WIN_WIDTH / 2, (float)WIN_HEIGHT / 2};
+  camera.rotation = 0;
+  camera.zoom = 1;
 }
 
 void player_shoot(int pressed_key) {
@@ -140,7 +146,7 @@ void handle_input(int pressed_key) {
     handle_game_input(pressed_key);
     break;
   case LEVEL_EDITOR:
-    handle_level_input(pressed_key);
+    handle_level_input(&camera, pressed_key);
     break;
   }
 }
@@ -289,7 +295,7 @@ void render() {
     render_game();
     break;
   case LEVEL_EDITOR:
-    render_level_editor();
+    render_level_editor(&camera);
     break;
   }
 
@@ -324,18 +330,32 @@ int main(int argc, char *argv[]) {
   }
 
   init();
+
   load_level_file("level.hacc", level_grid);
   load_walls(walls, level_grid);
+  Vector2 initial_player_pos = get_player_position(level_grid);
+
+  TraceLog(LOG_INFO, TextFormat("Player: (%f, %f)", initial_player_pos.x,
+                                initial_player_pos.y));
+
+  player.position = initial_player_pos;
+
   define_shape(&player);
 
   while (!WindowShouldClose()) {
     BeginDrawing();
+    BeginMode2D(camera);
     ClearBackground(BLACK);
     int pressed_key = GetKeyPressed();
 
     handle_enemy_shoot(&enemy);
     handle_input(pressed_key);
     handle_updates();
+
+    TraceLog(LOG_INFO, TextFormat("Player: (%f, %f)", player.position.x,
+                                  player.position.y));
+
+    camera.target = player.position;
 
     bool is_in_range = CheckCollisionPointCircle(
         player.position, enemy.position, enemy.vision_radius);
@@ -346,6 +366,7 @@ int main(int argc, char *argv[]) {
     }
 
     render();
+    EndMode2D();
     EndDrawing();
   }
 
