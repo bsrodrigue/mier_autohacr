@@ -2,7 +2,9 @@
 #include "entities.h"
 #include "game.h"
 #include "level_editor.h"
+#include "player.h"
 #include "save.h"
+#include "wall.h"
 #include <cstdio>
 #include <cstdlib>
 #include <raylib.h>
@@ -21,14 +23,49 @@ static int level_grid[CELL_COUNT][CELL_COUNT];
 
 std::vector<Wall> walls;
 
+typedef enum {
+  BASE,
+} EnemyType;
+
+std::vector<Projectile> projectiles;
+std::vector<Projectile> enemy_projectiles;
+
+typedef struct {
+  float health;
+  float shooting_interval;
+  Vector2 position;
+  float vision_radius;
+  EnemyType type;
+} Enemy;
+
+Enemy create_enemy(Vector2 position, EnemyType type) {
+  Enemy enemy;
+  enemy.health = 3;
+  enemy.position = position;
+  enemy.shooting_interval = 2;
+  enemy.vision_radius = 50 * 4.5;
+  enemy.type = type;
+
+  return enemy;
+}
+
+void enemy_shoot(Enemy *enemy, Vector2 player_position) {
+  Projectile projectile;
+  projectile.pos = enemy->position;
+  projectile.direction =
+      Vector2Normalize(Vector2Subtract(player_position, projectile.pos));
+  projectile.id = enemy_projectiles.size();
+  enemy_projectiles.push_back(projectile);
+}
+
 float half_len = 15;
-float projectile_speed = 12.5;
+float projectile_speed = 10.5;
 
 GameObject player = {.position{(float)WIN_WIDTH / 2, (float)WIN_HEIGHT / 2},
                      .velocity{0, 0},
                      .direction{0, 0}};
 
-std::vector<Projectile> projectiles;
+Enemy enemy = create_enemy({350, 350}, BASE);
 
 void define_shape(GameObject *game_obj) {
   // For the moment we will handle triangles only
@@ -84,75 +121,9 @@ void handle_single_press_input(int pressed_key) {
     player_shoot(pressed_key);
 }
 
-int check_wall_collision(Vector2 position) {
-  for (int i = 0; i < walls.size(); i++) {
-    Wall wall = walls[i];
-    Rectangle rect;
-
-    rect.x = wall.position.x * CELL_SIZE;
-    rect.y = wall.position.y * CELL_SIZE;
-
-    rect.width = CELL_SIZE;
-    rect.height = CELL_SIZE;
-
-    // DEBUG:
-    // DrawRectangleRec(rect, RED);
-
-    if (CheckCollisionPointRec(position, rect)) {
-      // DEBUG:
-      // TraceLog(LOG_INFO, "WALL_COLLISION");
-      return i;
-    }
-  }
-
-  return -1;
-}
-
-void handle_player_movement() {
-  Vector2 vertical_movement = {0, 0};
-  Vector2 horizontal_movement = {0, 0};
-
-  bool can_move_vertical = true;
-  bool can_move_horizontal = true;
-
-  if (IsKeyDown(KEY_UP)) {
-    vertical_movement = {0, -velocity};
-  } else if (IsKeyDown(KEY_DOWN)) {
-    vertical_movement = {0, velocity};
-  }
-
-  if (IsKeyDown(KEY_LEFT)) {
-    horizontal_movement = {-velocity, 0};
-  } else if (IsKeyDown(KEY_RIGHT)) {
-    horizontal_movement = {velocity, 0};
-  }
-
-  Vector2 next_vertical_position =
-      Vector2Add(player.position, vertical_movement);
-
-  if (check_wall_collision(next_vertical_position) != -1) {
-    can_move_vertical = false;
-  }
-
-  Vector2 next_horizontal_position =
-      Vector2Add(player.position, horizontal_movement);
-
-  if (check_wall_collision(next_horizontal_position) != -1) {
-    can_move_horizontal = false;
-  }
-
-  if (can_move_vertical) {
-    player.position = Vector2Add(player.position, vertical_movement);
-  }
-
-  if (can_move_horizontal) {
-    player.position = Vector2Add(player.position, horizontal_movement);
-  }
-}
-
 void handle_game_input(int pressed_key) {
   handle_single_press_input(pressed_key);
-  handle_player_movement();
+  handle_player_movement(&player, velocity, walls);
 }
 
 void handle_global_input() {}
@@ -182,12 +153,42 @@ void damage_wall(int index) {
   walls.at(index).health = walls.at(index).health - player_bullet_damage;
 }
 
-void update_projectiles() {
+void update_enemy_projectiles() {
+  for (int i = 0; i < enemy_projectiles.size(); i++) {
+
+    // Recycle in object pool for optimal memory usage
+    // Find better way to check many-to-many collisions
+    int touched = check_wall_collision(walls, enemy_projectiles[i].pos);
+
+    if (touched != -1) {
+      switch (walls[touched].type) {
+      case BREAKABLE:
+        // It seems not safe to change the vector's size while looping
+        // Should enemies be able to destroy walls?
+        damage_wall(touched);
+        break;
+      case UNBREAKABLE:
+        break;
+      }
+
+      enemy_projectiles.erase(enemy_projectiles.begin() + i);
+      continue;
+    }
+
+    Vector2 projectile_pos =
+        Vector2Add(enemy_projectiles[i].pos,
+                   Vector2Multiply(enemy_projectiles[i].direction,
+                                   {projectile_speed, projectile_speed}));
+    enemy_projectiles[i].pos = projectile_pos;
+  }
+}
+
+void update_player_projectiles() {
   for (int i = 0; i < projectiles.size(); i++) {
 
     // Recycle in object pool for optimal memory usage
     // Find better way to check many-to-many collisions
-    int touched = check_wall_collision(projectiles[i].pos);
+    int touched = check_wall_collision(walls, projectiles[i].pos);
 
     if (touched != -1) {
       switch (walls[touched].type) {
@@ -211,7 +212,10 @@ void update_projectiles() {
   }
 }
 
-void update_positions() { update_projectiles(); }
+void update_positions() {
+  update_enemy_projectiles();
+  update_player_projectiles();
+}
 
 void handle_updates() {
   switch (current_screen) {
@@ -232,11 +236,18 @@ void draw_projectiles() {
   for (int i = 0; i < projectiles.size(); i++) {
     DrawCircleV(projectiles[i].pos, 15, RED);
   }
+
+  for (int i = 0; i < enemy_projectiles.size(); i++) {
+    DrawCircleV(enemy_projectiles[i].pos, 15, LIGHTGRAY);
+  }
 }
+
+void draw_enemies() { DrawCircleV(enemy.position, 20, RED); }
 
 void render_game() {
   draw_arena(walls);
   draw_projectiles();
+  draw_enemies();
   draw_game_obj(player, WHITE);
 }
 
@@ -292,6 +303,20 @@ void select_screen(const char *screen_name) {
   }
 }
 
+void handle_enemy_shoot(Enemy *enemy) {
+  float time = GetTime();
+
+  if ((time - last_enemy_shoot) >= 0.6) {
+    last_enemy_shoot = time;
+    bool is_in_range = CheckCollisionPointCircle(
+        player.position, enemy->position, enemy->vision_radius);
+
+    if (is_in_range) {
+      enemy_shoot(enemy, player.position);
+    }
+  }
+}
+
 int main(int argc, char *argv[]) {
   if (argc == 2) {
     char *screen_name = argv[1];
@@ -308,8 +333,17 @@ int main(int argc, char *argv[]) {
     ClearBackground(BLACK);
     int pressed_key = GetKeyPressed();
 
+    handle_enemy_shoot(&enemy);
     handle_input(pressed_key);
     handle_updates();
+
+    bool is_in_range = CheckCollisionPointCircle(
+        player.position, enemy.position, enemy.vision_radius);
+
+    if (is_in_range) {
+      enemy.position = Vector2MoveTowards(enemy.position, player.position, 2);
+      DrawCircleV(enemy.position, enemy.vision_radius, ColorAlpha(RED, 0.5));
+    }
 
     render();
     EndDrawing();

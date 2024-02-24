@@ -5,7 +5,7 @@
 #include <raylib.h>
 #include <raymath.h>
 
-EntityType current_entity_type = UBWALL;
+EntityType current_entity_type = BWALL;
 
 static int level_grid[CELL_COUNT][CELL_COUNT];
 
@@ -37,6 +37,7 @@ void render_entity(EntityType type, Vector2 position) {
     draw_cell(position.x, position.y, WHITE);
     break;
   case BWALL:
+    draw_cell(position.x, position.y, RED);
     break;
   case PLAYER:
     break;
@@ -55,7 +56,6 @@ void render_entities() {
 }
 
 void handle_level_input(int pressed_key) {
-
   switch (pressed_key) {
   case KEY_S:
     save_level_file("level.hacc", level_grid);

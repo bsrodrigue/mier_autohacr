@@ -16,7 +16,7 @@
 #define CELL_OFFSET(x) (x * (CELL_SIZE))
 #define MOUSE_TO_GRID(x) (int)(x / CELL_SIZE)
 
-#define BREAKABLE_WALL_HEALTH 5
+#define BREAKABLE_WALL_HEALTH 1
 
 typedef enum {
   UNKNOWN = -1,
