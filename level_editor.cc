@@ -6,8 +6,45 @@
 #include <raymath.h>
 
 // TODO: Define flexible level structure and editing
+// TODO: Provide simple GUI to switch between entity types
 
-EntityType current_entity_type = UBWALL;
+Vector2 get_world_mouse(Camera2D camera) {
+  Vector2 mouse = GetMousePosition();
+  return GetScreenToWorld2D(mouse, camera);
+}
+
+int current_entity_index = 1;
+EntityType types[5] = {EMPTY, BWALL, UBWALL, BASE_ENEMY, PLAYER};
+EntityType current_entity_type = types[current_entity_index];
+
+void next_type() {
+  if (current_entity_index + 1 >= 4) {
+    current_entity_index = 0;
+    return;
+  }
+
+  current_entity_index++;
+}
+
+const char *get_entity_type_name(EntityType type) {
+  switch (type) {
+  case EMPTY:
+    return "Empty";
+    break;
+  case UBWALL:
+    return "Unbreakable Wall";
+    break;
+  case BWALL:
+    return "Breakable Wall";
+    break;
+  case PLAYER:
+    return "Player";
+    break;
+  case BASE_ENEMY:
+    return "Base Enemy";
+    break;
+  }
+};
 
 static int level_grid[CELL_COUNT][CELL_COUNT];
 
@@ -59,7 +96,9 @@ void render_entity(EntityType type, Vector2 position) {
   case PLAYER:
     draw_cell(position.x, position.y, VIOLET);
     break;
-  case ENEMY:
+  case BASE_ENEMY:
+    DrawCircleV({MOUSE_TO_CIRCLE(position.x), MOUSE_TO_CIRCLE(position.y)}, 10,
+                ColorAlpha(RED, 0.5));
     break;
   }
 }
@@ -81,6 +120,10 @@ void handle_level_input(Camera2D *camera, int pressed_key) {
   case KEY_S:
     save_level_file("level.hacc", level_grid);
     break;
+  case KEY_SPACE:
+    next_type();
+    current_entity_type = types[current_entity_index];
+    break;
   }
 
   // TODO: Allow multi-input camera movement
@@ -97,7 +140,7 @@ void handle_level_input(Camera2D *camera, int pressed_key) {
   }
 
   if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-    Vector2 mouse = GetMousePosition();
+    Vector2 mouse = get_world_mouse(*camera);
 
     if (current_entity_type == PLAYER) {
       Vector2 previous_pos = get_player_position(level_grid);
@@ -112,7 +155,7 @@ void handle_level_input(Camera2D *camera, int pressed_key) {
   }
 
   if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
-    Vector2 mouse = GetMousePosition();
+    Vector2 mouse = get_world_mouse(*camera);
     level_grid[MOUSE_TO_GRID(mouse.y)][MOUSE_TO_GRID(mouse.x)] = EMPTY;
   }
 
@@ -133,7 +176,10 @@ void render_mouse_hover_grid(Vector2 mouse) {
     draw_cell(MOUSE_TO_GRID(mouse.x), MOUSE_TO_GRID(mouse.y),
               ColorAlpha(VIOLET, 0.5));
     break;
-  case ENEMY:
+  case BASE_ENEMY:
+    DrawCircleV({MOUSE_TO_CIRCLE((int)(mouse.x / CELL_SIZE)),
+                 MOUSE_TO_CIRCLE((int)(mouse.y / CELL_SIZE))},
+                10, ColorAlpha(RED, 0.5));
     break;
   case EMPTY:
     break;
@@ -147,7 +193,8 @@ void render_mouse_position(Vector2 mouse) {
 }
 
 void render_current_entity_type() {
-  const char *message = TextFormat("ENTITY TYPE: UBWALL");
+  const char *message =
+      TextFormat("ENTITY TYPE: %s", get_entity_type_name(current_entity_type));
   DrawText(message, TEXT_POS(1), TEXT_POS(10), 14, RED);
 }
 
@@ -157,10 +204,9 @@ void render_hud(Vector2 mouse) {
 }
 
 void render_level_editor(Camera2D *camera) {
-  Vector2 mouse = GetMousePosition();
+  Vector2 mouse = get_world_mouse(*camera);
   draw_grid();
   render_entities();
-  render_mouse_hover_grid(GetScreenToWorld2D(mouse, *camera));
-
+  render_mouse_hover_grid(mouse);
   render_hud(mouse);
 }

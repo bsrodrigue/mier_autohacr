@@ -7,7 +7,7 @@
 #define LEVEL_WIDTH 2500
 #define LEVEL_HEIGHT 2500
 #define WIN_WIDTH 800
-#define WIN_HEIGHT 800
+#define WIN_HEIGHT 600
 
 #define TEXT_POS(x) x * 5
 
@@ -17,6 +17,7 @@
 
 #define CELL_OFFSET(x) (x * (CELL_SIZE))
 #define MOUSE_TO_GRID(x) (int)(x / CELL_SIZE)
+#define MOUSE_TO_CIRCLE(x) (float)(x * CELL_SIZE + (int)(CELL_SIZE / 2))
 
 #define BREAKABLE_WALL_HEALTH 1
 

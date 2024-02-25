@@ -14,10 +14,8 @@
 Screen current_screen = GAME;
 
 float velocity = 5;
-float shooting_range = 25 * 5;
-float last_enemy_shoot = 0;
-float shooting_interval = 1;
 float player_bullet_damage = 1;
+float player_health = 5;
 
 static int level_grid[CELL_COUNT][CELL_COUNT];
 
@@ -29,12 +27,10 @@ typedef enum {
   BASE,
 } EnemyType;
 
-std::vector<Projectile> projectiles;
-std::vector<Projectile> enemy_projectiles;
-
 typedef struct {
   float health;
   float shooting_interval;
+  float last_shot;
   Vector2 position;
   float vision_radius;
   EnemyType type;
@@ -44,12 +40,17 @@ Enemy create_enemy(Vector2 position, EnemyType type) {
   Enemy enemy;
   enemy.health = 3;
   enemy.position = position;
-  enemy.shooting_interval = 2;
-  enemy.vision_radius = 50 * 4.5;
+  enemy.shooting_interval = 1;
+  enemy.last_shot = 0;
+  enemy.vision_radius = 50 * 3;
   enemy.type = type;
 
   return enemy;
 }
+
+std::vector<Projectile> projectiles;
+std::vector<Projectile> enemy_projectiles;
+std::vector<Enemy> enemies;
 
 void enemy_shoot(Enemy *enemy, Vector2 player_position) {
   Projectile projectile;
@@ -60,12 +61,23 @@ void enemy_shoot(Enemy *enemy, Vector2 player_position) {
   enemy_projectiles.push_back(projectile);
 }
 
-float half_len = 15;
+void load_enemies() {
+  for (int y = 0; y < CELL_COUNT; y++) {
+    for (int x = 0; x < CELL_COUNT; x++) {
+      int type = level_grid[y][x];
+      if (type == BASE_ENEMY) {
+        Enemy enemy =
+            create_enemy({(float)CELL_OFFSET(x), (float)CELL_OFFSET(y)}, BASE);
+        enemies.push_back(enemy);
+      }
+    }
+  }
+}
+
+float half_len = 10;
 float projectile_speed = 10.5;
 
 GameObject player;
-
-Enemy enemy = create_enemy({350, 350}, BASE);
 
 void define_shape(GameObject *game_obj) {
   // For the moment we will handle triangles only
@@ -105,11 +117,11 @@ void init() {
   camera.target = player.position;
   camera.offset = {(float)WIN_WIDTH / 2, (float)WIN_HEIGHT / 2};
   camera.rotation = 0;
-  camera.zoom = 1;
+  camera.zoom = 1.5;
 }
 
 void player_shoot(int pressed_key) {
-  Vector2 mouse = GetMousePosition();
+  Vector2 mouse = get_world_mouse(camera);
 
   Projectile new_projectile;
 
@@ -159,8 +171,23 @@ void damage_wall(int index) {
   walls.at(index).health = walls.at(index).health - player_bullet_damage;
 }
 
+void damage_player(float damage) {
+  if ((player_health - damage) <= 0) {
+    player_health = 0;
+    // TODO: Implement Game Over (restart game);
+    CloseWindow();
+  }
+
+  player_health -= damage;
+}
+
 void update_enemy_projectiles() {
   for (int i = 0; i < enemy_projectiles.size(); i++) {
+
+    if (CheckCollisionCircles(enemy_projectiles[i].pos, 5, player.position,
+                              10)) {
+      damage_player(1);
+    }
 
     // Recycle in object pool for optimal memory usage
     // Find better way to check many-to-many collisions
@@ -218,7 +245,44 @@ void update_player_projectiles() {
   }
 }
 
+void handle_enemy_shoot(Enemy *enemy) {
+  float time = GetTime();
+
+  if ((time - enemy->last_shot) >= enemy->shooting_interval) {
+    enemy->last_shot = time;
+    bool is_in_range = CheckCollisionPointCircle(
+        player.position, enemy->position, enemy->vision_radius);
+
+    if (is_in_range) {
+      enemy_shoot(enemy, player.position);
+    }
+  }
+}
+
+void handle_enemy_behaviour() {
+  for (int i = 0; i < enemies.size(); i++) {
+    handle_enemy_shoot(&enemies[i]);
+
+    bool is_in_range = CheckCollisionPointCircle(
+        player.position, enemies[i].position, enemies[i].vision_radius);
+
+    if (is_in_range) {
+      Vector2 next_position =
+          Vector2MoveTowards(enemies[i].position, player.position, 2);
+
+      if (check_wall_collision(walls, next_position) == -1) {
+        enemies[i].position = next_position;
+      }
+
+      DrawCircleV(enemies[i].position, enemies[i].vision_radius,
+                  ColorAlpha(RED, 0.5));
+    }
+  }
+}
+
 void update_positions() {
+  camera.target = player.position;
+  handle_enemy_behaviour();
   update_enemy_projectiles();
   update_player_projectiles();
 }
@@ -240,15 +304,19 @@ void handle_updates() {
 
 void draw_projectiles() {
   for (int i = 0; i < projectiles.size(); i++) {
-    DrawCircleV(projectiles[i].pos, 15, RED);
+    DrawCircleV(projectiles[i].pos, 5, RED);
   }
 
   for (int i = 0; i < enemy_projectiles.size(); i++) {
-    DrawCircleV(enemy_projectiles[i].pos, 15, LIGHTGRAY);
+    DrawCircleV(enemy_projectiles[i].pos, 5, LIGHTGRAY);
   }
 }
 
-void draw_enemies() { DrawCircleV(enemy.position, 20, RED); }
+void draw_enemies() {
+  for (int i = 0; i < enemies.size(); i++) {
+    DrawCircleV(enemies[i].position, 10, RED);
+  }
+}
 
 void render_game() {
   draw_arena(walls);
@@ -258,8 +326,8 @@ void render_game() {
 }
 
 void render_game_debug() {
-  Vector2 mouse = GetMousePosition();
-  DrawLineV(player.position, mouse, BLUE);
+  Vector2 mouse = get_world_mouse(camera);
+  DrawLineV(player.position, mouse, RED);
 }
 
 const char *get_current_screen_title() {
@@ -309,18 +377,10 @@ void select_screen(const char *screen_name) {
   }
 }
 
-void handle_enemy_shoot(Enemy *enemy) {
-  float time = GetTime();
-
-  if ((time - last_enemy_shoot) >= 0.6) {
-    last_enemy_shoot = time;
-    bool is_in_range = CheckCollisionPointCircle(
-        player.position, enemy->position, enemy->vision_radius);
-
-    if (is_in_range) {
-      enemy_shoot(enemy, player.position);
-    }
-  }
+void load_game() {
+  load_level_file("level.hacc", level_grid);
+  load_walls(walls, level_grid);
+  load_enemies();
 }
 
 int main(int argc, char *argv[]) {
@@ -331,11 +391,11 @@ int main(int argc, char *argv[]) {
 
   init();
 
-  // load_level_file("level.hacc", level_grid);
-  //  load_walls(walls, level_grid);
-  //  Vector2 initial_player_pos = get_player_position(level_grid);
+  load_game();
 
-  // player.position = initial_player_pos;
+  Vector2 initial_player_pos = get_player_position(level_grid);
+
+  player.position = initial_player_pos;
 
   define_shape(&player);
 
@@ -345,25 +405,8 @@ int main(int argc, char *argv[]) {
     ClearBackground(BLACK);
     int pressed_key = GetKeyPressed();
 
-    handle_enemy_shoot(&enemy);
     handle_input(pressed_key);
     handle_updates();
-
-    //    camera.target = player.position;
-
-    // bool is_in_range = CheckCollisionPointCircle(
-    // player.position, enemy.position, enemy.vision_radius);
-
-    if (false) {
-      Vector2 next_position =
-          Vector2MoveTowards(enemy.position, player.position, 2);
-
-      if (check_wall_collision(walls, next_position) == -1) {
-        enemy.position = next_position;
-      }
-
-      // DrawCircleV(enemy.position, enemy.vision_radius, ColorAlpha(RED, 0.5));
-    }
 
     render();
     EndMode2D();
