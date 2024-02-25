@@ -331,14 +331,11 @@ int main(int argc, char *argv[]) {
 
   init();
 
-  load_level_file("level.hacc", level_grid);
-  load_walls(walls, level_grid);
-  Vector2 initial_player_pos = get_player_position(level_grid);
+  // load_level_file("level.hacc", level_grid);
+  //  load_walls(walls, level_grid);
+  //  Vector2 initial_player_pos = get_player_position(level_grid);
 
-  TraceLog(LOG_INFO, TextFormat("Player: (%f, %f)", initial_player_pos.x,
-                                initial_player_pos.y));
-
-  player.position = initial_player_pos;
+  // player.position = initial_player_pos;
 
   define_shape(&player);
 
@@ -352,17 +349,20 @@ int main(int argc, char *argv[]) {
     handle_input(pressed_key);
     handle_updates();
 
-    TraceLog(LOG_INFO, TextFormat("Player: (%f, %f)", player.position.x,
-                                  player.position.y));
+    //    camera.target = player.position;
 
-    camera.target = player.position;
+    // bool is_in_range = CheckCollisionPointCircle(
+    // player.position, enemy.position, enemy.vision_radius);
 
-    bool is_in_range = CheckCollisionPointCircle(
-        player.position, enemy.position, enemy.vision_radius);
+    if (false) {
+      Vector2 next_position =
+          Vector2MoveTowards(enemy.position, player.position, 2);
 
-    if (is_in_range) {
-      enemy.position = Vector2MoveTowards(enemy.position, player.position, 2);
-      DrawCircleV(enemy.position, enemy.vision_radius, ColorAlpha(RED, 0.5));
+      if (check_wall_collision(walls, next_position) == -1) {
+        enemy.position = next_position;
+      }
+
+      // DrawCircleV(enemy.position, enemy.vision_radius, ColorAlpha(RED, 0.5));
     }
 
     render();

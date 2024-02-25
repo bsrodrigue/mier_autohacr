@@ -7,7 +7,7 @@
 
 // TODO: Define flexible level structure and editing
 
-EntityType current_entity_type = PLAYER;
+EntityType current_entity_type = UBWALL;
 
 static int level_grid[CELL_COUNT][CELL_COUNT];
 
@@ -160,7 +160,7 @@ void render_level_editor(Camera2D *camera) {
   Vector2 mouse = GetMousePosition();
   draw_grid();
   render_entities();
-  render_mouse_hover_grid(mouse);
+  render_mouse_hover_grid(GetScreenToWorld2D(mouse, *camera));
 
   render_hud(mouse);
 }
