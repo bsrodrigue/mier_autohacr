@@ -5,17 +5,22 @@
 #include "player.h"
 #include "save.h"
 #include "wall.h"
+#include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <raylib.h>
 #include <raymath.h>
 #include <string.h>
 
+// TODO: Implement an Object Pool for Enemies and Projectiles
+
 Screen current_screen = GAME;
+
+Texture2D wall_texture;
 
 float velocity = 5;
 float player_bullet_damage = 1;
-float player_health = 5;
+float player_health = 10;
 
 static int level_grid[CELL_COUNT][CELL_COUNT];
 
@@ -52,6 +57,8 @@ std::vector<Projectile> projectiles;
 std::vector<Projectile> enemy_projectiles;
 std::vector<Enemy> enemies;
 
+void load_wall_texture() { wall_texture = LoadTexture("./wall.png"); }
+
 void enemy_shoot(Enemy *enemy, Vector2 player_position) {
   Projectile projectile;
   projectile.pos = enemy->position;
@@ -79,24 +86,7 @@ float projectile_speed = 10.5;
 
 GameObject player;
 
-void define_shape(GameObject *game_obj) {
-  // For the moment we will handle triangles only
-  game_obj->shape.push_back(Vector2Add(game_obj->position, {0, -half_len}));
-  game_obj->shape.push_back(
-      Vector2Add(game_obj->position, {-half_len, half_len}));
-  game_obj->shape.push_back(
-      Vector2Add(game_obj->position, {half_len, half_len}));
-}
-
-void update_shape(GameObject *game_obj) {
-  game_obj->shape[0] = Vector2Add(game_obj->position, {0, -half_len});
-  game_obj->shape[1] = Vector2Add(game_obj->position, {-half_len, half_len});
-  game_obj->shape[2] = Vector2Add(game_obj->position, {half_len, half_len});
-}
-
-void draw_game_obj(GameObject game_obj, Color color) {
-  DrawTriangle(game_obj.shape[0], game_obj.shape[1], game_obj.shape[2], color);
-}
+void draw_player() { DrawPoly(player.position, 3, 15, player.angle, WHITE); }
 
 void die(const char *message) {
   perror(message);
@@ -104,7 +94,7 @@ void die(const char *message) {
 }
 
 void init() {
-  InitWindow(WIN_WIDTH, WIN_HEIGHT, "NieR: AutoHacker");
+  InitWindow(WIN_WIDTH, WIN_HEIGHT, "MieR: AutoHacker");
 
   if (!IsWindowReady())
     die("Failed to initialize window\n");
@@ -113,7 +103,6 @@ void init() {
 
   ShowCursor();
 
-  camera = {0};
   camera.target = player.position;
   camera.offset = {(float)WIN_WIDTH / 2, (float)WIN_HEIGHT / 2};
   camera.rotation = 0;
@@ -163,6 +152,14 @@ void handle_input(int pressed_key) {
   }
 }
 
+void damage_enemy(int index) {
+  if ((enemies[index].health - player_bullet_damage) <= 0) {
+    enemies.erase(enemies.begin() + index);
+  }
+
+  enemies.at(index).health = enemies.at(index).health - player_bullet_damage;
+}
+
 void damage_wall(int index) {
   if ((walls[index].health - player_bullet_damage) <= 0) {
     walls.erase(walls.begin() + index);
@@ -179,6 +176,15 @@ void damage_player(float damage) {
   }
 
   player_health -= damage;
+}
+
+int check_enemy_collision(Vector2 position, float radius) {
+  for (int i = 0; i < enemies.size(); i++) {
+    if (CheckCollisionCircles(position, radius, enemies[i].position, 10))
+      return i;
+  }
+
+  return -1;
 }
 
 void update_enemy_projectiles() {
@@ -218,6 +224,13 @@ void update_enemy_projectiles() {
 
 void update_player_projectiles() {
   for (int i = 0; i < projectiles.size(); i++) {
+
+    int enemy = check_enemy_collision(projectiles[i].pos, 5);
+
+    if (enemy != -1) {
+      damage_enemy(enemy);
+      continue;
+    }
 
     // Recycle in object pool for optimal memory usage
     // Find better way to check many-to-many collisions
@@ -287,6 +300,13 @@ void update_positions() {
   update_player_projectiles();
 }
 
+void update_player_angle() {
+  Vector2 mouse = get_world_mouse(camera);
+  float angle = atan2(mouse.y - player.position.y, mouse.x - player.position.x);
+
+  player.angle = (angle * RAD2DEG);
+}
+
 void handle_updates() {
   switch (current_screen) {
   case UNKNOWN:
@@ -295,21 +315,28 @@ void handle_updates() {
     break;
   case GAME:
     update_positions();
-    update_shape(&player);
+    update_player_angle();
     break;
   case LEVEL_EDITOR:
     break;
   }
 }
 
-void draw_projectiles() {
+void draw_player_projectiles() {
   for (int i = 0; i < projectiles.size(); i++) {
     DrawCircleV(projectiles[i].pos, 5, RED);
   }
+}
 
+void draw_enemy_projectiles() {
   for (int i = 0; i < enemy_projectiles.size(); i++) {
     DrawCircleV(enemy_projectiles[i].pos, 5, LIGHTGRAY);
   }
+}
+
+void draw_projectiles() {
+  draw_enemy_projectiles();
+  draw_player_projectiles();
 }
 
 void draw_enemies() {
@@ -319,16 +346,28 @@ void draw_enemies() {
 }
 
 void render_game() {
-  draw_arena(walls);
+  draw_arena(walls, wall_texture);
   draw_projectiles();
   draw_enemies();
-  draw_game_obj(player, WHITE);
+  draw_player();
 }
 
-void render_game_debug() {
-  Vector2 mouse = get_world_mouse(camera);
-  DrawLineV(player.position, mouse, RED);
+void draw_player_mouse_angle() {
+  Vector2 mouse = GetMousePosition();
+  float angle = Vector2Angle(mouse, player.position);
+  float atan_angle = atan2(mouse.x, mouse.y);
+
+  const char *text = TextFormat("Angle: %fdegs", (angle * RAD2DEG));
+  const char *text_2 =
+      TextFormat("Mouse angle: %fdegs", (atan_angle * RAD2DEG));
+  DrawText(text, TEXT_POS(1), TEXT_POS(1), 18, RED);
+  DrawText(text_2, TEXT_POS(4), TEXT_POS(4), 18, RED);
+
+  DrawLineV({0, 0}, mouse, RED);
+  DrawLineV({0, 0}, player.position, RED);
 }
+
+void render_game_debug() { draw_player_mouse_angle(); }
 
 const char *get_current_screen_title() {
   switch (current_screen) {
@@ -377,8 +416,11 @@ void select_screen(const char *screen_name) {
   }
 }
 
-void load_game() {
-  load_level_file("level.hacc", level_grid);
+void load_game(const char *filename) {
+  load_level_file(filename, level_grid);
+
+  // TODO: Optimize level loading
+  load_wall_texture();
   load_walls(walls, level_grid);
   load_enemies();
 }
@@ -391,13 +433,13 @@ int main(int argc, char *argv[]) {
 
   init();
 
-  load_game();
+  load_game("level.hacc");
 
   Vector2 initial_player_pos = get_player_position(level_grid);
 
   player.position = initial_player_pos;
-
-  define_shape(&player);
+  player.direction = player.position;
+  player.angle = 0;
 
   while (!WindowShouldClose()) {
     BeginDrawing();

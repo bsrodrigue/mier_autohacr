@@ -30,21 +30,18 @@ const char *get_entity_type_name(EntityType type) {
   switch (type) {
   case EMPTY:
     return "Empty";
-    break;
   case UBWALL:
     return "Unbreakable Wall";
-    break;
   case BWALL:
     return "Breakable Wall";
-    break;
   case PLAYER:
     return "Player";
-    break;
   case BASE_ENEMY:
     return "Base Enemy";
-    break;
+  default:
+    return "";
   }
-};
+}
 
 static int level_grid[CELL_COUNT][CELL_COUNT];
 

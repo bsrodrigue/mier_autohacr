@@ -54,9 +54,10 @@ void load_walls(std::vector<Wall> &walls,
   }
 }
 
-void draw_arena(std::vector<Wall> &walls) {
+void draw_arena(std::vector<Wall> &walls, Texture2D texture) {
   for (int i = 0; i < walls.size(); i++) {
     Vector2 position = walls[i].position;
+    // DrawTexture(texture, position.x, position.y, WHITE);
     draw_cell(position.x, position.y, walls[i].type == BREAKABLE ? RED : WHITE);
   }
 }

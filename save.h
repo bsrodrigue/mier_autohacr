@@ -4,6 +4,7 @@
 #define SAVE_H
 
 //======== File Format =======//
+#define FORMAT_VERSION 0.1
 #define LEVEL_NAME_OFFSET 0
 #define LEVEL_NAME_SIZE 256
 #define LEVEL_DATA_OFFSET (LEVEL_NAME_SIZE)
