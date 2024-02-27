@@ -6,7 +6,7 @@
 
 typedef enum { BREAKABLE, UNBREAKABLE } WallType;
 
-typedef enum { EMPTY, UBWALL, BWALL, PLAYER, ENEMY } EntityType;
+typedef enum { EMPTY, UBWALL, BWALL, PLAYER, BASE_ENEMY } EntityType;
 
 typedef struct {
   WallType type;
@@ -18,6 +18,7 @@ typedef struct {
   Vector2 position;
   Vector2 velocity;
   Vector2 direction;
+  float angle;
   std::vector<Vector2> shape;
 } GameObject;
 

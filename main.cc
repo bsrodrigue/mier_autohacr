@@ -2,52 +2,91 @@
 #include "entities.h"
 #include "game.h"
 #include "level_editor.h"
+#include "player.h"
 #include "save.h"
+#include "wall.h"
+#include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <raylib.h>
 #include <raymath.h>
 #include <string.h>
 
+// TODO: Implement an Object Pool for Enemies and Projectiles
+
 Screen current_screen = GAME;
 
+Texture2D wall_texture;
+
 float velocity = 5;
-float shooting_range = 25 * 5;
-float last_enemy_shoot = 0;
-float shooting_interval = 1;
 float player_bullet_damage = 1;
+float player_health = 10;
 
 static int level_grid[CELL_COUNT][CELL_COUNT];
 
+Camera2D camera;
+
 std::vector<Wall> walls;
 
-float half_len = 15;
-float projectile_speed = 12.5;
+typedef enum {
+  BASE,
+} EnemyType;
 
-GameObject player = {.position{(float)WIN_WIDTH / 2, (float)WIN_HEIGHT / 2},
-                     .velocity{0, 0},
-                     .direction{0, 0}};
+typedef struct {
+  float health;
+  float shooting_interval;
+  float last_shot;
+  Vector2 position;
+  float vision_radius;
+  EnemyType type;
+} Enemy;
+
+Enemy create_enemy(Vector2 position, EnemyType type) {
+  Enemy enemy;
+  enemy.health = 3;
+  enemy.position = position;
+  enemy.shooting_interval = 1;
+  enemy.last_shot = 0;
+  enemy.vision_radius = 50 * 3;
+  enemy.type = type;
+
+  return enemy;
+}
 
 std::vector<Projectile> projectiles;
+std::vector<Projectile> enemy_projectiles;
+std::vector<Enemy> enemies;
 
-void define_shape(GameObject *game_obj) {
-  // For the moment we will handle triangles only
-  game_obj->shape.push_back(Vector2Add(game_obj->position, {0, -half_len}));
-  game_obj->shape.push_back(
-      Vector2Add(game_obj->position, {-half_len, half_len}));
-  game_obj->shape.push_back(
-      Vector2Add(game_obj->position, {half_len, half_len}));
+void load_wall_texture() { wall_texture = LoadTexture("./wall.png"); }
+
+void enemy_shoot(Enemy *enemy, Vector2 player_position) {
+  Projectile projectile;
+  projectile.pos = enemy->position;
+  projectile.direction =
+      Vector2Normalize(Vector2Subtract(player_position, projectile.pos));
+  projectile.id = enemy_projectiles.size();
+  enemy_projectiles.push_back(projectile);
 }
 
-void update_shape(GameObject *game_obj) {
-  game_obj->shape[0] = Vector2Add(game_obj->position, {0, -half_len});
-  game_obj->shape[1] = Vector2Add(game_obj->position, {-half_len, half_len});
-  game_obj->shape[2] = Vector2Add(game_obj->position, {half_len, half_len});
+void load_enemies() {
+  for (int y = 0; y < CELL_COUNT; y++) {
+    for (int x = 0; x < CELL_COUNT; x++) {
+      int type = level_grid[y][x];
+      if (type == BASE_ENEMY) {
+        Enemy enemy =
+            create_enemy({(float)CELL_OFFSET(x), (float)CELL_OFFSET(y)}, BASE);
+        enemies.push_back(enemy);
+      }
+    }
+  }
 }
 
-void draw_game_obj(GameObject game_obj, Color color) {
-  DrawTriangle(game_obj.shape[0], game_obj.shape[1], game_obj.shape[2], color);
-}
+float half_len = 10;
+float projectile_speed = 10.5;
+
+GameObject player;
+
+void draw_player() { DrawPoly(player.position, 3, 15, player.angle, WHITE); }
 
 void die(const char *message) {
   perror(message);
@@ -55,7 +94,7 @@ void die(const char *message) {
 }
 
 void init() {
-  InitWindow(WIN_WIDTH, WIN_HEIGHT, "NieR: AutoHacker");
+  InitWindow(WIN_WIDTH, WIN_HEIGHT, "MieR: AutoHacker");
 
   if (!IsWindowReady())
     die("Failed to initialize window\n");
@@ -63,10 +102,15 @@ void init() {
   SetTargetFPS(FPS);
 
   ShowCursor();
+
+  camera.target = player.position;
+  camera.offset = {(float)WIN_WIDTH / 2, (float)WIN_HEIGHT / 2};
+  camera.rotation = 0;
+  camera.zoom = 1.5;
 }
 
 void player_shoot(int pressed_key) {
-  Vector2 mouse = GetMousePosition();
+  Vector2 mouse = get_world_mouse(camera);
 
   Projectile new_projectile;
 
@@ -84,75 +128,9 @@ void handle_single_press_input(int pressed_key) {
     player_shoot(pressed_key);
 }
 
-int check_wall_collision(Vector2 position) {
-  for (int i = 0; i < walls.size(); i++) {
-    Wall wall = walls[i];
-    Rectangle rect;
-
-    rect.x = wall.position.x * CELL_SIZE;
-    rect.y = wall.position.y * CELL_SIZE;
-
-    rect.width = CELL_SIZE;
-    rect.height = CELL_SIZE;
-
-    // DEBUG:
-    // DrawRectangleRec(rect, RED);
-
-    if (CheckCollisionPointRec(position, rect)) {
-      // DEBUG:
-      // TraceLog(LOG_INFO, "WALL_COLLISION");
-      return i;
-    }
-  }
-
-  return -1;
-}
-
-void handle_player_movement() {
-  Vector2 vertical_movement = {0, 0};
-  Vector2 horizontal_movement = {0, 0};
-
-  bool can_move_vertical = true;
-  bool can_move_horizontal = true;
-
-  if (IsKeyDown(KEY_UP)) {
-    vertical_movement = {0, -velocity};
-  } else if (IsKeyDown(KEY_DOWN)) {
-    vertical_movement = {0, velocity};
-  }
-
-  if (IsKeyDown(KEY_LEFT)) {
-    horizontal_movement = {-velocity, 0};
-  } else if (IsKeyDown(KEY_RIGHT)) {
-    horizontal_movement = {velocity, 0};
-  }
-
-  Vector2 next_vertical_position =
-      Vector2Add(player.position, vertical_movement);
-
-  if (check_wall_collision(next_vertical_position) != -1) {
-    can_move_vertical = false;
-  }
-
-  Vector2 next_horizontal_position =
-      Vector2Add(player.position, horizontal_movement);
-
-  if (check_wall_collision(next_horizontal_position) != -1) {
-    can_move_horizontal = false;
-  }
-
-  if (can_move_vertical) {
-    player.position = Vector2Add(player.position, vertical_movement);
-  }
-
-  if (can_move_horizontal) {
-    player.position = Vector2Add(player.position, horizontal_movement);
-  }
-}
-
 void handle_game_input(int pressed_key) {
   handle_single_press_input(pressed_key);
-  handle_player_movement();
+  handle_player_movement(&player, velocity, walls);
 }
 
 void handle_global_input() {}
@@ -169,9 +147,17 @@ void handle_input(int pressed_key) {
     handle_game_input(pressed_key);
     break;
   case LEVEL_EDITOR:
-    handle_level_input(pressed_key);
+    handle_level_input(&camera, pressed_key);
     break;
   }
+}
+
+void damage_enemy(int index) {
+  if ((enemies[index].health - player_bullet_damage) <= 0) {
+    enemies.erase(enemies.begin() + index);
+  }
+
+  enemies.at(index).health = enemies.at(index).health - player_bullet_damage;
 }
 
 void damage_wall(int index) {
@@ -182,12 +168,73 @@ void damage_wall(int index) {
   walls.at(index).health = walls.at(index).health - player_bullet_damage;
 }
 
-void update_projectiles() {
-  for (int i = 0; i < projectiles.size(); i++) {
+void damage_player(float damage) {
+  if ((player_health - damage) <= 0) {
+    player_health = 0;
+    // TODO: Implement Game Over (restart game);
+    CloseWindow();
+  }
+
+  player_health -= damage;
+}
+
+int check_enemy_collision(Vector2 position, float radius) {
+  for (int i = 0; i < enemies.size(); i++) {
+    if (CheckCollisionCircles(position, radius, enemies[i].position, 10))
+      return i;
+  }
+
+  return -1;
+}
+
+void update_enemy_projectiles() {
+  for (int i = 0; i < enemy_projectiles.size(); i++) {
+
+    if (CheckCollisionCircles(enemy_projectiles[i].pos, 5, player.position,
+                              10)) {
+      damage_player(1);
+    }
 
     // Recycle in object pool for optimal memory usage
     // Find better way to check many-to-many collisions
-    int touched = check_wall_collision(projectiles[i].pos);
+    int touched = check_wall_collision(walls, enemy_projectiles[i].pos);
+
+    if (touched != -1) {
+      switch (walls[touched].type) {
+      case BREAKABLE:
+        // It seems not safe to change the vector's size while looping
+        // Should enemies be able to destroy walls?
+        damage_wall(touched);
+        break;
+      case UNBREAKABLE:
+        break;
+      }
+
+      enemy_projectiles.erase(enemy_projectiles.begin() + i);
+      continue;
+    }
+
+    Vector2 projectile_pos =
+        Vector2Add(enemy_projectiles[i].pos,
+                   Vector2Multiply(enemy_projectiles[i].direction,
+                                   {projectile_speed, projectile_speed}));
+    enemy_projectiles[i].pos = projectile_pos;
+  }
+}
+
+void update_player_projectiles() {
+  for (int i = 0; i < projectiles.size(); i++) {
+
+    int enemy = check_enemy_collision(projectiles[i].pos, 5);
+
+    if (enemy != -1) {
+      damage_enemy(enemy);
+      continue;
+    }
+
+    // Recycle in object pool for optimal memory usage
+    // Find better way to check many-to-many collisions
+    int touched = check_wall_collision(walls, projectiles[i].pos);
 
     if (touched != -1) {
       switch (walls[touched].type) {
@@ -211,7 +258,54 @@ void update_projectiles() {
   }
 }
 
-void update_positions() { update_projectiles(); }
+void handle_enemy_shoot(Enemy *enemy) {
+  float time = GetTime();
+
+  if ((time - enemy->last_shot) >= enemy->shooting_interval) {
+    enemy->last_shot = time;
+    bool is_in_range = CheckCollisionPointCircle(
+        player.position, enemy->position, enemy->vision_radius);
+
+    if (is_in_range) {
+      enemy_shoot(enemy, player.position);
+    }
+  }
+}
+
+void handle_enemy_behaviour() {
+  for (int i = 0; i < enemies.size(); i++) {
+    handle_enemy_shoot(&enemies[i]);
+
+    bool is_in_range = CheckCollisionPointCircle(
+        player.position, enemies[i].position, enemies[i].vision_radius);
+
+    if (is_in_range) {
+      Vector2 next_position =
+          Vector2MoveTowards(enemies[i].position, player.position, 2);
+
+      if (check_wall_collision(walls, next_position) == -1) {
+        enemies[i].position = next_position;
+      }
+
+      DrawCircleV(enemies[i].position, enemies[i].vision_radius,
+                  ColorAlpha(RED, 0.5));
+    }
+  }
+}
+
+void update_positions() {
+  camera.target = player.position;
+  handle_enemy_behaviour();
+  update_enemy_projectiles();
+  update_player_projectiles();
+}
+
+void update_player_angle() {
+  Vector2 mouse = get_world_mouse(camera);
+  float angle = atan2(mouse.y - player.position.y, mouse.x - player.position.x);
+
+  player.angle = (angle * RAD2DEG);
+}
 
 void handle_updates() {
   switch (current_screen) {
@@ -221,29 +315,59 @@ void handle_updates() {
     break;
   case GAME:
     update_positions();
-    update_shape(&player);
+    update_player_angle();
     break;
   case LEVEL_EDITOR:
     break;
   }
 }
 
-void draw_projectiles() {
+void draw_player_projectiles() {
   for (int i = 0; i < projectiles.size(); i++) {
-    DrawCircleV(projectiles[i].pos, 15, RED);
+    DrawCircleV(projectiles[i].pos, 5, RED);
+  }
+}
+
+void draw_enemy_projectiles() {
+  for (int i = 0; i < enemy_projectiles.size(); i++) {
+    DrawCircleV(enemy_projectiles[i].pos, 5, LIGHTGRAY);
+  }
+}
+
+void draw_projectiles() {
+  draw_enemy_projectiles();
+  draw_player_projectiles();
+}
+
+void draw_enemies() {
+  for (int i = 0; i < enemies.size(); i++) {
+    DrawCircleV(enemies[i].position, 10, RED);
   }
 }
 
 void render_game() {
-  draw_arena(walls);
+  draw_arena(walls, wall_texture);
   draw_projectiles();
-  draw_game_obj(player, WHITE);
+  draw_enemies();
+  draw_player();
 }
 
-void render_game_debug() {
+void draw_player_mouse_angle() {
   Vector2 mouse = GetMousePosition();
-  DrawLineV(player.position, mouse, BLUE);
+  float angle = Vector2Angle(mouse, player.position);
+  float atan_angle = atan2(mouse.x, mouse.y);
+
+  const char *text = TextFormat("Angle: %fdegs", (angle * RAD2DEG));
+  const char *text_2 =
+      TextFormat("Mouse angle: %fdegs", (atan_angle * RAD2DEG));
+  DrawText(text, TEXT_POS(1), TEXT_POS(1), 18, RED);
+  DrawText(text_2, TEXT_POS(4), TEXT_POS(4), 18, RED);
+
+  DrawLineV({0, 0}, mouse, RED);
+  DrawLineV({0, 0}, player.position, RED);
 }
+
+void render_game_debug() { draw_player_mouse_angle(); }
 
 const char *get_current_screen_title() {
   switch (current_screen) {
@@ -278,7 +402,7 @@ void render() {
     render_game();
     break;
   case LEVEL_EDITOR:
-    render_level_editor();
+    render_level_editor(&camera);
     break;
   }
 
@@ -292,6 +416,15 @@ void select_screen(const char *screen_name) {
   }
 }
 
+void load_game(const char *filename) {
+  load_level_file(filename, level_grid);
+
+  // TODO: Optimize level loading
+  load_wall_texture();
+  load_walls(walls, level_grid);
+  load_enemies();
+}
+
 int main(int argc, char *argv[]) {
   if (argc == 2) {
     char *screen_name = argv[1];
@@ -299,12 +432,18 @@ int main(int argc, char *argv[]) {
   }
 
   init();
-  load_level_file("level.hacc", level_grid);
-  load_walls(walls, level_grid);
-  define_shape(&player);
+
+  load_game("level.hacc");
+
+  Vector2 initial_player_pos = get_player_position(level_grid);
+
+  player.position = initial_player_pos;
+  player.direction = player.position;
+  player.angle = 0;
 
   while (!WindowShouldClose()) {
     BeginDrawing();
+    BeginMode2D(camera);
     ClearBackground(BLACK);
     int pressed_key = GetKeyPressed();
 
@@ -312,6 +451,7 @@ int main(int argc, char *argv[]) {
     handle_updates();
 
     render();
+    EndMode2D();
     EndDrawing();
   }
 
