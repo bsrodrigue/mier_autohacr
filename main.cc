@@ -12,7 +12,7 @@
 #include <raymath.h>
 #include <string.h>
 
-#define MAX_PROJECTILES 100
+#define MAX_PROJECTILES 10
 
 // TODO: Implement an Object Pool for Enemies and Projectiles
 
@@ -106,6 +106,13 @@ void die(const char *message) {
   exit(1);
 }
 
+void init_camera() {
+  camera.target = player.position;
+  camera.offset = {(float)WIN_WIDTH / 2, (float)WIN_HEIGHT / 2};
+  camera.rotation = 0;
+  camera.zoom = 1.5;
+}
+
 void init() {
   InitWindow(WIN_WIDTH, WIN_HEIGHT, "MieR: AutoHacker");
 
@@ -116,48 +123,53 @@ void init() {
 
   ShowCursor();
 
-  camera.target = player.position;
-  camera.offset = {(float)WIN_WIDTH / 2, (float)WIN_HEIGHT / 2};
-  camera.rotation = 0;
-  camera.zoom = 1.5;
+  init_camera();
+  init_projectiles(player_projectiles);
 }
 
-void player_shoot(int pressed_key) {
+int get_free_projectile(Projectile *projectiles) {
+  for (int i = 0; i < MAX_PROJECTILES; i++) {
+    if (!projectiles[i].is_shooting)
+      return i;
+  }
+
+  return -1;
+}
+
+void player_shoot() {
   Vector2 mouse = get_world_mouse(camera);
 
-  Projectile new_projectile;
+  int free_index = get_free_projectile(player_projectiles);
 
-  new_projectile.pos = player.position;
-  new_projectile.direction =
+  if (free_index == -1) {
+    // TODO: Seriously, what is the best way to handle this?
+    return;
+  }
+
+  player_projectiles[free_index].pos = player.position;
+  player_projectiles[free_index].is_shooting = true;
+  player_projectiles[free_index].direction =
       Vector2Normalize(Vector2Subtract(mouse, player.position));
-
-  new_projectile.id = projectiles.size();
-
-  projectiles.push_back(new_projectile);
 }
 
-void handle_single_press_input(int pressed_key) {
+void handle_single_press_input() {
   if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-    player_shoot(pressed_key);
+    player_shoot();
 }
 
-void handle_game_input(int pressed_key) {
-  handle_single_press_input(pressed_key);
+void handle_game_input() {
+  handle_single_press_input();
   handle_player_movement(&player, velocity, walls);
 }
 
-void handle_global_input() {}
-
 void handle_input(int pressed_key) {
-  handle_global_input();
-
   switch (current_screen) {
   case UNKNOWN:
     break;
   case MENU:
     break;
   case GAME:
-    handle_game_input(pressed_key);
+    handle_game_input();
     break;
   case LEVEL_EDITOR:
     handle_level_input(&camera, pressed_key);
@@ -236,9 +248,12 @@ void update_enemy_projectiles() {
 }
 
 void update_player_projectiles() {
-  for (int i = 0; i < projectiles.size(); i++) {
+  // TODO: Do you seriously want to loop over all the projectiles?
+  for (int i = 0; i < MAX_PROJECTILES; i++) {
+    if (!player_projectiles[i].is_shooting)
+      continue;
 
-    int enemy = check_enemy_collision(projectiles[i].pos, 5);
+    int enemy = check_enemy_collision(player_projectiles[i].pos, 5);
 
     if (enemy != -1) {
       damage_enemy(enemy);
@@ -247,7 +262,7 @@ void update_player_projectiles() {
 
     // Recycle in object pool for optimal memory usage
     // Find better way to check many-to-many collisions
-    int touched = check_wall_collision(walls, projectiles[i].pos);
+    int touched = check_wall_collision(walls, player_projectiles[i].pos);
 
     if (touched != -1) {
       switch (walls[touched].type) {
@@ -258,16 +273,15 @@ void update_player_projectiles() {
       case UNBREAKABLE:
         break;
       }
-
-      projectiles.erase(projectiles.begin() + i);
+      player_projectiles[i].is_shooting = false;
       continue;
     }
 
     Vector2 projectile_pos =
-        Vector2Add(projectiles[i].pos,
-                   Vector2Multiply(projectiles[i].direction,
+        Vector2Add(player_projectiles[i].pos,
+                   Vector2Multiply(player_projectiles[i].direction,
                                    {projectile_speed, projectile_speed}));
-    projectiles[i].pos = projectile_pos;
+    player_projectiles[i].pos = projectile_pos;
   }
 }
 
@@ -336,8 +350,9 @@ void handle_updates() {
 }
 
 void draw_player_projectiles() {
-  for (int i = 0; i < projectiles.size(); i++) {
-    DrawCircleV(projectiles[i].pos, 5, RED);
+  for (int i = 0; i < MAX_PROJECTILES; i++) {
+    if (player_projectiles[i].is_shooting)
+      DrawCircleV(player_projectiles[i].pos, 5, RED);
   }
 }
 
