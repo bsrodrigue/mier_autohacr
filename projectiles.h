@@ -3,7 +3,7 @@
 #ifndef PROJECTILES_H
 #define PROJECTILES_H
 
-#define MAX_PROJECTILES 5
+#define MAX_PROJECTILES 50
 
 typedef struct {
   int id;

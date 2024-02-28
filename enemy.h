@@ -7,6 +7,7 @@
 
 typedef enum {
   BASE,
+  SENTRY_A,
 } EnemyType;
 
 typedef enum {
@@ -17,6 +18,7 @@ typedef enum {
 typedef struct {
   float health;
   float shooting_interval;
+  float shooting_angle;
   float last_shot;
   Vector2 position;
   float vision_radius;

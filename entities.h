@@ -6,7 +6,14 @@
 
 typedef enum { BREAKABLE, UNBREAKABLE } WallType;
 
-typedef enum { EMPTY, UBWALL, BWALL, PLAYER, BASE_ENEMY } EntityType;
+typedef enum {
+  EMPTY,
+  UBWALL,
+  BWALL,
+  PLAYER,
+  BASE_ENEMY,
+  SENTRY_A_ENEMY
+} EntityType;
 
 typedef struct {
   WallType type;

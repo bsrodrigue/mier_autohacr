@@ -41,7 +41,7 @@ void load_wall_texture() { wall_texture = LoadTexture("./wall.png"); }
 
 GameObject player;
 
-void enemy_shoot(Enemy enemy, Vector2 player_position) {
+void enemy_shoot(Enemy enemy, Vector2 target) {
   int free_index = get_free_projectile(enemy_projectiles);
 
   if (free_index == -1) {
@@ -51,7 +51,18 @@ void enemy_shoot(Enemy enemy, Vector2 player_position) {
   enemy_projectiles[free_index].pos = enemy.position;
   enemy_projectiles[free_index].is_shooting = true;
   enemy_projectiles[free_index].direction =
-      Vector2Normalize(Vector2Subtract(player.position, enemy.position));
+      Vector2Normalize(Vector2Subtract(target, enemy.position));
+}
+
+void enemy_shoot_player(Enemy enemy, Vector2 player_position) {
+  enemy_shoot(enemy, player_position);
+}
+
+void enemy_shoot_star(Enemy enemy) {
+  enemy_shoot(enemy, Vector2Add(enemy.position, {0, -1}));
+  enemy_shoot(enemy, Vector2Add(enemy.position, {1, 0}));
+  enemy_shoot(enemy, Vector2Add(enemy.position, {0, 1}));
+  enemy_shoot(enemy, Vector2Add(enemy.position, {-1, 0}));
 }
 
 void player_shoot() {
@@ -77,6 +88,12 @@ void load_enemies() {
       if (type == BASE_ENEMY) {
         Enemy enemy =
             create_enemy({(float)CELL_OFFSET(x), (float)CELL_OFFSET(y)}, BASE);
+        enemies[enemy_count++] = enemy;
+      }
+
+      else if (type == SENTRY_A_ENEMY) {
+        Enemy enemy = create_enemy(
+            {(float)CELL_OFFSET(x), (float)CELL_OFFSET(y)}, SENTRY_A);
         enemies[enemy_count++] = enemy;
       }
     }
@@ -253,16 +270,21 @@ void update_player_projectiles() {
   }
 }
 
-void handle_enemy_shoot(Enemy *enemy) {
+void handle_enemy_shoot(Enemy *enemy, bool is_in_range) {
   float time = GetTime();
 
   if ((time - enemy->last_shot) >= enemy->shooting_interval) {
     enemy->last_shot = time;
-    bool is_in_range = CheckCollisionPointCircle(
-        player.position, enemy->position, enemy->vision_radius);
 
     if (is_in_range) {
-      enemy_shoot(*enemy, player.position);
+      switch (enemy->type) {
+      case BASE:
+        enemy_shoot_player(*enemy, player.position);
+        break;
+      case SENTRY_A:
+        enemy_shoot_star(*enemy);
+        break;
+      }
     }
   }
 }
@@ -271,17 +293,25 @@ void handle_enemy_behaviour() {
   for (int i = 0; i < enemy_count; i++) {
     if (enemies[i].state == DEAD)
       continue;
-    handle_enemy_shoot(&enemies[i]);
 
     bool is_in_range = CheckCollisionPointCircle(
         player.position, enemies[i].position, enemies[i].vision_radius);
 
-    if (is_in_range) {
-      Vector2 next_position =
-          Vector2MoveTowards(enemies[i].position, player.position, 2);
+    handle_enemy_shoot(&enemies[i], is_in_range);
 
-      if (check_wall_collision(walls, next_position) == -1) {
-        enemies[i].position = next_position;
+    if (is_in_range) {
+
+      switch (enemies[i].type) {
+      case BASE: {
+        Vector2 next_position =
+            Vector2MoveTowards(enemies[i].position, player.position, 2);
+
+        if (check_wall_collision(walls, next_position) == -1) {
+          enemies[i].position = next_position;
+        }
+      } break;
+      case SENTRY_A:
+        break;
       }
 
       DrawCircleV(enemies[i].position, enemies[i].vision_radius,
@@ -342,7 +372,15 @@ void draw_enemies() {
   for (int i = 0; i < enemy_count; i++) {
     if (enemies[i].state == DEAD)
       continue;
-    DrawCircleV(enemies[i].position, 10, RED);
+
+    switch (enemies[i].type) {
+    case BASE:
+      DrawCircleV(enemies[i].position, 10, RED);
+      break;
+    case SENTRY_A:
+      DrawCircleV(enemies[i].position, 10, PURPLE);
+      break;
+    }
   }
 }
 
