@@ -12,6 +12,8 @@
 #include <raymath.h>
 #include <string.h>
 
+#define MAX_PROJECTILES 100
+
 // TODO: Implement an Object Pool for Enemies and Projectiles
 
 Screen current_screen = GAME;
@@ -56,6 +58,17 @@ Enemy create_enemy(Vector2 position, EnemyType type) {
 std::vector<Projectile> projectiles;
 std::vector<Projectile> enemy_projectiles;
 std::vector<Enemy> enemies;
+
+Projectile player_projectiles[MAX_PROJECTILES];
+
+void init_projectiles(Projectile *projectiles) {
+  for (int i = 0; i < MAX_PROJECTILES; i++) {
+    Projectile p = projectiles[i];
+    p.pos = {0, 0};
+    p.direction = {0, 0};
+    p.is_shooting = false;
+  }
+}
 
 void load_wall_texture() { wall_texture = LoadTexture("./wall.png"); }
 
