@@ -22,11 +22,4 @@ typedef struct {
   std::vector<Vector2> shape;
 } GameObject;
 
-typedef struct {
-  int id;
-  Vector2 pos;
-  Vector2 direction;
-  bool is_shooting;
-} Projectile;
-
 #endif
