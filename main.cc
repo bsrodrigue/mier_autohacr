@@ -1,8 +1,10 @@
 #include "config.h"
+#include "enemy.h"
 #include "entities.h"
 #include "game.h"
 #include "level_editor.h"
 #include "player.h"
+#include "projectiles.h"
 #include "save.h"
 #include "wall.h"
 #include <cmath>
@@ -21,51 +23,62 @@ Texture2D wall_texture;
 float velocity = 5;
 float player_bullet_damage = 1;
 float player_health = 10;
+float projectile_speed = 8;
 
 static int level_grid[CELL_COUNT][CELL_COUNT];
 
-Camera2D camera;
+static Camera2D camera;
 
-std::vector<Wall> walls;
+static std::vector<Wall> walls;
 
-typedef enum {
-  BASE,
-} EnemyType;
+static int enemy_count = 0;
+Enemy enemies[MAX_ENEMIES];
 
-typedef struct {
-  float health;
-  float shooting_interval;
-  float last_shot;
-  Vector2 position;
-  float vision_radius;
-  EnemyType type;
-} Enemy;
-
-Enemy create_enemy(Vector2 position, EnemyType type) {
-  Enemy enemy;
-  enemy.health = 3;
-  enemy.position = position;
-  enemy.shooting_interval = 1;
-  enemy.last_shot = 0;
-  enemy.vision_radius = 50 * 3;
-  enemy.type = type;
-
-  return enemy;
-}
-
-std::vector<Projectile> projectiles;
-std::vector<Projectile> enemy_projectiles;
-std::vector<Enemy> enemies;
+Projectile player_projectiles[MAX_PROJECTILES];
+Projectile enemy_projectiles[MAX_PROJECTILES];
 
 void load_wall_texture() { wall_texture = LoadTexture("./wall.png"); }
 
-void enemy_shoot(Enemy *enemy, Vector2 player_position) {
-  Projectile projectile;
-  projectile.pos = enemy->position;
-  projectile.direction =
-      Vector2Normalize(Vector2Subtract(player_position, projectile.pos));
-  projectile.id = enemy_projectiles.size();
-  enemy_projectiles.push_back(projectile);
+GameObject player;
+
+void enemy_shoot(Enemy enemy, Vector2 target) {
+  int free_index = get_free_projectile(enemy_projectiles);
+
+  if (free_index == -1) {
+    return;
+  }
+
+  enemy_projectiles[free_index].pos = enemy.position;
+  enemy_projectiles[free_index].is_shooting = true;
+  enemy_projectiles[free_index].direction =
+      Vector2Normalize(Vector2Subtract(target, enemy.position));
+}
+
+void enemy_shoot_player(Enemy enemy, Vector2 player_position) {
+  enemy_shoot(enemy, player_position);
+}
+
+void enemy_shoot_star(Enemy enemy) {
+  enemy_shoot(enemy, Vector2Add(enemy.position, {0, -1}));
+  enemy_shoot(enemy, Vector2Add(enemy.position, {1, 0}));
+  enemy_shoot(enemy, Vector2Add(enemy.position, {0, 1}));
+  enemy_shoot(enemy, Vector2Add(enemy.position, {-1, 0}));
+}
+
+void player_shoot() {
+  Vector2 mouse = get_world_mouse(camera);
+
+  int free_index = get_free_projectile(player_projectiles);
+
+  if (free_index == -1) {
+    // TODO: Seriously, what is the best way to handle this?
+    return;
+  }
+
+  player_projectiles[free_index].pos = player.position;
+  player_projectiles[free_index].is_shooting = true;
+  player_projectiles[free_index].direction =
+      Vector2Normalize(Vector2Subtract(mouse, player.position));
 }
 
 void load_enemies() {
@@ -75,22 +88,30 @@ void load_enemies() {
       if (type == BASE_ENEMY) {
         Enemy enemy =
             create_enemy({(float)CELL_OFFSET(x), (float)CELL_OFFSET(y)}, BASE);
-        enemies.push_back(enemy);
+        enemies[enemy_count++] = enemy;
+      }
+
+      else if (type == SENTRY_A_ENEMY) {
+        Enemy enemy = create_enemy(
+            {(float)CELL_OFFSET(x), (float)CELL_OFFSET(y)}, SENTRY_A);
+        enemies[enemy_count++] = enemy;
       }
     }
   }
 }
-
-float half_len = 10;
-float projectile_speed = 10.5;
-
-GameObject player;
 
 void draw_player() { DrawPoly(player.position, 3, 15, player.angle, WHITE); }
 
 void die(const char *message) {
   perror(message);
   exit(1);
+}
+
+void init_camera() {
+  camera.target = player.position;
+  camera.offset = {(float)WIN_WIDTH / 2, (float)WIN_HEIGHT / 2};
+  camera.rotation = 0;
+  camera.zoom = 1.5;
 }
 
 void init() {
@@ -103,48 +124,28 @@ void init() {
 
   ShowCursor();
 
-  camera.target = player.position;
-  camera.offset = {(float)WIN_WIDTH / 2, (float)WIN_HEIGHT / 2};
-  camera.rotation = 0;
-  camera.zoom = 1.5;
+  init_camera();
+  init_projectiles(player_projectiles);
 }
 
-void player_shoot(int pressed_key) {
-  Vector2 mouse = get_world_mouse(camera);
-
-  Projectile new_projectile;
-
-  new_projectile.pos = player.position;
-  new_projectile.direction =
-      Vector2Normalize(Vector2Subtract(mouse, player.position));
-
-  new_projectile.id = projectiles.size();
-
-  projectiles.push_back(new_projectile);
-}
-
-void handle_single_press_input(int pressed_key) {
+void handle_single_press_input() {
   if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-    player_shoot(pressed_key);
+    player_shoot();
 }
 
-void handle_game_input(int pressed_key) {
-  handle_single_press_input(pressed_key);
+void handle_game_input() {
+  handle_single_press_input();
   handle_player_movement(&player, velocity, walls);
 }
 
-void handle_global_input() {}
-
 void handle_input(int pressed_key) {
-  handle_global_input();
-
   switch (current_screen) {
   case UNKNOWN:
     break;
   case MENU:
     break;
   case GAME:
-    handle_game_input(pressed_key);
+    handle_game_input();
     break;
   case LEVEL_EDITOR:
     handle_level_input(&camera, pressed_key);
@@ -154,10 +155,10 @@ void handle_input(int pressed_key) {
 
 void damage_enemy(int index) {
   if ((enemies[index].health - player_bullet_damage) <= 0) {
-    enemies.erase(enemies.begin() + index);
+    enemies[index].state = DEAD;
   }
 
-  enemies.at(index).health = enemies.at(index).health - player_bullet_damage;
+  enemies[index].health = enemies[index].health - player_bullet_damage;
 }
 
 void damage_wall(int index) {
@@ -179,7 +180,9 @@ void damage_player(float damage) {
 }
 
 int check_enemy_collision(Vector2 position, float radius) {
-  for (int i = 0; i < enemies.size(); i++) {
+  for (int i = 0; i < enemy_count; i++) {
+    if (enemies[i].state == DEAD)
+      continue;
     if (CheckCollisionCircles(position, radius, enemies[i].position, 10))
       return i;
   }
@@ -188,21 +191,21 @@ int check_enemy_collision(Vector2 position, float radius) {
 }
 
 void update_enemy_projectiles() {
-  for (int i = 0; i < enemy_projectiles.size(); i++) {
+  for (int i = 0; i < MAX_PROJECTILES; i++) {
+    if (!enemy_projectiles[i].is_shooting)
+      continue;
 
     if (CheckCollisionCircles(enemy_projectiles[i].pos, 5, player.position,
                               10)) {
       damage_player(1);
     }
 
-    // Recycle in object pool for optimal memory usage
     // Find better way to check many-to-many collisions
     int touched = check_wall_collision(walls, enemy_projectiles[i].pos);
 
     if (touched != -1) {
       switch (walls[touched].type) {
       case BREAKABLE:
-        // It seems not safe to change the vector's size while looping
         // Should enemies be able to destroy walls?
         damage_wall(touched);
         break;
@@ -210,7 +213,7 @@ void update_enemy_projectiles() {
         break;
       }
 
-      enemy_projectiles.erase(enemy_projectiles.begin() + i);
+      enemy_projectiles[i].is_shooting = false;
       continue;
     }
 
@@ -222,19 +225,29 @@ void update_enemy_projectiles() {
   }
 }
 
-void update_player_projectiles() {
-  for (int i = 0; i < projectiles.size(); i++) {
+void reset_projectile(int index, Projectile *projectiles) {
+  projectiles[index].is_shooting = false;
+  projectiles[index].pos = {0, 0};
+  projectiles[index].direction = {0, 0};
+}
 
-    int enemy = check_enemy_collision(projectiles[i].pos, 5);
+void update_player_projectiles() {
+  // TODO: Do you seriously want to loop over all the projectiles?
+  for (int i = 0; i < MAX_PROJECTILES; i++) {
+    if (!player_projectiles[i].is_shooting)
+      continue;
+
+    int enemy = check_enemy_collision(player_projectiles[i].pos, 5);
 
     if (enemy != -1) {
       damage_enemy(enemy);
+      reset_projectile(i, player_projectiles);
       continue;
     }
 
     // Recycle in object pool for optimal memory usage
     // Find better way to check many-to-many collisions
-    int touched = check_wall_collision(walls, projectiles[i].pos);
+    int touched = check_wall_collision(walls, player_projectiles[i].pos);
 
     if (touched != -1) {
       switch (walls[touched].type) {
@@ -245,46 +258,60 @@ void update_player_projectiles() {
       case UNBREAKABLE:
         break;
       }
-
-      projectiles.erase(projectiles.begin() + i);
+      reset_projectile(i, player_projectiles);
       continue;
     }
 
     Vector2 projectile_pos =
-        Vector2Add(projectiles[i].pos,
-                   Vector2Multiply(projectiles[i].direction,
+        Vector2Add(player_projectiles[i].pos,
+                   Vector2Multiply(player_projectiles[i].direction,
                                    {projectile_speed, projectile_speed}));
-    projectiles[i].pos = projectile_pos;
+    player_projectiles[i].pos = projectile_pos;
   }
 }
 
-void handle_enemy_shoot(Enemy *enemy) {
+void handle_enemy_shoot(Enemy *enemy, bool is_in_range) {
   float time = GetTime();
 
   if ((time - enemy->last_shot) >= enemy->shooting_interval) {
     enemy->last_shot = time;
-    bool is_in_range = CheckCollisionPointCircle(
-        player.position, enemy->position, enemy->vision_radius);
 
     if (is_in_range) {
-      enemy_shoot(enemy, player.position);
+      switch (enemy->type) {
+      case BASE:
+        enemy_shoot_player(*enemy, player.position);
+        break;
+      case SENTRY_A:
+        enemy_shoot_star(*enemy);
+        break;
+      }
     }
   }
 }
 
 void handle_enemy_behaviour() {
-  for (int i = 0; i < enemies.size(); i++) {
-    handle_enemy_shoot(&enemies[i]);
+  for (int i = 0; i < enemy_count; i++) {
+    if (enemies[i].state == DEAD)
+      continue;
 
     bool is_in_range = CheckCollisionPointCircle(
         player.position, enemies[i].position, enemies[i].vision_radius);
 
-    if (is_in_range) {
-      Vector2 next_position =
-          Vector2MoveTowards(enemies[i].position, player.position, 2);
+    handle_enemy_shoot(&enemies[i], is_in_range);
 
-      if (check_wall_collision(walls, next_position) == -1) {
-        enemies[i].position = next_position;
+    if (is_in_range) {
+
+      switch (enemies[i].type) {
+      case BASE: {
+        Vector2 next_position =
+            Vector2MoveTowards(enemies[i].position, player.position, 2);
+
+        if (check_wall_collision(walls, next_position) == -1) {
+          enemies[i].position = next_position;
+        }
+      } break;
+      case SENTRY_A:
+        break;
       }
 
       DrawCircleV(enemies[i].position, enemies[i].vision_radius,
@@ -323,14 +350,16 @@ void handle_updates() {
 }
 
 void draw_player_projectiles() {
-  for (int i = 0; i < projectiles.size(); i++) {
-    DrawCircleV(projectiles[i].pos, 5, RED);
+  for (int i = 0; i < MAX_PROJECTILES; i++) {
+    if (player_projectiles[i].is_shooting)
+      DrawCircleV(player_projectiles[i].pos, 5, RED);
   }
 }
 
 void draw_enemy_projectiles() {
-  for (int i = 0; i < enemy_projectiles.size(); i++) {
-    DrawCircleV(enemy_projectiles[i].pos, 5, LIGHTGRAY);
+  for (int i = 0; i < MAX_PROJECTILES; i++) {
+    if (enemy_projectiles[i].is_shooting)
+      DrawCircleV(enemy_projectiles[i].pos, 5, DARKPURPLE);
   }
 }
 
@@ -340,8 +369,18 @@ void draw_projectiles() {
 }
 
 void draw_enemies() {
-  for (int i = 0; i < enemies.size(); i++) {
-    DrawCircleV(enemies[i].position, 10, RED);
+  for (int i = 0; i < enemy_count; i++) {
+    if (enemies[i].state == DEAD)
+      continue;
+
+    switch (enemies[i].type) {
+    case BASE:
+      DrawCircleV(enemies[i].position, 10, RED);
+      break;
+    case SENTRY_A:
+      DrawCircleV(enemies[i].position, 10, PURPLE);
+      break;
+    }
   }
 }
 
@@ -398,7 +437,7 @@ void render() {
   case MENU:
     break;
   case GAME:
-    render_game_debug();
+    // render_game_debug();
     render_game();
     break;
   case LEVEL_EDITOR:

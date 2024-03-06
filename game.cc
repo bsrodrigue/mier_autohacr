@@ -22,22 +22,6 @@ Wall create_ubreakable_wall(Vector2 position) {
   return wall;
 }
 
-void generate_walls(std::vector<Wall> &walls) {
-  for (float i = 0; i < CELL_COUNT; i++) {
-    Wall wall_up = create_ubreakable_wall({i, 0});
-    Wall wall_down = create_ubreakable_wall({i, CELL_COUNT - 1});
-    walls.push_back(wall_up);
-    walls.push_back(wall_down);
-  }
-
-  for (float i = 0; i < CELL_COUNT; i++) {
-    Wall wall_up = create_ubreakable_wall({0, i});
-    Wall wall_down = create_ubreakable_wall({CELL_COUNT - 1, i});
-    walls.push_back(wall_up);
-    walls.push_back(wall_down);
-  }
-}
-
 void load_walls(std::vector<Wall> &walls,
                 int level_grid[CELL_COUNT][CELL_COUNT]) {
   for (int y = 0; y < CELL_COUNT; y++) {
@@ -57,7 +41,6 @@ void load_walls(std::vector<Wall> &walls,
 void draw_arena(std::vector<Wall> &walls, Texture2D texture) {
   for (int i = 0; i < walls.size(); i++) {
     Vector2 position = walls[i].position;
-    // DrawTexture(texture, position.x, position.y, WHITE);
     draw_cell(position.x, position.y, walls[i].type == BREAKABLE ? RED : WHITE);
   }
 }

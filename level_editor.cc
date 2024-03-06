@@ -14,11 +14,12 @@ Vector2 get_world_mouse(Camera2D camera) {
 }
 
 int current_entity_index = 1;
-EntityType types[5] = {EMPTY, BWALL, UBWALL, BASE_ENEMY, PLAYER};
+EntityType types[6] = {EMPTY,  BWALL,      UBWALL,
+                       PLAYER, BASE_ENEMY, SENTRY_A_ENEMY};
 EntityType current_entity_type = types[current_entity_index];
 
 void next_type() {
-  if (current_entity_index + 1 >= 4) {
+  if (current_entity_index + 1 >= 6) {
     current_entity_index = 0;
     return;
   }
@@ -38,6 +39,8 @@ const char *get_entity_type_name(EntityType type) {
     return "Player";
   case BASE_ENEMY:
     return "Base Enemy";
+  case SENTRY_A_ENEMY:
+    return "Sentry A Enemy";
   default:
     return "";
   }
@@ -95,7 +98,11 @@ void render_entity(EntityType type, Vector2 position) {
     break;
   case BASE_ENEMY:
     DrawCircleV({MOUSE_TO_CIRCLE(position.x), MOUSE_TO_CIRCLE(position.y)}, 10,
-                ColorAlpha(RED, 0.5));
+                ColorAlpha(RED, 1));
+    break;
+  case SENTRY_A_ENEMY:
+    DrawCircleV({MOUSE_TO_CIRCLE(position.x), MOUSE_TO_CIRCLE(position.y)}, 10,
+                ColorAlpha(PURPLE, 1));
     break;
   }
 }
@@ -179,6 +186,11 @@ void render_mouse_hover_grid(Vector2 mouse) {
                 10, ColorAlpha(RED, 0.5));
     break;
   case EMPTY:
+    break;
+  case SENTRY_A_ENEMY:
+    DrawCircleV({MOUSE_TO_CIRCLE((int)(mouse.x / CELL_SIZE)),
+                 MOUSE_TO_CIRCLE((int)(mouse.y / CELL_SIZE))},
+                10, ColorAlpha(PURPLE, 0.5));
     break;
   }
 }
