@@ -6,7 +6,8 @@
 #define GAME_H
 void load_walls(std::vector<Wall> &walls,
                 int level_grid[CELL_COUNT][CELL_COUNT]);
-void draw_arena(std::vector<Wall> &walls, Texture2D texture);
+void draw_arena(std::vector<Wall> &walls, Texture2D ubwall_texture,
+                Texture2D bwall_texture);
 
 Wall create_breakable_wall(Vector2 position);
 

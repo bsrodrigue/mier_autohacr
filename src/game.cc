@@ -1,6 +1,7 @@
 #include "common.h"
 #include "config.h"
 #include "entities.h"
+#include "wall.h"
 #include <raylib.h>
 #include <vector>
 
@@ -38,9 +39,17 @@ void load_walls(std::vector<Wall> &walls,
   }
 }
 
-void draw_arena(std::vector<Wall> &walls, Texture2D texture) {
+void draw_arena(std::vector<Wall> &walls, Texture2D ubwall_texture,
+                Texture2D bwall_texture) {
   for (int i = 0; i < walls.size(); i++) {
     Vector2 position = walls[i].position;
-    draw_cell(position.x, position.y, walls[i].type == BREAKABLE ? RED : WHITE);
+    switch (walls[i].type) {
+    case BREAKABLE:
+      draw_wall(position, bwall_texture);
+      break;
+    case UNBREAKABLE:
+      draw_wall(position, ubwall_texture);
+      break;
+    }
   }
 }

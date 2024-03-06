@@ -12,8 +12,9 @@
 #define TEXT_POS(x) x * 5
 
 #define CELL_SIZE 25
+// TODO: Make Level Cell Count independent of Cell Size
 #define CELL_COUNT (int)(LEVEL_WIDTH / CELL_SIZE)
-#define CELL_PADDING 5
+#define CELL_PADDING 0
 
 #define CELL_OFFSET(x) (x * (CELL_SIZE))
 #define MOUSE_TO_GRID(x) (int)(x / CELL_SIZE)
