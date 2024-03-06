@@ -7,7 +7,6 @@
 
 // TODO: Define flexible level structure and editing
 // TODO: Provide simple GUI to switch between entity types
-// TODO: Ghost
 
 Vector2 get_world_mouse(Camera2D camera) {
   Vector2 mouse = GetMousePosition();

@@ -23,7 +23,7 @@ Texture2D wall_texture;
 float velocity = 5;
 float player_bullet_damage = 1;
 float player_health = 10;
-float projectile_speed = 10.5;
+float projectile_speed = 8;
 
 static int level_grid[CELL_COUNT][CELL_COUNT];
 
@@ -437,7 +437,7 @@ void render() {
   case MENU:
     break;
   case GAME:
-    render_game_debug();
+    // render_game_debug();
     render_game();
     break;
   case LEVEL_EDITOR:
