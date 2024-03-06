@@ -21,6 +21,7 @@ Screen current_screen = GAME;
 static Texture2D player_texture;
 static Texture2D ubwall_texture;
 static Texture2D bwall_texture;
+static Texture2D floor_texture;
 
 float velocity = 5;
 float player_bullet_damage = 1;
@@ -46,6 +47,10 @@ void load_actor_textures() {
 void load_wall_textures() {
   ubwall_texture = LoadTexture("./assets/textures/environment/wall.png");
   bwall_texture = LoadTexture("./assets/textures/environment/bwall.png");
+}
+
+void load_floor_textures() {
+  floor_texture = LoadTexture("./assets/textures/environment/floor.png");
 }
 
 GameObject player;
@@ -136,7 +141,7 @@ void init() {
   if (!IsWindowReady())
     die("Failed to initialize window\n");
 
-  ToggleFullscreen();
+  // ToggleFullscreen();
 
   SetTargetFPS(FPS);
 
@@ -402,7 +407,17 @@ void draw_enemies() {
   }
 }
 
+void draw_floor() {
+  for (int y = 0; y < CELL_COUNT; y++) {
+    for (int x = 0; x < CELL_COUNT; x++) {
+      int type = level_grid[y][x];
+      draw_wall({(float)x, (float)y}, floor_texture);
+    }
+  }
+}
+
 void render_game() {
+  draw_floor();
   draw_arena(walls, ubwall_texture, bwall_texture);
   draw_projectiles();
   draw_enemies();
@@ -479,6 +494,7 @@ void load_game(const char *filename) {
   // TODO: Optimize level loading
   load_wall_textures();
   load_actor_textures();
+  load_floor_textures();
   load_walls(walls, level_grid);
   load_enemies();
 }
