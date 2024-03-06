@@ -6,6 +6,7 @@
 #include "player.h"
 #include "projectiles.h"
 #include "save.h"
+#include "textures.h"
 #include "wall.h"
 #include <cmath>
 #include <cstdio>
@@ -16,12 +17,12 @@
 
 // TODO: Implement an Object Pool for Enemies and Projectiles
 
-Screen current_screen = GAME;
+Texture2D player_texture;
+Texture2D ubwall_texture;
+Texture2D bwall_texture;
+Texture2D floor_texture;
 
-static Texture2D player_texture;
-static Texture2D ubwall_texture;
-static Texture2D bwall_texture;
-static Texture2D floor_texture;
+Screen current_screen = GAME;
 
 float velocity = 5;
 float player_bullet_damage = 1;
@@ -39,19 +40,6 @@ Enemy enemies[MAX_ENEMIES];
 
 Projectile player_projectiles[MAX_PROJECTILES];
 Projectile enemy_projectiles[MAX_PROJECTILES];
-
-void load_actor_textures() {
-  player_texture = LoadTexture("./assets/textures/actors/ship.png");
-}
-
-void load_wall_textures() {
-  ubwall_texture = LoadTexture("./assets/textures/environment/wall.png");
-  bwall_texture = LoadTexture("./assets/textures/environment/bwall.png");
-}
-
-void load_floor_textures() {
-  floor_texture = LoadTexture("./assets/textures/environment/floor.png");
-}
 
 GameObject player;
 
@@ -410,7 +398,6 @@ void draw_enemies() {
 void draw_floor() {
   for (int y = 0; y < CELL_COUNT; y++) {
     for (int x = 0; x < CELL_COUNT; x++) {
-      int type = level_grid[y][x];
       draw_wall({(float)x, (float)y}, floor_texture);
     }
   }
@@ -492,9 +479,6 @@ void load_game(const char *filename) {
   load_level_file(filename, level_grid);
 
   // TODO: Optimize level loading
-  load_wall_textures();
-  load_actor_textures();
-  load_floor_textures();
   load_walls(walls, level_grid);
   load_enemies();
 }
@@ -507,6 +491,7 @@ int main(int argc, char *argv[]) {
     select_screen(screen_name);
   }
 
+  load_textures();
   load_game("level.hacc");
 
   Vector2 initial_player_pos = get_player_position(level_grid);

@@ -2,20 +2,19 @@
 #include "config.h"
 #include "entities.h"
 #include "save.h"
+#include "textures.h"
 #include "wall.h"
 #include <raylib.h>
 #include <raymath.h>
 
 // TODO: Define flexible level structure and editing
 // TODO: Provide simple GUI to switch between entity types
+// TODO: Add undo action
 
 Vector2 get_world_mouse(Camera2D camera) {
   Vector2 mouse = GetMousePosition();
   return GetScreenToWorld2D(mouse, camera);
 }
-
-static Texture2D ubwall_texture;
-static Texture2D bwall_texture;
 
 int current_entity_index = 1;
 EntityType types[6] = {EMPTY,  BWALL,      UBWALL,
@@ -74,8 +73,7 @@ Vector2 get_player_position(int level_grid[CELL_COUNT][CELL_COUNT]) {
 
 void load_level_editor() {
   // empty_level();
-  ubwall_texture = LoadTexture("./assets/textures/environment/wall.png");
-  bwall_texture = LoadTexture("./assets/textures/environment/bwall.png");
+  load_textures();
   load_level_file("level.hacc", level_grid);
 }
 
@@ -92,20 +90,28 @@ void draw_grid() {
 void draw_ubwall(Vector2 position) { draw_wall(position, ubwall_texture); }
 void draw_bwall(Vector2 position) { draw_wall(position, bwall_texture); }
 
+void draw_ship(Vector2 position) {
+  DrawTexturePro(player_texture, {.x = 0, .y = 0, .width = 32, .height = 32},
+                 {.x = (position.x * CELL_SIZE),
+                  .y = (position.y * CELL_SIZE),
+                  .width = 25,
+                  .height = 25},
+                 {0, 0}, 0, WHITE);
+}
+
 void render_entity(EntityType type, Vector2 position) {
+  draw_wall(position, floor_texture);
   switch (type) {
   case EMPTY:
     break;
   case UBWALL:
-    // draw_cell(position.x, position.y, WHITE);
-    draw_ubwall(position);
+    draw_wall(position, ubwall_texture);
     break;
   case BWALL:
-    // draw_cell(position.x, position.y, RED);
-    draw_bwall(position);
+    draw_wall(position, bwall_texture);
     break;
   case PLAYER:
-    draw_cell(position.x, position.y, VIOLET);
+    draw_ship(position);
     break;
   case BASE_ENEMY:
     DrawCircleV({MOUSE_TO_CIRCLE(position.x), MOUSE_TO_CIRCLE(position.y)}, 10,
@@ -129,6 +135,8 @@ void render_entities() {
 
 void handle_level_input(Camera2D *camera, int pressed_key) {
   Vector2 camera_movement = {0, 0};
+  Vector2 camera_vertical_movement = {0, 0};
+  Vector2 camera_horizontal_movement = {0, 0};
   float camera_velocity = 10;
 
   switch (pressed_key) {
@@ -141,17 +149,16 @@ void handle_level_input(Camera2D *camera, int pressed_key) {
     break;
   }
 
-  // TODO: Allow multi-input camera movement
   if (IsKeyDown(KEY_UP)) {
-    camera_movement = {0, -camera_velocity};
+    camera_vertical_movement = {0, -camera_velocity};
   } else if (IsKeyDown(KEY_DOWN)) {
-    camera_movement = {0, camera_velocity};
+    camera_vertical_movement = {0, camera_velocity};
   }
 
   if (IsKeyDown(KEY_LEFT)) {
-    camera_movement = {-camera_velocity, 0};
+    camera_horizontal_movement = {-camera_velocity, 0};
   } else if (IsKeyDown(KEY_RIGHT)) {
-    camera_movement = {camera_velocity, 0};
+    camera_horizontal_movement = {camera_velocity, 0};
   }
 
   if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
@@ -161,7 +168,8 @@ void handle_level_input(Camera2D *camera, int pressed_key) {
       Vector2 previous_pos = get_player_position(level_grid);
 
       if (previous_pos.x != -1) {
-        level_grid[(int)previous_pos.y][(int)previous_pos.x] = EMPTY;
+        level_grid[(int)previous_pos.y / CELL_SIZE]
+                  [(int)previous_pos.x / CELL_SIZE] = EMPTY;
       }
     }
 
@@ -174,22 +182,23 @@ void handle_level_input(Camera2D *camera, int pressed_key) {
     level_grid[MOUSE_TO_GRID(mouse.y)][MOUSE_TO_GRID(mouse.x)] = EMPTY;
   }
 
-  camera->target = Vector2Add(camera->target, camera_movement);
+  camera->target =
+      Vector2Add(camera->target, Vector2Add(camera_horizontal_movement,
+                                            camera_vertical_movement));
 }
 
 void render_mouse_hover_grid(Vector2 mouse) {
   switch (current_entity_type) {
   case UBWALL:
-    draw_cell(MOUSE_TO_GRID(mouse.x), MOUSE_TO_GRID(mouse.y),
-              ColorAlpha(WHITE, 0.5));
+    draw_wall({(float)MOUSE_TO_GRID(mouse.x), (float)MOUSE_TO_GRID(mouse.y)},
+              ubwall_texture);
     break;
   case BWALL:
-    draw_cell(MOUSE_TO_GRID(mouse.x), MOUSE_TO_GRID(mouse.y),
-              ColorAlpha(RED, 0.5));
+    draw_wall({(float)MOUSE_TO_GRID(mouse.x), (float)MOUSE_TO_GRID(mouse.y)},
+              bwall_texture);
     break;
   case PLAYER:
-    draw_cell(MOUSE_TO_GRID(mouse.x), MOUSE_TO_GRID(mouse.y),
-              ColorAlpha(VIOLET, 0.5));
+    draw_ship({(float)MOUSE_TO_GRID(mouse.x), (float)MOUSE_TO_GRID(mouse.y)});
     break;
   case BASE_ENEMY:
     DrawCircleV({MOUSE_TO_CIRCLE((int)(mouse.x / CELL_SIZE)),
@@ -197,6 +206,8 @@ void render_mouse_hover_grid(Vector2 mouse) {
                 10, ColorAlpha(RED, 0.5));
     break;
   case EMPTY:
+    draw_wall({(float)MOUSE_TO_GRID(mouse.x), (float)MOUSE_TO_GRID(mouse.y)},
+              floor_texture);
     break;
   case SENTRY_A_ENEMY:
     DrawCircleV({MOUSE_TO_CIRCLE((int)(mouse.x / CELL_SIZE)),
@@ -206,27 +217,29 @@ void render_mouse_hover_grid(Vector2 mouse) {
   }
 }
 
-void render_mouse_position(Vector2 mouse) {
+void render_mouse_position(Camera2D camera, Vector2 mouse) {
+  Vector2 hud_position = camera.target;
   const char *message = TextFormat("MOUSE: (%d,%d)", MOUSE_TO_GRID(mouse.x),
                                    MOUSE_TO_GRID(mouse.y));
-  DrawText(message, TEXT_POS(1), TEXT_POS(5), 14, RED);
+  DrawText(message, hud_position.x, hud_position.y, 14, RED);
 }
 
-void render_current_entity_type() {
+void render_current_entity_type(Camera2D camera) {
   const char *message =
       TextFormat("ENTITY TYPE: %s", get_entity_type_name(current_entity_type));
   DrawText(message, TEXT_POS(1), TEXT_POS(10), 14, RED);
 }
 
-void render_hud(Vector2 mouse) {
-  render_mouse_position(mouse);
-  render_current_entity_type();
+void render_hud(Camera2D *camera, Vector2 mouse) {
+  render_mouse_position(*camera, mouse);
+  render_current_entity_type(*camera);
 }
 
 void render_level_editor(Camera2D *camera) {
   Vector2 mouse = get_world_mouse(*camera);
   draw_grid();
+
   render_entities();
   render_mouse_hover_grid(mouse);
-  render_hud(mouse);
+  render_hud(camera, mouse);
 }
