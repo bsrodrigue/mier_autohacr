@@ -167,9 +167,9 @@ void handle_level_input(Camera2D *camera, int pressed_key) {
     if (current_entity_type == PLAYER) {
       Vector2 previous_pos = get_player_position(level_grid);
 
-      return;
       if (previous_pos.x != -1) {
-        level_grid[(int)previous_pos.y][(int)previous_pos.x] = EMPTY;
+        level_grid[(int)previous_pos.y / CELL_SIZE]
+                  [(int)previous_pos.x / CELL_SIZE] = EMPTY;
       }
     }
 
@@ -217,21 +217,22 @@ void render_mouse_hover_grid(Vector2 mouse) {
   }
 }
 
-void render_mouse_position(Vector2 mouse) {
+void render_mouse_position(Camera2D camera, Vector2 mouse) {
+  Vector2 hud_position = camera.target;
   const char *message = TextFormat("MOUSE: (%d,%d)", MOUSE_TO_GRID(mouse.x),
                                    MOUSE_TO_GRID(mouse.y));
-  DrawText(message, TEXT_POS(1), TEXT_POS(5), 14, RED);
+  DrawText(message, hud_position.x, hud_position.y, 14, RED);
 }
 
-void render_current_entity_type() {
+void render_current_entity_type(Camera2D camera) {
   const char *message =
       TextFormat("ENTITY TYPE: %s", get_entity_type_name(current_entity_type));
   DrawText(message, TEXT_POS(1), TEXT_POS(10), 14, RED);
 }
 
-void render_hud(Vector2 mouse) {
-  render_mouse_position(mouse);
-  render_current_entity_type();
+void render_hud(Camera2D *camera, Vector2 mouse) {
+  render_mouse_position(*camera, mouse);
+  render_current_entity_type(*camera);
 }
 
 void render_level_editor(Camera2D *camera) {
@@ -240,5 +241,5 @@ void render_level_editor(Camera2D *camera) {
 
   render_entities();
   render_mouse_hover_grid(mouse);
-  render_hud(mouse);
+  render_hud(camera, mouse);
 }
