@@ -3,6 +3,15 @@
 #include <raylib.h>
 #include <vector>
 
+void draw_wall(Vector2 position, Texture2D texture) {
+  DrawTexturePro(texture, {.x = 0, .y = 0, .width = 32, .height = 32},
+                 {.x = CELL_OFFSET(position.x),
+                  .y = CELL_OFFSET(position.y),
+                  .width = CELL_SIZE,
+                  .height = CELL_SIZE},
+                 {0, 0}, 0, WHITE);
+}
+
 int check_wall_collision(std::vector<Wall> walls, Vector2 position) {
   for (int i = 0; i < walls.size(); i++) {
     Wall wall = walls[i];

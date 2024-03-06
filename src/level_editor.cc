@@ -2,6 +2,7 @@
 #include "config.h"
 #include "entities.h"
 #include "save.h"
+#include "wall.h"
 #include <raylib.h>
 #include <raymath.h>
 
@@ -12,6 +13,9 @@ Vector2 get_world_mouse(Camera2D camera) {
   Vector2 mouse = GetMousePosition();
   return GetScreenToWorld2D(mouse, camera);
 }
+
+static Texture2D ubwall_texture;
+static Texture2D bwall_texture;
 
 int current_entity_index = 1;
 EntityType types[6] = {EMPTY,  BWALL,      UBWALL,
@@ -70,6 +74,8 @@ Vector2 get_player_position(int level_grid[CELL_COUNT][CELL_COUNT]) {
 
 void load_level_editor() {
   // empty_level();
+  ubwall_texture = LoadTexture("./assets/textures/environment/wall.png");
+  bwall_texture = LoadTexture("./assets/textures/environment/bwall.png");
   load_level_file("level.hacc", level_grid);
 }
 
@@ -83,15 +89,20 @@ void draw_grid() {
   }
 }
 
+void draw_ubwall(Vector2 position) { draw_wall(position, ubwall_texture); }
+void draw_bwall(Vector2 position) { draw_wall(position, bwall_texture); }
+
 void render_entity(EntityType type, Vector2 position) {
   switch (type) {
   case EMPTY:
     break;
   case UBWALL:
-    draw_cell(position.x, position.y, WHITE);
+    // draw_cell(position.x, position.y, WHITE);
+    draw_ubwall(position);
     break;
   case BWALL:
-    draw_cell(position.x, position.y, RED);
+    // draw_cell(position.x, position.y, RED);
+    draw_bwall(position);
     break;
   case PLAYER:
     draw_cell(position.x, position.y, VIOLET);

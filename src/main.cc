@@ -18,7 +18,8 @@
 
 Screen current_screen = GAME;
 
-Texture2D wall_texture;
+static Texture2D ubwall_texture;
+static Texture2D bwall_texture;
 
 float velocity = 5;
 float player_bullet_damage = 1;
@@ -37,7 +38,10 @@ Enemy enemies[MAX_ENEMIES];
 Projectile player_projectiles[MAX_PROJECTILES];
 Projectile enemy_projectiles[MAX_PROJECTILES];
 
-void load_wall_texture() { wall_texture = LoadTexture("./wall.png"); }
+void load_wall_texture() {
+  ubwall_texture = LoadTexture("./assets/textures/environment/wall.png");
+  bwall_texture = LoadTexture("./assets/textures/environment/bwall.png");
+}
 
 GameObject player;
 
@@ -119,6 +123,8 @@ void init() {
 
   if (!IsWindowReady())
     die("Failed to initialize window\n");
+
+  ToggleFullscreen();
 
   SetTargetFPS(FPS);
 
@@ -385,7 +391,7 @@ void draw_enemies() {
 }
 
 void render_game() {
-  draw_arena(walls, wall_texture);
+  draw_arena(walls, ubwall_texture, bwall_texture);
   draw_projectiles();
   draw_enemies();
   draw_player();
@@ -465,12 +471,12 @@ void load_game(const char *filename) {
 }
 
 int main(int argc, char *argv[]) {
+  init();
+
   if (argc == 2) {
     char *screen_name = argv[1];
     select_screen(screen_name);
   }
-
-  init();
 
   load_game("level.hacc");
 
@@ -482,14 +488,16 @@ int main(int argc, char *argv[]) {
 
   while (!WindowShouldClose()) {
     BeginDrawing();
-    BeginMode2D(camera);
     ClearBackground(BLACK);
+    BeginMode2D(camera);
+
     int pressed_key = GetKeyPressed();
 
     handle_input(pressed_key);
     handle_updates();
 
     render();
+
     EndMode2D();
     EndDrawing();
   }
