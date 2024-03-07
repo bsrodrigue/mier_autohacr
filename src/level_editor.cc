@@ -72,7 +72,6 @@ Vector2 get_player_position(int level_grid[CELL_COUNT][CELL_COUNT]) {
 }
 
 void load_level_editor() {
-  // empty_level();
   load_textures();
   load_level_file("level.hacc", level_grid);
 }

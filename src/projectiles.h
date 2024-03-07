@@ -5,15 +5,28 @@
 
 #define MAX_PROJECTILES 50
 
-typedef struct {
-  int id;
-  Vector2 pos;
+class Projectile {
+public:
+  Vector2 position;
   Vector2 direction;
   bool is_shooting;
-} Projectile;
 
-void init_projectiles(Projectile *projectiles);
+  Projectile();
+  Projectile(Vector2 position);
+};
 
-int get_free_projectile(Projectile *projectiles);
+class ProjectilePool {
+public:
+  Projectile pool[MAX_PROJECTILES];
+
+  ProjectilePool();
+
+  int get_free_projectile();
+
+  void allocate_projectile(int index, Vector2 entity_position,
+                           Vector2 target_position);
+
+  void deallocate_projectile(int index);
+};
 
 #endif
