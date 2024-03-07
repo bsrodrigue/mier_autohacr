@@ -2,10 +2,12 @@
 #include "enemy.h"
 #include "entities.h"
 #include "game.h"
+#include "level.h"
 #include "level_editor.h"
 #include "player.h"
 #include "projectiles.h"
 #include "save.h"
+#include "screen.h"
 #include "textures.h"
 #include "wall.h"
 #include <cmath>
@@ -15,21 +17,19 @@
 #include <raymath.h>
 #include <string.h>
 
-// TODO: Implement an Object Pool for Enemies and Projectiles
-
 Texture2D player_texture;
 Texture2D ubwall_texture;
 Texture2D bwall_texture;
 Texture2D floor_texture;
+Texture2D target_texture;
+Texture2D sentinel_texture;
 
-Screen current_screen = GAME;
+ScreenManager screen_manager;
 
-float velocity = 5;
+Level level;
+
 float player_bullet_damage = 1;
-float player_health = 10;
 float projectile_speed = 8;
-
-static int level_grid[CELL_COUNT][CELL_COUNT];
 
 static Camera2D camera;
 
@@ -38,22 +38,16 @@ static std::vector<Wall> walls;
 static int enemy_count = 0;
 Enemy enemies[MAX_ENEMIES];
 
-Projectile player_projectiles[MAX_PROJECTILES];
-Projectile enemy_projectiles[MAX_PROJECTILES];
+ProjectilePool player_projectiles;
+ProjectilePool enemy_projectiles;
 
-GameObject player;
+Player player;
 
 void enemy_shoot(Enemy enemy, Vector2 target) {
-  int free_index = get_free_projectile(enemy_projectiles);
-
-  if (free_index == -1) {
-    return;
+  int result = enemy_projectiles.get_free_projectile();
+  if (result != -1) {
+    enemy_projectiles.allocate_projectile(result, enemy.position, target);
   }
-
-  enemy_projectiles[free_index].pos = enemy.position;
-  enemy_projectiles[free_index].is_shooting = true;
-  enemy_projectiles[free_index].direction =
-      Vector2Normalize(Vector2Subtract(target, enemy.position));
 }
 
 void enemy_shoot_player(Enemy enemy, Vector2 player_position) {
@@ -69,24 +63,13 @@ void enemy_shoot_star(Enemy enemy) {
 
 void player_shoot() {
   Vector2 mouse = get_world_mouse(camera);
-
-  int free_index = get_free_projectile(player_projectiles);
-
-  if (free_index == -1) {
-    // TODO: Seriously, what is the best way to handle this?
-    return;
-  }
-
-  player_projectiles[free_index].pos = player.position;
-  player_projectiles[free_index].is_shooting = true;
-  player_projectiles[free_index].direction =
-      Vector2Normalize(Vector2Subtract(mouse, player.position));
+  player.shoot(mouse);
 }
 
 void load_enemies() {
   for (int y = 0; y < CELL_COUNT; y++) {
     for (int x = 0; x < CELL_COUNT; x++) {
-      int type = level_grid[y][x];
+      int type = level.grid[y][x];
       if (type == BASE_ENEMY) {
         Enemy enemy =
             create_enemy({(float)CELL_OFFSET(x), (float)CELL_OFFSET(y)}, BASE);
@@ -102,41 +85,27 @@ void load_enemies() {
   }
 }
 
-void draw_player() {
-  DrawTexturePro(player_texture, {.x = 0, .y = 0, .width = 32, .height = 32},
-                 {.x = (player.position.x),
-                  .y = (player.position.y),
-                  .width = 32,
-                  .height = 32},
-                 {16, 16}, player.angle + 90, WHITE);
-}
-
 void die(const char *message) {
   perror(message);
   exit(1);
 }
 
-void init_camera() {
+void init_game_camera() {
   camera.target = player.position;
   camera.offset = {(float)WIN_WIDTH / 2, (float)WIN_HEIGHT / 2};
   camera.rotation = 0;
-  camera.zoom = 1.5;
+  camera.zoom = 2;
 }
 
-void init() {
-  InitWindow(WIN_WIDTH, WIN_HEIGHT, "MieR: AutoHacker");
+void init_window() {
+  InitWindow(WIN_WIDTH, WIN_HEIGHT, "Mia: Autohacker");
 
   if (!IsWindowReady())
     die("Failed to initialize window\n");
 
-  // ToggleFullscreen();
-
   SetTargetFPS(FPS);
 
-  ShowCursor();
-
-  init_camera();
-  init_projectiles(player_projectiles);
+  HideCursor();
 }
 
 void handle_single_press_input() {
@@ -146,11 +115,11 @@ void handle_single_press_input() {
 
 void handle_game_input() {
   handle_single_press_input();
-  handle_player_movement(&player, velocity, walls);
+  player.handle_player_movement(walls);
 }
 
 void handle_input(int pressed_key) {
-  switch (current_screen) {
+  switch (screen_manager.active_screen) {
   case UNKNOWN:
     break;
   case MENU:
@@ -181,13 +150,13 @@ void damage_wall(int index) {
 }
 
 void damage_player(float damage) {
-  if ((player_health - damage) <= 0) {
-    player_health = 0;
+  if ((player.health - damage) <= 0) {
+    player.health = 0;
     // TODO: Implement Game Over (restart game);
     CloseWindow();
   }
 
-  player_health -= damage;
+  player.health -= damage;
 }
 
 int check_enemy_collision(Vector2 position, float radius) {
@@ -203,16 +172,17 @@ int check_enemy_collision(Vector2 position, float radius) {
 
 void update_enemy_projectiles() {
   for (int i = 0; i < MAX_PROJECTILES; i++) {
-    if (!enemy_projectiles[i].is_shooting)
+    if (!enemy_projectiles.pool[i].is_shooting)
       continue;
 
-    if (CheckCollisionCircles(enemy_projectiles[i].pos, 5, player.position,
-                              10)) {
+    if (CheckCollisionCircles(enemy_projectiles.pool[i].position, 5,
+                              player.position, 10)) {
       damage_player(1);
     }
 
     // Find better way to check many-to-many collisions
-    int touched = check_wall_collision(walls, enemy_projectiles[i].pos);
+    int touched =
+        check_wall_collision(walls, enemy_projectiles.pool[i].position);
 
     if (touched != -1) {
       switch (walls[touched].type) {
@@ -224,41 +194,42 @@ void update_enemy_projectiles() {
         break;
       }
 
-      enemy_projectiles[i].is_shooting = false;
+      enemy_projectiles.pool[i].is_shooting = false;
       continue;
     }
 
     Vector2 projectile_pos =
-        Vector2Add(enemy_projectiles[i].pos,
-                   Vector2Multiply(enemy_projectiles[i].direction,
+        Vector2Add(enemy_projectiles.pool[i].position,
+                   Vector2Multiply(enemy_projectiles.pool[i].direction,
                                    {projectile_speed, projectile_speed}));
-    enemy_projectiles[i].pos = projectile_pos;
+    enemy_projectiles.pool[i].position = projectile_pos;
   }
 }
 
 void reset_projectile(int index, Projectile *projectiles) {
   projectiles[index].is_shooting = false;
-  projectiles[index].pos = {0, 0};
+  projectiles[index].position = {0, 0};
   projectiles[index].direction = {0, 0};
 }
 
 void update_player_projectiles() {
   // TODO: Do you seriously want to loop over all the projectiles?
   for (int i = 0; i < MAX_PROJECTILES; i++) {
-    if (!player_projectiles[i].is_shooting)
+    if (!player_projectiles.pool[i].is_shooting)
       continue;
 
-    int enemy = check_enemy_collision(player_projectiles[i].pos, 5);
+    int enemy = check_enemy_collision(player_projectiles.pool[i].position, 5);
 
     if (enemy != -1) {
       damage_enemy(enemy);
-      reset_projectile(i, player_projectiles);
+      player_projectiles.deallocate_projectile(i);
       continue;
     }
 
     // Recycle in object pool for optimal memory usage
     // Find better way to check many-to-many collisions
-    int touched = check_wall_collision(walls, player_projectiles[i].pos);
+    int touched =
+        check_wall_collision(walls, player_projectiles.pool[i].position);
 
     if (touched != -1) {
       switch (walls[touched].type) {
@@ -269,15 +240,15 @@ void update_player_projectiles() {
       case UNBREAKABLE:
         break;
       }
-      reset_projectile(i, player_projectiles);
+      player_projectiles.deallocate_projectile(i);
       continue;
     }
 
     Vector2 projectile_pos =
-        Vector2Add(player_projectiles[i].pos,
-                   Vector2Multiply(player_projectiles[i].direction,
+        Vector2Add(player_projectiles.pool[i].position,
+                   Vector2Multiply(player_projectiles.pool[i].direction,
                                    {projectile_speed, projectile_speed}));
-    player_projectiles[i].pos = projectile_pos;
+    player_projectiles.pool[i].position = projectile_pos;
   }
 }
 
@@ -346,7 +317,7 @@ void update_player_angle() {
 }
 
 void handle_updates() {
-  switch (current_screen) {
+  switch (screen_manager.active_screen) {
   case UNKNOWN:
     break;
   case MENU:
@@ -362,15 +333,15 @@ void handle_updates() {
 
 void draw_player_projectiles() {
   for (int i = 0; i < MAX_PROJECTILES; i++) {
-    if (player_projectiles[i].is_shooting)
-      DrawCircleV(player_projectiles[i].pos, 5, RED);
+    if (player_projectiles.pool[i].is_shooting)
+      DrawCircleV(player_projectiles.pool[i].position, 5, RED);
   }
 }
 
 void draw_enemy_projectiles() {
   for (int i = 0; i < MAX_PROJECTILES; i++) {
-    if (enemy_projectiles[i].is_shooting)
-      DrawCircleV(enemy_projectiles[i].pos, 5, DARKPURPLE);
+    if (enemy_projectiles.pool[i].is_shooting)
+      DrawCircleV(enemy_projectiles.pool[i].position, 5, DARKPURPLE);
   }
 }
 
@@ -389,7 +360,11 @@ void draw_enemies() {
       DrawCircleV(enemies[i].position, 10, RED);
       break;
     case SENTRY_A:
-      DrawCircleV(enemies[i].position, 10, PURPLE);
+      Vector2 position = enemies[i].position;
+      DrawTexturePro(
+          sentinel_texture, {.x = 0, .y = 0, .width = 64, .height = 64},
+          {.x = (position.x), .y = (position.y), .width = 32, .height = 32},
+          {16, 16}, 0, WHITE);
       break;
     }
   }
@@ -403,33 +378,26 @@ void draw_floor() {
   }
 }
 
+void draw_player_target() {
+  Vector2 position = GetScreenToWorld2D(GetMousePosition(), camera);
+
+  DrawTexturePro(
+      target_texture, {.x = 0, .y = 0, .width = 32, .height = 32},
+      {.x = (position.x), .y = (position.y), .width = 32, .height = 32},
+      {16, 16}, player.angle + 90, WHITE);
+}
+
 void render_game() {
   draw_floor();
   draw_arena(walls, ubwall_texture, bwall_texture);
   draw_projectiles();
   draw_enemies();
-  draw_player();
+  player.draw();
+  draw_player_target();
 }
-
-void draw_player_mouse_angle() {
-  Vector2 mouse = GetMousePosition();
-  float angle = Vector2Angle(mouse, player.position);
-  float atan_angle = atan2(mouse.x, mouse.y);
-
-  const char *text = TextFormat("Angle: %fdegs", (angle * RAD2DEG));
-  const char *text_2 =
-      TextFormat("Mouse angle: %fdegs", (atan_angle * RAD2DEG));
-  DrawText(text, TEXT_POS(1), TEXT_POS(1), 18, RED);
-  DrawText(text_2, TEXT_POS(4), TEXT_POS(4), 18, RED);
-
-  DrawLineV({0, 0}, mouse, RED);
-  DrawLineV({0, 0}, player.position, RED);
-}
-
-void render_game_debug() { draw_player_mouse_angle(); }
 
 const char *get_current_screen_title() {
-  switch (current_screen) {
+  switch (screen_manager.active_screen) {
   case UNKNOWN:
     return "unkown";
   case MENU:
@@ -451,13 +419,12 @@ void render_current_screen() {
 void render_global() { render_current_screen(); }
 
 void render() {
-  switch (current_screen) {
+  switch (screen_manager.active_screen) {
   case UNKNOWN:
     break;
   case MENU:
     break;
   case GAME:
-    // render_game_debug();
     render_game();
     break;
   case LEVEL_EDITOR:
@@ -468,39 +435,60 @@ void render() {
   render_global();
 }
 
-void select_screen(const char *screen_name) {
-  if (strcmp(screen_name, "editor\n")) {
-    load_level_editor();
-    current_screen = LEVEL_EDITOR;
-  }
-}
-
-void load_game(const char *filename) {
-  load_level_file(filename, level_grid);
-
-  // TODO: Optimize level loading
-  load_walls(walls, level_grid);
+// TODO: Optimize level loading
+void load_level() {
+  load_walls(walls, level.grid);
   load_enemies();
 }
 
+void init_player() {
+  player.subscribe_to_projectile_pool(&player_projectiles);
+  player.load_texture(player_texture);
+  player.position = get_player_position(level.grid);
+}
+
+void ScreenManager::init_game_screen() {
+  level.load_level_data("level.hacc");
+  init_player();
+  load_level();
+  init_game_camera();
+}
+
+void ScreenManager::init_level_editor_screen() { load_level_editor(); }
+
+void ScreenManager::handle_screen_change() {
+  if (!this->screen_changed())
+    return;
+
+  this->previous_screen = this->active_screen;
+
+  switch (this->active_screen) {
+  case UNKNOWN:
+    break;
+  case MENU:
+    break;
+  case GAME:
+    this->init_game_screen();
+    break;
+  case LEVEL_EDITOR:
+    this->init_level_editor_screen();
+    break;
+  }
+}
+
 int main(int argc, char *argv[]) {
-  init();
+  init_window();
+  load_textures();
 
   if (argc == 2) {
     char *screen_name = argv[1];
-    select_screen(screen_name);
+    if (strcmp("editor\n", screen_name) == 0) {
+      screen_manager.set_screen(LEVEL_EDITOR);
+    }
   }
 
-  load_textures();
-  load_game("level.hacc");
-
-  Vector2 initial_player_pos = get_player_position(level_grid);
-
-  player.position = initial_player_pos;
-  player.direction = player.position;
-  player.angle = 0;
-
   while (!WindowShouldClose()) {
+    screen_manager.handle_screen_change();
     BeginDrawing();
     ClearBackground(BLACK);
     BeginMode2D(camera);

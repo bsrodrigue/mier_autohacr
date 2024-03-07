@@ -21,12 +21,4 @@ typedef struct {
   Vector2 position;
 } Wall;
 
-typedef struct {
-  Vector2 position;
-  Vector2 velocity;
-  Vector2 direction;
-  float angle;
-  std::vector<Vector2> shape;
-} GameObject;
-
 #endif

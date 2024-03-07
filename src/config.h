@@ -22,11 +22,4 @@
 
 #define BREAKABLE_WALL_HEALTH 1
 
-typedef enum {
-  UNKNOWN = -1,
-  MENU = 0,
-  GAME,
-  LEVEL_EDITOR,
-} Screen;
-
 #endif
