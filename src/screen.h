@@ -20,7 +20,7 @@ public:
   bool screen_changed();
 
   void init_game_screen();
-  void init_level_editor_screen();
+  void init_level_editor_screen(const char *filename);
 
   void handle_screen_change();
 

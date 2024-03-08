@@ -1,6 +1,7 @@
 #include "common.h"
 #include "config.h"
 #include "entities.h"
+#include "level.h"
 #include "save.h"
 #include "textures.h"
 #include "wall.h"
@@ -11,18 +12,22 @@
 // TODO: Provide simple GUI to switch between entity types
 // TODO: Add undo action
 
+#define TYPE_COUNT 7
+
+static Level level;
+
 Vector2 get_world_mouse(Camera2D camera) {
   Vector2 mouse = GetMousePosition();
   return GetScreenToWorld2D(mouse, camera);
 }
 
 int current_entity_index = 1;
-EntityType types[6] = {EMPTY,  BWALL,      UBWALL,
-                       PLAYER, BASE_ENEMY, SENTRY_A_ENEMY};
+EntityType types[TYPE_COUNT] = {EMPTY,      BWALL,          UBWALL,  PLAYER,
+                                BASE_ENEMY, SENTRY_A_ENEMY, WARPZONE};
 EntityType current_entity_type = types[current_entity_index];
 
 void next_type() {
-  if (current_entity_index + 1 >= 6) {
+  if (current_entity_index + 1 >= TYPE_COUNT) {
     current_entity_index = 0;
     return;
   }
@@ -44,18 +49,10 @@ const char *get_entity_type_name(EntityType type) {
     return "Base Enemy";
   case SENTRY_A_ENEMY:
     return "Sentry A Enemy";
+  case WARPZONE:
+    return "Warp Zone";
   default:
     return "";
-  }
-}
-
-static int level_grid[CELL_COUNT][CELL_COUNT];
-
-void empty_level() {
-  for (int y = 0; y < CELL_COUNT; y++) {
-    for (int x = 0; x < CELL_COUNT; x++) {
-      level_grid[y][x] = EMPTY;
-    }
   }
 }
 
@@ -71,9 +68,14 @@ Vector2 get_player_position(int level_grid[CELL_COUNT][CELL_COUNT]) {
   return {-1, -1};
 }
 
-void load_level_editor() {
-  load_textures();
-  load_level_file("level.hacc", level_grid);
+void load_level_editor(const char *filename) {
+  level.filename = filename;
+
+  if (!FileExists(filename)) {
+    level.create_level_data();
+  }
+
+  level.load_level_data();
 }
 
 void draw_grid() {
@@ -88,6 +90,15 @@ void draw_grid() {
 
 void draw_ubwall(Vector2 position) { draw_wall(position, ubwall_texture); }
 void draw_bwall(Vector2 position) { draw_wall(position, bwall_texture); }
+
+void draw_warpzone(Vector2 position) {
+  DrawTexturePro(warzone_texture, {.x = 0, .y = 0, .width = 32, .height = 32},
+                 {.x = (position.x * CELL_SIZE),
+                  .y = (position.y * CELL_SIZE),
+                  .width = 25,
+                  .height = 25},
+                 {0, 0}, 0, WHITE);
+}
 
 void draw_ship(Vector2 position) {
   DrawTexturePro(player_texture, {.x = 0, .y = 0, .width = 32, .height = 32},
@@ -120,18 +131,22 @@ void render_entity(EntityType type, Vector2 position) {
     DrawCircleV({MOUSE_TO_CIRCLE(position.x), MOUSE_TO_CIRCLE(position.y)}, 10,
                 ColorAlpha(PURPLE, 1));
     break;
+  case WARPZONE:
+    draw_warpzone(position);
+    break;
   }
 }
 
 void render_entities() {
   for (int y = 0; y < CELL_COUNT; y++) {
     for (int x = 0; x < CELL_COUNT; x++) {
-      int type = level_grid[y][x];
+      int type = level.grid[y][x];
       render_entity((EntityType)type, {(float)x, (float)y});
     }
   }
 }
 
+// TODO: Setup a generic Key Manipulation Handler
 void handle_level_input(Camera2D *camera, int pressed_key) {
   Vector2 camera_movement = {0, 0};
   Vector2 camera_vertical_movement = {0, 0};
@@ -139,8 +154,8 @@ void handle_level_input(Camera2D *camera, int pressed_key) {
   float camera_velocity = 10;
 
   switch (pressed_key) {
-  case KEY_S:
-    save_level_file("level.hacc", level_grid);
+  case KEY_M:
+    level.save_level();
     break;
   case KEY_SPACE:
     next_type();
@@ -148,37 +163,42 @@ void handle_level_input(Camera2D *camera, int pressed_key) {
     break;
   }
 
-  if (IsKeyDown(KEY_UP)) {
+  if (IsKeyDown(KEY_W)) {
     camera_vertical_movement = {0, -camera_velocity};
-  } else if (IsKeyDown(KEY_DOWN)) {
+  } else if (IsKeyDown(KEY_S)) {
     camera_vertical_movement = {0, camera_velocity};
   }
 
-  if (IsKeyDown(KEY_LEFT)) {
+  if (IsKeyDown(KEY_A)) {
     camera_horizontal_movement = {-camera_velocity, 0};
-  } else if (IsKeyDown(KEY_RIGHT)) {
+  } else if (IsKeyDown(KEY_D)) {
     camera_horizontal_movement = {camera_velocity, 0};
   }
 
   if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
     Vector2 mouse = get_world_mouse(*camera);
 
+    if (MOUSE_TO_GRID(mouse.x) >= CELL_COUNT ||
+        MOUSE_TO_GRID(mouse.y) >= CELL_COUNT) {
+      return;
+    }
+
     if (current_entity_type == PLAYER) {
-      Vector2 previous_pos = get_player_position(level_grid);
+      Vector2 previous_pos = get_player_position(level.grid);
 
       if (previous_pos.x != -1) {
-        level_grid[(int)previous_pos.y / CELL_SIZE]
+        level.grid[(int)previous_pos.y / CELL_SIZE]
                   [(int)previous_pos.x / CELL_SIZE] = EMPTY;
       }
     }
 
-    level_grid[MOUSE_TO_GRID(mouse.y)][MOUSE_TO_GRID(mouse.x)] =
+    level.grid[MOUSE_TO_GRID(mouse.y)][MOUSE_TO_GRID(mouse.x)] =
         current_entity_type;
   }
 
   if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
     Vector2 mouse = get_world_mouse(*camera);
-    level_grid[MOUSE_TO_GRID(mouse.y)][MOUSE_TO_GRID(mouse.x)] = EMPTY;
+    level.grid[MOUSE_TO_GRID(mouse.y)][MOUSE_TO_GRID(mouse.x)] = EMPTY;
   }
 
   camera->target =
@@ -213,6 +233,10 @@ void render_mouse_hover_grid(Vector2 mouse) {
                  MOUSE_TO_CIRCLE((int)(mouse.y / CELL_SIZE))},
                 10, ColorAlpha(PURPLE, 0.5));
     break;
+  case WARPZONE:
+    draw_warpzone(
+        {(float)MOUSE_TO_GRID(mouse.x), (float)MOUSE_TO_GRID(mouse.y)});
+    break;
   }
 }
 
@@ -237,7 +261,6 @@ void render_hud(Camera2D *camera, Vector2 mouse) {
 void render_level_editor(Camera2D *camera) {
   Vector2 mouse = get_world_mouse(*camera);
   draw_grid();
-
   render_entities();
   render_mouse_hover_grid(mouse);
   render_hud(camera, mouse);

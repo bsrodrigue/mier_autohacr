@@ -12,7 +12,8 @@ typedef enum {
   BWALL,
   PLAYER,
   BASE_ENEMY,
-  SENTRY_A_ENEMY
+  SENTRY_A_ENEMY,
+  WARPZONE
 } EntityType;
 
 typedef struct {
