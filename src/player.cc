@@ -8,7 +8,7 @@ Player::Player() {
   this->position = {0, 0};
   this->direction = {0, 0};
   this->angle = 0;
-  this->speed = 8;
+  this->speed = 5;
   this->health = 20;
   this->projectiles = NULL;
 }
@@ -17,7 +17,7 @@ Player::Player(Vector2 position) {
   this->position = position;
   this->direction = position;
   this->angle = 0;
-  this->speed = 8;
+  this->speed = 5;
   this->health = 20;
   this->projectiles = NULL;
 }

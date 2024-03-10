@@ -9,6 +9,7 @@ class Projectile {
 public:
   Vector2 position;
   Vector2 direction;
+  float angle;
   bool is_shooting;
 
   Projectile();

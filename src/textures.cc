@@ -17,6 +17,16 @@ void load_target_textures() {
 
 void load_enemies_textures() {
   sentinel_texture = LoadTexture(SENTINEL_TEXTURE_SRC);
+  sentinel_head_texture = LoadTexture(SENTINEL_HEAD_TEXTURE_SRC);
+  sentinel_barrel_texture = LoadTexture(SENTINEL_BARREL_TEXTURE_SRC);
+}
+
+void load_transport_textures() {
+  warzone_texture = LoadTexture(WARPZONE_TEXTURE_SRC);
+}
+
+void load_projectile_textures() {
+  projectile_texture = LoadTexture(PROJECTILE_TEXTURE_SRC);
 }
 
 void load_textures() {
@@ -25,4 +35,6 @@ void load_textures() {
   load_wall_textures();
   load_floor_textures();
   load_enemies_textures();
+  load_transport_textures();
+  load_projectile_textures();
 }

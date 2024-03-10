@@ -1,4 +1,5 @@
 #include "config.h"
+#include <cmath>
 #include <raylib.h>
 
 void draw_cell(float x, float y, Color color) {
@@ -8,4 +9,9 @@ void draw_cell(float x, float y, Color color) {
 
 void draw_hover_cell(float x, float y, Color color) {
   DrawRectangle(x / CELL_SIZE, y / CELL_SIZE, CELL_SIZE, CELL_SIZE, color);
+}
+
+float get_angle_relative_to(Vector2 dest, Vector2 origin) {
+  float angle = atan2(dest.y - origin.y, dest.x - origin.x);
+  return (angle * RAD2DEG);
 }

@@ -1,3 +1,4 @@
+#include "common.h"
 #include "config.h"
 #include "enemy.h"
 #include "entities.h"
@@ -10,7 +11,6 @@
 #include "screen.h"
 #include "textures.h"
 #include "wall.h"
-#include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <raylib.h>
@@ -23,10 +23,16 @@ Texture2D bwall_texture;
 Texture2D floor_texture;
 Texture2D target_texture;
 Texture2D sentinel_texture;
+Texture2D sentinel_head_texture;
+Texture2D sentinel_barrel_texture;
+Texture2D warzone_texture;
+Texture2D projectile_texture;
 
 ScreenManager screen_manager;
 
 Level level;
+
+char *level_file;
 
 float player_bullet_damage = 1;
 float projectile_speed = 8;
@@ -83,6 +89,13 @@ void load_enemies() {
       }
     }
   }
+}
+
+void draw_game_texture(Vector2 position, float angle, Texture2D texture) {
+  DrawTexturePro(
+      texture, {.x = 0, .y = 0, .width = 32, .height = 32},
+      {.x = (position.x), .y = (position.y), .width = 32, .height = 32},
+      {16, 16}, angle, WHITE);
 }
 
 void die(const char *message) {
@@ -285,6 +298,8 @@ void handle_enemy_behaviour() {
 
       switch (enemies[i].type) {
       case BASE: {
+        enemies[i].shooting_angle =
+            get_angle_relative_to(player.position, enemies[i].position);
         Vector2 next_position =
             Vector2MoveTowards(enemies[i].position, player.position, 2);
 
@@ -311,9 +326,7 @@ void update_positions() {
 
 void update_player_angle() {
   Vector2 mouse = get_world_mouse(camera);
-  float angle = atan2(mouse.y - player.position.y, mouse.x - player.position.x);
-
-  player.angle = (angle * RAD2DEG);
+  player.angle = get_angle_relative_to(mouse, player.position);
 }
 
 void handle_updates() {
@@ -333,15 +346,22 @@ void handle_updates() {
 
 void draw_player_projectiles() {
   for (int i = 0; i < MAX_PROJECTILES; i++) {
-    if (player_projectiles.pool[i].is_shooting)
-      DrawCircleV(player_projectiles.pool[i].position, 5, RED);
+    if (player_projectiles.pool[i].is_shooting) {
+      draw_game_texture(player_projectiles.pool[i].position,
+                        player_projectiles.pool[i].angle + 90,
+                        projectile_texture);
+    }
   }
 }
 
 void draw_enemy_projectiles() {
   for (int i = 0; i < MAX_PROJECTILES; i++) {
-    if (enemy_projectiles.pool[i].is_shooting)
-      DrawCircleV(enemy_projectiles.pool[i].position, 5, DARKPURPLE);
+    if (enemy_projectiles.pool[i].is_shooting) {
+
+      draw_game_texture(enemy_projectiles.pool[i].position,
+                        enemy_projectiles.pool[i].angle + 90,
+                        projectile_texture);
+    }
   }
 }
 
@@ -356,9 +376,16 @@ void draw_enemies() {
       continue;
 
     switch (enemies[i].type) {
-    case BASE:
-      DrawCircleV(enemies[i].position, 10, RED);
-      break;
+    case BASE: {
+      Vector2 position = enemies[i].position;
+      DrawTexturePro(
+          sentinel_barrel_texture, {.x = 0, .y = 0, .width = 32, .height = 32},
+          {.x = (position.x), .y = (position.y), .width = 32, .height = 32},
+          {16, 32}, enemies[i].shooting_angle + 90, WHITE);
+
+      draw_game_texture(enemies[i].position, enemies[i].shooting_angle + 90,
+                        sentinel_head_texture);
+    } break;
     case SENTRY_A:
       Vector2 position = enemies[i].position;
       DrawTexturePro(
@@ -448,13 +475,20 @@ void init_player() {
 }
 
 void ScreenManager::init_game_screen() {
-  level.load_level_data("level.hacc");
+  level.filename = level_file;
+  level.load_level_data();
   init_player();
   load_level();
   init_game_camera();
 }
 
-void ScreenManager::init_level_editor_screen() { load_level_editor(); }
+void ScreenManager::init_level_editor_screen(const char *filename) {
+  ShowCursor();
+  camera.offset = {(float)WIN_WIDTH / 2, (float)WIN_HEIGHT / 2};
+  camera.rotation = 0;
+  camera.zoom = 1;
+  load_level_editor(filename);
+}
 
 void ScreenManager::handle_screen_change() {
   if (!this->screen_changed())
@@ -471,20 +505,29 @@ void ScreenManager::handle_screen_change() {
     this->init_game_screen();
     break;
   case LEVEL_EDITOR:
-    this->init_level_editor_screen();
+    this->init_level_editor_screen(level_file);
     break;
   }
 }
 
 int main(int argc, char *argv[]) {
+  if (argc != 3) {
+    printf("usage: autohacka [gamemode] [level_file]\n");
+    return 1;
+  }
+
   init_window();
   load_textures();
 
-  if (argc == 2) {
-    char *screen_name = argv[1];
-    if (strcmp("editor\n", screen_name) == 0) {
-      screen_manager.set_screen(LEVEL_EDITOR);
-    }
+  char *screen_name = argv[1];
+  level_file = argv[2];
+
+  if (strcmp("editor", screen_name) == 0) {
+    screen_manager.set_screen(LEVEL_EDITOR);
+  }
+
+  else if (strcmp("game", screen_name) == 0) {
+    screen_manager.set_screen(GAME);
   }
 
   while (!WindowShouldClose()) {

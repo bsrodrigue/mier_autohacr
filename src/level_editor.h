@@ -9,6 +9,6 @@ void render_level_editor(Camera2D *camera);
 void handle_level_input(Camera2D *camera, int pressed_key);
 Vector2 get_player_position(int level_grid[CELL_COUNT][CELL_COUNT]);
 Vector2 get_world_mouse(Camera2D camera);
-void load_level_editor();
+void load_level_editor(const char *filename);
 
 #endif
