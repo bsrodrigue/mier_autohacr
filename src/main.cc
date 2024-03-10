@@ -511,8 +511,10 @@ void ScreenManager::handle_screen_change() {
 }
 
 int main(int argc, char *argv[]) {
-  if (argc != 3)
-    die("usage: autohacka [gamemode] [level_file]");
+  if (argc != 3) {
+    printf("usage: autohacka [gamemode] [level_file]\n");
+    return 1;
+  }
 
   init_window();
   load_textures();
