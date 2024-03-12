@@ -1,8 +1,22 @@
 #include "config.h"
+#include "entities.h"
 #include <raylib.h>
 
 #ifndef LEVEL_EDITOR_H
 #define LEVEL_EDITOR_H
+
+typedef struct {
+  EntityType type;
+  int index;
+} LevelGridCell;
+
+class LevelEditor {
+public:
+  LevelGridCell grid[CELL_COUNT][CELL_COUNT];
+  LevelEditor();
+
+  void init_grid();
+};
 
 void draw_grid();
 void render_level_editor(Camera2D *camera);

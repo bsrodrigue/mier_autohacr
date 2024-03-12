@@ -1,5 +1,6 @@
 #include "config.h"
 #include "entities.h"
+#include "wall.h"
 #include <raylib.h>
 
 #ifndef GAME_H

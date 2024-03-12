@@ -14,12 +14,7 @@
 
 #define TYPE_COUNT 7
 
-static Level level;
-
-Vector2 get_world_mouse(Camera2D camera) {
-  Vector2 mouse = GetMousePosition();
-  return GetScreenToWorld2D(mouse, camera);
-}
+static LevelEditor level_editor;
 
 int current_entity_index = 1;
 EntityType types[TYPE_COUNT] = {EMPTY,      BWALL,          UBWALL,  PLAYER,
@@ -69,23 +64,13 @@ Vector2 get_player_position(int level_grid[CELL_COUNT][CELL_COUNT]) {
 }
 
 void load_level_editor(const char *filename) {
-  level.filename = filename;
+  level_editor.filename = filename;
 
   if (!FileExists(filename)) {
-    level.create_level_data();
+    level_editor.create_level_data();
   }
 
-  level.load_level_data();
-}
-
-void draw_grid() {
-  for (int i = 0; i < CELL_COUNT; i++) {
-    DrawLine(CELL_OFFSET(i), 0, CELL_OFFSET(i), LEVEL_HEIGHT, WHITE);
-  }
-
-  for (int i = 0; i < CELL_COUNT; i++) {
-    DrawLine(0, CELL_OFFSET(i), LEVEL_WIDTH, CELL_OFFSET(i), WHITE);
-  }
+  level_editor.load_level_data();
 }
 
 void draw_ubwall(Vector2 position) { draw_wall(position, ubwall_texture); }
@@ -140,7 +125,7 @@ void render_entity(EntityType type, Vector2 position) {
 void render_entities() {
   for (int y = 0; y < CELL_COUNT; y++) {
     for (int x = 0; x < CELL_COUNT; x++) {
-      int type = level.grid[y][x];
+      int type = level_editor.grid[y][x];
       render_entity((EntityType)type, {(float)x, (float)y});
     }
   }
@@ -155,7 +140,7 @@ void handle_level_input(Camera2D *camera, int pressed_key) {
 
   switch (pressed_key) {
   case KEY_M:
-    level.save_level();
+    level_editor.save_level();
     break;
   case KEY_SPACE:
     next_type();
@@ -184,21 +169,21 @@ void handle_level_input(Camera2D *camera, int pressed_key) {
     }
 
     if (current_entity_type == PLAYER) {
-      Vector2 previous_pos = get_player_position(level.grid);
+      Vector2 previous_pos = get_player_position(level_editor.grid);
 
       if (previous_pos.x != -1) {
-        level.grid[(int)previous_pos.y / CELL_SIZE]
-                  [(int)previous_pos.x / CELL_SIZE] = EMPTY;
+        level_editor.grid[(int)previous_pos.y / CELL_SIZE]
+                         [(int)previous_pos.x / CELL_SIZE] = EMPTY;
       }
     }
 
-    level.grid[MOUSE_TO_GRID(mouse.y)][MOUSE_TO_GRID(mouse.x)] =
+    level_editor.grid[MOUSE_TO_GRID(mouse.y)][MOUSE_TO_GRID(mouse.x)] =
         current_entity_type;
   }
 
   if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
     Vector2 mouse = get_world_mouse(*camera);
-    level.grid[MOUSE_TO_GRID(mouse.y)][MOUSE_TO_GRID(mouse.x)] = EMPTY;
+    level_editor.grid[MOUSE_TO_GRID(mouse.y)][MOUSE_TO_GRID(mouse.x)] = EMPTY;
   }
 
   camera->target =
@@ -260,7 +245,7 @@ void render_hud(Camera2D *camera, Vector2 mouse) {
 
 void render_level_editor(Camera2D *camera) {
   Vector2 mouse = get_world_mouse(*camera);
-  draw_grid();
+
   render_entities();
   render_mouse_hover_grid(mouse);
   render_hud(camera, mouse);

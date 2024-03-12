@@ -1,65 +1,78 @@
-#include "config.h"
+#include "enemy.h"
+#include "wall.h"
+#include <raylib.h>
 
 #ifndef SAVE_H
 #define SAVE_H
 
 //======== File Format =======//
 #define FORMAT_VERSION 0.2
-#define OFFSET_SIZE 4
 #define LEN_SIZE 4
+#define OFFSET_SIZE 4
 
-#define LEVEL_HEADER_NAME_OFFSET 0
-#define LEVEL_HEADER_NAME_SIZE 256
+typedef struct {
+  Vector2 position;
+} FilePlayer;
 
-#define LEVEL_HEADER_AUTHOR_OFFSET 256
-#define LEVEL_HEADER_AUTHOR_SIZE 256
+typedef struct {
+  Vector2 position;
+  EnemyType type;
+} FileEnemy;
 
-//========== METADATA-WALLS
-#define LEVEL_HEADER_WALLS_OFFSET 512
-#define LEVEL_HEADER_WALLS_OFFSET_SIZE OFFSET_SIZE
+typedef struct {
+  Vector2 position;
+  WallType type;
+} FileWall;
 
-#define LEVEL_HEADER_WALLS_LEN_OFFSET 516
-#define LEVEL_HEADER_WALLS_LEN_SIZE LEN_SIZE
+typedef struct {
+  Vector2 position;
+  Vector2 destination;
+} FileWarpzone;
 
-//========== METADATA-ENEMIES
-#define LEVEL_HEADER_ENEMIES_OFFSET 520
-#define LEVEL_HEADER_ENEMIES_OFFSET_SIZE OFFSET_SIZE
+#define MAX_FPLAYERS 1
+#define MAX_FENEMIES 100
+#define MAX_FWALLS 10000
+#define MAX_FWARPZONES 100
 
-#define LEVEL_HEADER_ENEMIES_LEN_OFFSET 524
-#define LEVEL_HEADER_ENEMIES_LEN_SIZE LEN_SIZE
+#define FTYPE_COUNT 4
 
-//========== METADATA-WARPZONES
-#define LEVEL_HEADER_WARPZONES_OFFSET 528
-#define LEVEL_HEADER_WARPZONES_OFFSET_SIZE OFFSET_SIZE
+// HEADER
+#define HEADER_NAME_OFFSET 0
+#define HEADER_NAME_LEN 256
 
-#define LEVEL_HEADER_WARPZONES_LEN_OFFSET 532
-#define LEVEL_HEADER_WARPZONES_LEN_SIZE LEN_SIZE
+#define HEADER_AUTHOR_OFFSET 256
+#define HEADER_AUTHOR_LEN 256
 
-//========== METADATA-PLAYER
-#define LEVEL_HEADER_PLAYER_OFFSET 536
-#define LEVEL_HEADER_PLAYER_OFFSET_SIZE OFFSET_SIZE
+#define HEADER_SIZE ((256 * 2) + (sizeof(int) * FTYPE_COUNT))
+#define HEADER_TAB_OFFSET (256 * 2)
 
-#define LEVEL_HEADER_PLAYER_LEN_OFFSET 540
-#define LEVEL_HEADER_PLAYER_LEN_SIZE LEN_SIZE
+#define DATA_OFFSET HEADER_SIZE
 
-//========== METADATA-ITEMS
-#define LEVEL_HEADER_ITEMS_OFFSET 544
-#define LEVEL_HEADER_ITEMS_OFFSET_SIZE OFFSET_SIZE
+// HEADER TABLE
+// HEADER TABLE -> ACTORS
+#define HEADER_TAB_PLAYER_OFFSET (DATA_OFFSET + 0)
+#define HEADER_TAB_PLAYER_LEN LEN_SIZE
 
-#define LEVEL_HEADER_ITEMS_LEN_OFFSET 548
-#define LEVEL_HEADER_ITEMS_LEN_SIZE LEN_SIZE
+#define HEADER_TAB_ENEMIES_OFFSET                                              \
+  (HEADER_TAB_PLAYER_OFFSET + (sizeof(FilePlayer) * MAX_FPLAYERS))
+#define HEADER_TAB_ENEMIES_LEN LEN_SIZE
 
-//========== METADATA-EXTENSIONS
-#define LEVEL_HEADER_EXTENSION_OFFSET 552
-#define LEVEL_HEADER_EXTENSION_OFFSET_SIZE OFFSET_SIZE
+// HEADER TABLE -> OBSTACLES
+#define HEADER_TAB_WALLS_OFFSET                                                \
+  (HEADER_TAB_ENEMIES_OFFSET + (sizeof(FileEnemy) * MAX_FENEMIES))
+#define HEADER_TAB_WALLS_LEN LEN_SIZE
 
-#define LEVEL_HEADER_EXTENSION_LEN_OFFSET 556
-#define LEVEL_HEADER_EXTENSION_LEN_SIZE LEN_SIZE
+// HEADER TABLE -> SPECIAL
+#define HEADER_TAB_WARPZONES_OFFSET                                            \
+  (HEADER_TAB_WALLS_OFFSET + (sizeof(FileWall) * MAX_FWALLS))
+#define HEADER_TAB_WARPZONES_LEN LEN_SIZE
 
-#define LEVEL_HEADER_SIZE 560
-#define LEVEL_DATA_OFFSET LEVEL_HEADER_SIZE
-
+// Legacy
 void load_level_file(const char *name, int level[CELL_COUNT][CELL_COUNT]);
 void save_level_file(const char *name, int level[CELL_COUNT][CELL_COUNT]);
+
+// New
+void create_level_file(const char *filename, const char *level_name,
+                       const char *author_name);
 
 #endif

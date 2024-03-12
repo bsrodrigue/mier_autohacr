@@ -510,6 +510,7 @@ void ScreenManager::handle_screen_change() {
   }
 }
 
+// Why is game development so hard?
 int main(int argc, char *argv[]) {
   if (argc != 3) {
     printf("usage: autohacka [gamemode] [level_file]\n");
