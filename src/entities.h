@@ -14,4 +14,6 @@ typedef enum {
   WARPZONE
 } EntityType;
 
+const char *get_entity_type_name(EntityType type);
+
 #endif

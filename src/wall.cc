@@ -1,7 +1,7 @@
+#include "wall.h"
 #include "config.h"
 #include "entities.h"
 #include <raylib.h>
-#include <vector>
 
 void draw_wall(Vector2 position, Texture2D texture) {
   DrawTexturePro(texture, {.x = 0, .y = 0, .width = 32, .height = 32},

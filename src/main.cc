@@ -141,7 +141,7 @@ void handle_input(int pressed_key) {
     handle_game_input();
     break;
   case LEVEL_EDITOR:
-    handle_level_input(&camera, pressed_key);
+    handle_editor_input(&camera, pressed_key);
     break;
   }
 }
@@ -471,7 +471,8 @@ void load_level() {
 void init_player() {
   player.subscribe_to_projectile_pool(&player_projectiles);
   player.load_texture(player_texture);
-  player.position = get_player_position(level.grid);
+  // player.position = get_player_position(level.grid);
+  player.position = {0, 0};
 }
 
 void ScreenManager::init_game_screen() {
@@ -520,14 +521,14 @@ int main(int argc, char *argv[]) {
   init_window();
   load_textures();
 
-  char *screen_name = argv[1];
+  char *game_mode = argv[1];
   level_file = argv[2];
 
-  if (strcmp("editor", screen_name) == 0) {
+  if (strcmp("editor", game_mode) == 0) {
     screen_manager.set_screen(LEVEL_EDITOR);
   }
 
-  else if (strcmp("game", screen_name) == 0) {
+  else if (strcmp("game", game_mode) == 0) {
     screen_manager.set_screen(GAME);
   }
 
