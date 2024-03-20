@@ -58,6 +58,9 @@ public:
   void save_level();
   Vector2 get_player_position();
 
+  template <typename T> int get_free_editor_entity(T entities[100]);
+  void place_entity(EditorGridCell *cell, EntityType type);
+
   void next_type();
 };
 

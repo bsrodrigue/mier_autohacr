@@ -82,15 +82,21 @@ void handle_editor_input(Camera2D *camera, int pressed_key) {
       }
     }
 
-    level_editor.grid[MOUSE_TO_GRID(mouse.y)][MOUSE_TO_GRID(mouse.x)].type =
-        level_editor.current_entity_type;
+    EditorGridCell *cell =
+        &level_editor.grid[MOUSE_TO_GRID(mouse.y)][MOUSE_TO_GRID(mouse.x)];
+
+    cell->type = level_editor.current_entity_type;
 
     switch (level_editor.current_entity_type) {
     case EMPTY:
     case UBWALL:
-    case BWALL:
-      // level_editor.walls.push_back();
+    case BWALL: {
+      int index = level_editor.get_free_editor_entity(level_editor.walls);
+      level_editor.walls[index].free = false;
+      level_editor.walls[index].type = BREAKABLE;
+      cell->index = index;
       break;
+    }
     case PLAYER:
     case BASE_ENEMY:
     case SENTRY_A_ENEMY:

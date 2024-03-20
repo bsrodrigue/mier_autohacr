@@ -39,3 +39,48 @@ void LevelEditor::next_type() {
 
   current_entity_type = types[current_entity_index];
 }
+
+template <typename T> int LevelEditor::get_free_editor_entity(T entities[100]) {
+  for (int i = 0; i < 100; i++) {
+    if (entities[i].free)
+      return i;
+  }
+
+  return -1;
+}
+
+void LevelEditor::place_entity(EditorGridCell *cell, EntityType type) {
+  int index;
+
+  switch (type) {
+  case EMPTY:
+    index = this->get_free_editor_entity(walls);
+
+    break;
+  case UBWALL:
+    index = this->get_free_editor_entity(walls);
+    walls[index].free = false;
+    walls[index].type = UNBREAKABLE;
+    break;
+  case BWALL:
+    index = this->get_free_editor_entity(walls);
+    walls[index].free = false;
+    walls[index].type = BREAKABLE;
+    break;
+  case PLAYER:
+    index = this->get_free_editor_entity(walls);
+    break;
+  case BASE_ENEMY:
+    index = this->get_free_editor_entity(enemies);
+    break;
+  case SENTRY_A_ENEMY:
+    index = this->get_free_editor_entity(enemies);
+    break;
+  case WARPZONE:
+    index = this->get_free_editor_entity(walls);
+    break;
+  }
+
+  cell->index = index;
+  cell->type = type;
+}
