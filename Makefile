@@ -1,6 +1,6 @@
 # Define compiler
 CC = gcc
-CFLAGS = -Wall -Wextra -lraylib -lm -lstdc++
+CFLAGS = -Wall -Wextra -lraylib -lm -lstdc++ --debug
 
 # Define directories
 SRC_DIR = src
