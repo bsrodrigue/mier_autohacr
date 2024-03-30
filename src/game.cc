@@ -1,6 +1,7 @@
 #include "common.h"
 #include "config.h"
 #include "entities.h"
+#include "level_editor.h"
 #include "wall.h"
 #include <raylib.h>
 #include <vector>
@@ -24,10 +25,10 @@ Wall create_ubreakable_wall(Vector2 position) {
 }
 
 void load_walls(std::vector<Wall> &walls,
-                int level_grid[CELL_COUNT][CELL_COUNT]) {
+                EditorGridCell level_grid[CELL_COUNT][CELL_COUNT]) {
   for (int y = 0; y < CELL_COUNT; y++) {
     for (int x = 0; x < CELL_COUNT; x++) {
-      int type = level_grid[y][x];
+      int type = level_grid[y][x].type;
       if (type == UBWALL) {
         walls.push_back(create_ubreakable_wall({(float)x, (float)y}));
       }

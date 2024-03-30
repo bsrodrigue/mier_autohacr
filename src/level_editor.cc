@@ -14,6 +14,18 @@
 // TODO: Provide simple GUI to switch between entity types
 // TODO: Add undo action
 
+Vector2 get_player_position(EditorGridCell (*grid)[100]) {
+  for (int y = 0; y < CELL_COUNT; y++) {
+    for (int x = 0; x < CELL_COUNT; x++) {
+      EntityType type = grid[y][x].type;
+      if (type == PLAYER)
+        return {(float)(x * CELL_SIZE), (float)(y * CELL_SIZE)};
+    }
+  }
+
+  return {-1, -1};
+}
+
 bool is_warpzone_destination = false;
 LevelEditor level_editor;
 

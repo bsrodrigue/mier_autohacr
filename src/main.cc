@@ -75,7 +75,7 @@ void player_shoot() {
 void load_enemies() {
   for (int y = 0; y < CELL_COUNT; y++) {
     for (int x = 0; x < CELL_COUNT; x++) {
-      int type = level.grid[y][x];
+      int type = level.grid[y][x].type;
       if (type == BASE_ENEMY) {
         Enemy enemy =
             create_enemy({(float)CELL_OFFSET(x), (float)CELL_OFFSET(y)}, BASE);
@@ -247,7 +247,6 @@ void update_player_projectiles() {
     if (touched != -1) {
       switch (walls[touched].type) {
       case BREAKABLE:
-        // It seems not safe to change the vector's size while looping
         damage_wall(touched);
         break;
       case UNBREAKABLE:
@@ -471,8 +470,7 @@ void load_level() {
 void init_player() {
   player.subscribe_to_projectile_pool(&player_projectiles);
   player.load_texture(player_texture);
-  // player.position = get_player_position(level.grid);
-  player.position = {0, 0};
+  player.position = get_player_position(level.grid);
 }
 
 void ScreenManager::init_game_screen() {

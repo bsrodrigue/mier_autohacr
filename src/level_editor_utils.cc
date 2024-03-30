@@ -1,16 +1,15 @@
 #include "level_editor.h"
+#include "save.h"
 
 LevelEditor::LevelEditor() {}
-void LevelEditor::save_level() {}
-void LevelEditor::load_level_data() {}
+
+void LevelEditor::save_level() { save_level_file(this->filename, this->grid); }
+
+void LevelEditor::load_level_data() {
+  load_level_file(this->filename, this->grid);
+}
 
 void LevelEditor::create_level_data() {
-  for (int y = 0; y < CELL_COUNT; y++) {
-    for (int x = 0; x < CELL_COUNT; x++) {
-      this->grid[y][x].type = EMPTY;
-    }
-  }
-
   create_level_file(this->filename, "New Level", "Sawcekeeper");
 }
 
@@ -29,12 +28,10 @@ Vector2 LevelEditor::get_player_position() {
 void LevelEditor::next_type() {
   if (current_entity_index + 1 >= TYPE_COUNT) {
     current_entity_index = 0;
+    return;
   }
 
-  else {
-
-    current_entity_index++;
-  }
+  current_entity_index++;
 }
 
 template <typename T> int LevelEditor::get_free_editor_entity(T entities[100]) {

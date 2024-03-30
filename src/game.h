@@ -1,12 +1,14 @@
 #include "config.h"
 #include "entities.h"
+#include "level_editor.h"
 #include "wall.h"
 #include <raylib.h>
 
 #ifndef GAME_H
 #define GAME_H
 void load_walls(std::vector<Wall> &walls,
-                int level_grid[CELL_COUNT][CELL_COUNT]);
+                EditorGridCell level_grid[CELL_COUNT][CELL_COUNT]);
+
 void draw_arena(std::vector<Wall> &walls, Texture2D ubwall_texture,
                 Texture2D bwall_texture);
 

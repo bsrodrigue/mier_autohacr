@@ -1,19 +1,13 @@
 #include "config.h"
+#include "enemy.h"
 #include "entities.h"
-#include "save.h"
+#include "wall.h"
 #include <raylib.h>
 
 #ifndef LEVEL_EDITOR_H
 #define LEVEL_EDITOR_H
 
 #define TYPE_COUNT 7
-
-void draw_grid();
-void render_level_editor(Camera2D *camera);
-void handle_editor_input(Camera2D *camera, int pressed_key);
-Vector2 get_player_position(int level_grid[CELL_COUNT][CELL_COUNT]);
-Vector2 get_world_mouse(Camera2D camera);
-void load_level_editor(const char *filename);
 
 // Their positions are already infered from their grid indices
 typedef struct {
@@ -67,5 +61,12 @@ public:
 
   void next_type();
 };
+
+void draw_grid();
+void render_level_editor(Camera2D *camera);
+void handle_editor_input(Camera2D *camera, int pressed_key);
+Vector2 get_player_position(EditorGridCell grid[CELL_COUNT][CELL_COUNT]);
+Vector2 get_world_mouse(Camera2D camera);
+void load_level_editor(const char *filename);
 
 #endif
