@@ -14,6 +14,7 @@
 // TODO: Provide simple GUI to switch between entity types
 // TODO: Add undo action
 
+bool is_warpzone_destination = false;
 LevelEditor level_editor;
 
 void load_level_editor(const char *filename) {
@@ -65,44 +66,7 @@ void handle_editor_input(Camera2D *camera, int pressed_key) {
 
   if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
     Vector2 mouse = get_world_mouse(*camera);
-
-    if (MOUSE_TO_GRID(mouse.x) >= CELL_COUNT ||
-        MOUSE_TO_GRID(mouse.y) >= CELL_COUNT) {
-      return;
-    }
-
-    if (level_editor.current_entity_type == PLAYER) {
-      Vector2 previous_pos = level_editor.get_player_position();
-
-      if (previous_pos.x != -1) {
-        level_editor
-            .grid[(int)previous_pos.y / CELL_SIZE]
-                 [(int)previous_pos.x / CELL_SIZE]
-            .type = EMPTY;
-      }
-    }
-
-    EditorGridCell *cell =
-        &level_editor.grid[MOUSE_TO_GRID(mouse.y)][MOUSE_TO_GRID(mouse.x)];
-
-    cell->type = level_editor.current_entity_type;
-
-    switch (level_editor.current_entity_type) {
-    case EMPTY:
-    case UBWALL:
-    case BWALL: {
-      int index = level_editor.get_free_editor_entity(level_editor.walls);
-      level_editor.walls[index].free = false;
-      level_editor.walls[index].type = BREAKABLE;
-      cell->index = index;
-      break;
-    }
-    case PLAYER:
-    case BASE_ENEMY:
-    case SENTRY_A_ENEMY:
-    case WARPZONE:
-      break;
-    }
+    level_editor.place_entity(mouse);
   }
 
   if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
@@ -117,7 +81,7 @@ void handle_editor_input(Camera2D *camera, int pressed_key) {
 }
 
 void render_mouse_hover_grid(Vector2 mouse) {
-  switch (level_editor.current_entity_type) {
+  switch (level_editor.types[level_editor.current_entity_index]) {
   case UBWALL:
     draw_wall({(float)MOUSE_TO_GRID(mouse.x), (float)MOUSE_TO_GRID(mouse.y)},
               ubwall_texture);
@@ -160,7 +124,8 @@ void render_mouse_position(Camera2D camera, Vector2 mouse) {
 void render_current_entity_type(Camera2D camera) {
   const char *message =
       TextFormat("ENTITY TYPE: %s",
-                 get_entity_type_name(level_editor.current_entity_type));
+                 get_entity_type_name(
+                     level_editor.types[level_editor.current_entity_index]));
   DrawText(message, TEXT_POS(1), TEXT_POS(10), 14, RED);
 }
 

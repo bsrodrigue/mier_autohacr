@@ -17,36 +17,36 @@ void load_level_editor(const char *filename);
 
 // Their positions are already infered from their grid indices
 typedef struct {
+} EditorPlayer;
+
+typedef struct {
   WallType type;
-  bool free;
 } EditorWall;
 
 typedef struct {
   EnemyType type;
-  bool free;
 } EditorEnemy;
 
 typedef struct {
   Vector2 destination;
-  bool free;
 } EditorWarpzone;
 
 typedef struct {
   EntityType type;
-  int index;
+  union {
+    EditorWall wall;
+    EditorEnemy enemy;
+    EditorWarpzone warpzone;
+    EditorPlayer player;
+  };
 } EditorGridCell;
 
 class LevelEditor {
 public:
   const char *filename;
 
-  // ------------------- Grid ----------------------------------
+  // ----------------------------[ Grid ]---------------------------------- //
   EditorGridCell grid[CELL_COUNT][CELL_COUNT];
-
-  // You can extend the editor entities how you want
-  EditorEnemy enemies[MAX_FENEMIES];
-  EditorWall walls[MAX_FWALLS];
-  EditorWarpzone warpzones[MAX_FWARPZONES];
 
   int current_entity_index = 1;
   EntityType types[TYPE_COUNT] = {EMPTY,      BWALL,          UBWALL,  PLAYER,
@@ -63,7 +63,7 @@ public:
   Vector2 get_player_position();
 
   template <typename T> int get_free_editor_entity(T entities[100]);
-  void place_entity(EditorGridCell *cell, EntityType type);
+  void place_entity(Vector2 mouse);
 
   void next_type();
 };

@@ -8,7 +8,6 @@ void LevelEditor::create_level_data() {
   for (int y = 0; y < CELL_COUNT; y++) {
     for (int x = 0; x < CELL_COUNT; x++) {
       this->grid[y][x].type = EMPTY;
-      this->grid[y][x].index = 0;
     }
   }
 
@@ -47,38 +46,46 @@ template <typename T> int LevelEditor::get_free_editor_entity(T entities[100]) {
   return -1;
 }
 
-void LevelEditor::place_entity(EditorGridCell *cell, EntityType type) {
-  int index;
-
-  switch (type) {
-  case EMPTY:
-    index = this->get_free_editor_entity(walls);
-
-    break;
-  case UBWALL:
-    index = this->get_free_editor_entity(walls);
-    walls[index].free = false;
-    walls[index].type = UNBREAKABLE;
-    break;
-  case BWALL:
-    index = this->get_free_editor_entity(walls);
-    walls[index].free = false;
-    walls[index].type = BREAKABLE;
-    break;
-  case PLAYER:
-    index = this->get_free_editor_entity(walls);
-    break;
-  case BASE_ENEMY:
-    index = this->get_free_editor_entity(enemies);
-    break;
-  case SENTRY_A_ENEMY:
-    index = this->get_free_editor_entity(enemies);
-    break;
-  case WARPZONE:
-    index = this->get_free_editor_entity(walls);
-    break;
+void LevelEditor::place_entity(Vector2 mouse) {
+  // Out of bounds
+  if (MOUSE_TO_GRID(mouse.x) >= CELL_COUNT ||
+      MOUSE_TO_GRID(mouse.y) >= CELL_COUNT) {
+    return;
   }
 
-  cell->index = index;
-  cell->type = type;
+  if (this->types[this->current_entity_index] == PLAYER) {
+    Vector2 previous_pos = this->get_player_position();
+
+    if (previous_pos.x != -1) {
+      this->grid[(int)previous_pos.y / CELL_SIZE]
+                [(int)previous_pos.x / CELL_SIZE]
+                    .type = EMPTY;
+    }
+  }
+
+  EditorGridCell *cell =
+      &this->grid[MOUSE_TO_GRID(mouse.y)][MOUSE_TO_GRID(mouse.x)];
+
+  cell->type = this->types[this->current_entity_index];
+
+  switch (cell->type) {
+  case EMPTY:
+  case PLAYER:
+    break;
+  case UBWALL:
+    cell->wall.type = UNBREAKABLE;
+    break;
+  case BWALL:
+    cell->wall.type = BREAKABLE;
+    break;
+  case BASE_ENEMY:
+    cell->enemy.type = BASE;
+    break;
+  case SENTRY_A_ENEMY:
+    cell->enemy.type = SENTRY_A;
+    break;
+  case WARPZONE:
+    // TODO: Handle warpzone
+    break;
+  }
 }
