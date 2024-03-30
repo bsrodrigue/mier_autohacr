@@ -36,8 +36,6 @@ void LevelEditor::next_type() {
 
     current_entity_index++;
   }
-
-  current_entity_type = types[current_entity_index];
 }
 
 template <typename T> int LevelEditor::get_free_editor_entity(T entities[100]) {

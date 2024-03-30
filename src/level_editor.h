@@ -38,7 +38,12 @@ typedef struct {
 
 class LevelEditor {
 public:
+  const char *filename;
+
+  // ------------------- Grid ----------------------------------
   EditorGridCell grid[CELL_COUNT][CELL_COUNT];
+
+  // You can extend the editor entities how you want
   EditorEnemy enemies[MAX_FENEMIES];
   EditorWall walls[MAX_FWALLS];
   EditorWarpzone warpzones[MAX_FWARPZONES];
@@ -46,9 +51,7 @@ public:
   int current_entity_index = 1;
   EntityType types[TYPE_COUNT] = {EMPTY,      BWALL,          UBWALL,  PLAYER,
                                   BASE_ENEMY, SENTRY_A_ENEMY, WARPZONE};
-  EntityType current_entity_type = types[current_entity_index];
 
-  const char *filename;
   LevelEditor();
   LevelEditor(const char *filename);
 
@@ -56,6 +59,7 @@ public:
   void load_level_data();
   void create_level_data();
   void save_level();
+
   Vector2 get_player_position();
 
   template <typename T> int get_free_editor_entity(T entities[100]);

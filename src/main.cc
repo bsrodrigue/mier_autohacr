@@ -511,6 +511,16 @@ void ScreenManager::handle_screen_change() {
   }
 }
 
+void set_initial_screen(const char *game_mode) {
+  if (strcmp("editor", game_mode) == 0) {
+    screen_manager.set_screen(LEVEL_EDITOR);
+  }
+
+  else if (strcmp("game", game_mode) == 0) {
+    screen_manager.set_screen(GAME);
+  }
+}
+
 // Why is game development so hard?
 int main(int argc, char *argv[]) {
   if (argc != 3) {
@@ -524,13 +534,7 @@ int main(int argc, char *argv[]) {
   char *game_mode = argv[1];
   level_file = argv[2];
 
-  if (strcmp("editor", game_mode) == 0) {
-    screen_manager.set_screen(LEVEL_EDITOR);
-  }
-
-  else if (strcmp("game", game_mode) == 0) {
-    screen_manager.set_screen(GAME);
-  }
+  set_initial_screen(game_mode);
 
   while (!WindowShouldClose()) {
     screen_manager.handle_screen_change();
