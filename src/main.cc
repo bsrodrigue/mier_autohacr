@@ -75,7 +75,7 @@ void player_shoot() {
 void load_enemies() {
   for (int y = 0; y < CELL_COUNT; y++) {
     for (int x = 0; x < CELL_COUNT; x++) {
-      int type = level.grid[y][x];
+      int type = level.grid[y][x].type;
       if (type == BASE_ENEMY) {
         Enemy enemy =
             create_enemy({(float)CELL_OFFSET(x), (float)CELL_OFFSET(y)}, BASE);
@@ -141,7 +141,7 @@ void handle_input(int pressed_key) {
     handle_game_input();
     break;
   case LEVEL_EDITOR:
-    handle_level_input(&camera, pressed_key);
+    handle_editor_input(&camera, pressed_key);
     break;
   }
 }
@@ -247,7 +247,6 @@ void update_player_projectiles() {
     if (touched != -1) {
       switch (walls[touched].type) {
       case BREAKABLE:
-        // It seems not safe to change the vector's size while looping
         damage_wall(touched);
         break;
       case UNBREAKABLE:
@@ -510,6 +509,17 @@ void ScreenManager::handle_screen_change() {
   }
 }
 
+void set_initial_screen(const char *game_mode) {
+  if (strcmp("editor", game_mode) == 0) {
+    screen_manager.set_screen(LEVEL_EDITOR);
+  }
+
+  else if (strcmp("game", game_mode) == 0) {
+    screen_manager.set_screen(GAME);
+  }
+}
+
+// Why is game development so hard?
 int main(int argc, char *argv[]) {
   if (argc != 3) {
     printf("usage: autohacka [gamemode] [level_file]\n");
@@ -519,16 +529,10 @@ int main(int argc, char *argv[]) {
   init_window();
   load_textures();
 
-  char *screen_name = argv[1];
+  char *game_mode = argv[1];
   level_file = argv[2];
 
-  if (strcmp("editor", screen_name) == 0) {
-    screen_manager.set_screen(LEVEL_EDITOR);
-  }
-
-  else if (strcmp("game", screen_name) == 0) {
-    screen_manager.set_screen(GAME);
-  }
+  set_initial_screen(game_mode);
 
   while (!WindowShouldClose()) {
     screen_manager.handle_screen_change();
