@@ -4,8 +4,6 @@
 #ifndef ENTITIES_H
 #define ENTITIES_H
 
-typedef enum { BREAKABLE, UNBREAKABLE } WallType;
-
 typedef enum {
   EMPTY,
   UBWALL,
@@ -16,10 +14,6 @@ typedef enum {
   WARPZONE
 } EntityType;
 
-typedef struct {
-  WallType type;
-  float health;
-  Vector2 position;
-} Wall;
+const char *get_entity_type_name(EntityType type);
 
 #endif

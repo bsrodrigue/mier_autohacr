@@ -1,5 +1,6 @@
 #include "entities.h"
 #include "projectiles.h"
+#include "wall.h"
 #include <raylib.h>
 
 #ifndef PLAYER_H

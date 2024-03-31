@@ -1,50 +1,76 @@
 #include "save.h"
 #include "common.h"
 #include "config.h"
-#include <cstdlib>
+#include "enemy.h"
+#include "entities.h"
 #include <raylib.h>
 #include <string.h>
 
-void load_level_file(const char *name, int level[CELL_COUNT][CELL_COUNT]) {
-  int data_size = LEVEL_DATA_SIZE;
-  unsigned char *loaded_data = LoadFileData(name, &data_size);
+void create_level_file(const char *filename, const char *level_name,
+                       const char *author_name) {
+
+  unsigned char *file = (unsigned char *)MemAlloc(LEVEL_FILE_SIZE);
+
+  strncpy((char *)(file + HEADER_NAME_OFFSET), level_name, HEADER_NAME_LEN);
+  strncpy((char *)(file + HEADER_AUTHOR_OFFSET), author_name,
+          HEADER_AUTHOR_LEN);
+
+  EditorGridCell *cells = (EditorGridCell *)(file + DATA_OFFSET);
+
+  for (int i = 0; i < CELL_COUNT; i++) {
+    for (int j = 0; j < CELL_COUNT; j++) {
+      cells->type = EMPTY;
+      cells++;
+    }
+  }
+
+  bool saved = SaveFileData(filename, file, LEVEL_FILE_SIZE);
+
+  if (!saved) {
+    TraceLog(LOG_ERROR, "An error occured while creating fresh level file");
+  }
+
+  TraceLog(LOG_INFO, "Level File Created");
+  MemFree(file);
+}
+
+void load_level_file(const char *filename, EditorGridCell (*grid)[100]) {
+  int data_size = LEVEL_FILE_SIZE;
+
+  unsigned char *loaded_data = LoadFileData(filename, &data_size);
 
   if (loaded_data == NULL) {
     return;
   }
 
-  TraceLog(LOG_INFO, "Level data loaded with success");
-
-  int *data_section = (int *)(loaded_data + LEVEL_DATA_OFFSET);
+  EditorGridCell *cells = (EditorGridCell *)(loaded_data + DATA_OFFSET);
 
   for (int i = 0; i < CELL_COUNT; i++) {
     for (int j = 0; j < CELL_COUNT; j++) {
-      level[i][j] = *data_section;
-      data_section++;
+      grid[i][j] = *cells;
+      cells++;
     }
   }
 }
 
-void save_level_file(const char *name, int level[CELL_COUNT][CELL_COUNT]) {
-  char *data = (char *)malloc(LEVEL_FILE_SIZE);
+void save_level_file(const char *filename, EditorGridCell (*grid)[100]) {
+  unsigned char *file = (unsigned char *)MemAlloc(LEVEL_FILE_SIZE);
 
-  strncpy((data + LEVEL_NAME_OFFSET), name, LEVEL_NAME_SIZE);
-
-  int *data_section = (int *)(data + LEVEL_DATA_OFFSET);
+  EditorGridCell *cells = (EditorGridCell *)(file + DATA_OFFSET);
 
   for (int i = 0; i < CELL_COUNT; i++) {
     for (int j = 0; j < CELL_COUNT; j++) {
-      *data_section = level[i][j];
-      data_section++;
+      memcpy(cells, &grid[i][j], sizeof(EditorGridCell));
+      cells++;
     }
   }
 
-  if (!SaveFileData(name, data, LEVEL_FILE_SIZE)) {
-    TraceLog(LOG_ERROR, "Error while saving level data");
-    exit(EXIT_FAILURE);
+  bool saved = SaveFileData(filename, file, LEVEL_FILE_SIZE);
+
+  if (!saved) {
+    TraceLog(LOG_ERROR, "An error occured while saving level file");
   }
 
-  TraceLog(LOG_INFO, "Level data saved with success");
-
-  free(data);
+  TraceLog(LOG_INFO, "Level File Saved");
+  MemFree(file);
 }
