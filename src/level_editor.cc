@@ -1,4 +1,5 @@
 #include "level_editor.h"
+#include "camera.h"
 #include "common.h"
 #include "config.h"
 #include "draw.h"
@@ -48,13 +49,7 @@ void render_entities() {
   }
 }
 
-// TODO: Setup a generic Key Manipulation Handler
-void handle_editor_input(Camera2D *camera, int pressed_key) {
-  Vector2 camera_movement = {0, 0};
-  Vector2 camera_vertical_movement = {0, 0};
-  Vector2 camera_horizontal_movement = {0, 0};
-  float camera_velocity = 10;
-
+void handle_editor_actions(Camera2D *camera, int pressed_key) {
   switch (pressed_key) {
   case KEY_M:
     level_editor.save_level();
@@ -62,18 +57,6 @@ void handle_editor_input(Camera2D *camera, int pressed_key) {
   case KEY_SPACE:
     level_editor.next_type();
     break;
-  }
-
-  if (IsKeyDown(KEY_W)) {
-    camera_vertical_movement = {0, -camera_velocity};
-  } else if (IsKeyDown(KEY_S)) {
-    camera_vertical_movement = {0, camera_velocity};
-  }
-
-  if (IsKeyDown(KEY_A)) {
-    camera_horizontal_movement = {-camera_velocity, 0};
-  } else if (IsKeyDown(KEY_D)) {
-    camera_horizontal_movement = {camera_velocity, 0};
   }
 
   if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
@@ -86,44 +69,12 @@ void handle_editor_input(Camera2D *camera, int pressed_key) {
     level_editor.grid[MOUSE_TO_GRID(mouse.y)][MOUSE_TO_GRID(mouse.x)].type =
         EMPTY;
   }
-
-  camera->target =
-      Vector2Add(camera->target, Vector2Add(camera_horizontal_movement,
-                                            camera_vertical_movement));
 }
 
-void render_mouse_hover_grid(Vector2 mouse) {
-  switch (level_editor.types[level_editor.current_entity_index]) {
-  case UBWALL:
-    draw_wall({(float)MOUSE_TO_GRID(mouse.x), (float)MOUSE_TO_GRID(mouse.y)},
-              ubwall_texture);
-    break;
-  case BWALL:
-    draw_wall({(float)MOUSE_TO_GRID(mouse.x), (float)MOUSE_TO_GRID(mouse.y)},
-              bwall_texture);
-    break;
-  case PLAYER:
-    draw_ship({(float)MOUSE_TO_GRID(mouse.x), (float)MOUSE_TO_GRID(mouse.y)});
-    break;
-  case BASE_ENEMY:
-    DrawCircleV({MOUSE_TO_CIRCLE((int)(mouse.x / CELL_SIZE)),
-                 MOUSE_TO_CIRCLE((int)(mouse.y / CELL_SIZE))},
-                10, ColorAlpha(RED, 0.5));
-    break;
-  case EMPTY:
-    draw_wall({(float)MOUSE_TO_GRID(mouse.x), (float)MOUSE_TO_GRID(mouse.y)},
-              floor_texture);
-    break;
-  case SENTRY_A_ENEMY:
-    DrawCircleV({MOUSE_TO_CIRCLE((int)(mouse.x / CELL_SIZE)),
-                 MOUSE_TO_CIRCLE((int)(mouse.y / CELL_SIZE))},
-                10, ColorAlpha(PURPLE, 0.5));
-    break;
-  case WARPZONE:
-    draw_warpzone(
-        {(float)MOUSE_TO_GRID(mouse.x), (float)MOUSE_TO_GRID(mouse.y)});
-    break;
-  }
+// TODO: Setup a generic Key Manipulation Handler
+void handle_editor_input(Camera2D *camera, int pressed_key) {
+  handle_editor_actions(camera, pressed_key);
+  handle_camera_movement(camera);
 }
 
 void render_mouse_position(Camera2D camera, Vector2 mouse) {
@@ -150,6 +101,7 @@ void render_level_editor(Camera2D *camera) {
   Vector2 mouse = get_world_mouse(*camera);
 
   render_entities();
-  render_mouse_hover_grid(mouse);
+  render_mouse_hover_grid(
+      mouse, level_editor.types[level_editor.current_entity_index]);
   render_hud(camera, mouse);
 }
