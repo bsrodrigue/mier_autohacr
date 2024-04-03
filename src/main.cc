@@ -219,12 +219,6 @@ void update_enemy_projectiles() {
   }
 }
 
-void reset_projectile(int index, Projectile *projectiles) {
-  projectiles[index].is_shooting = false;
-  projectiles[index].position = {0, 0};
-  projectiles[index].direction = {0, 0};
-}
-
 void update_player_projectiles() {
   // TODO: Do you seriously want to loop over all the projectiles?
   for (int i = 0; i < MAX_PROJECTILES; i++) {
@@ -369,6 +363,8 @@ void draw_projectiles() {
   draw_player_projectiles();
 }
 
+// TODO: Use this and think about creating maybe a universal utility for drawing
+// entities
 void draw_enemies() {
   for (int i = 0; i < enemy_count; i++) {
     if (enemies[i].state == DEAD)
