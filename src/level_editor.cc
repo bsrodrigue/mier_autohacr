@@ -27,7 +27,6 @@ Vector2 get_player_position(EditorGridCell (*grid)[100]) {
   return {-1, -1};
 }
 
-bool is_warpzone_destination = false;
 LevelEditor level_editor;
 
 void load_level_editor(const char *filename) {

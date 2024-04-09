@@ -39,7 +39,13 @@ class LevelEditor {
 public:
   const char *filename;
 
+  // ------------------------[ Editor State ]------------------------------ //
+
+  bool origin_warpzone_placed = false;
+  bool can_change_entity = true;
+
   // ----------------------------[ Grid ]---------------------------------- //
+
   EditorGridCell grid[CELL_COUNT][CELL_COUNT];
 
   int current_entity_index = 1;

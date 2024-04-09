@@ -6,6 +6,8 @@
 #include <raylib.h>
 #include <string.h>
 
+// TODO: Design a better file format for level files
+
 void create_level_file(const char *filename, const char *level_name,
                        const char *author_name) {
 
