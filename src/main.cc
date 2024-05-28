@@ -34,8 +34,9 @@ Level level;
 
 char *level_file;
 
+// TODO: Maybe create a config file for plater stats
 float player_bullet_damage = 1;
-float projectile_speed = 8;
+float projectile_speed = 10;
 
 static Camera2D camera;
 
@@ -111,7 +112,7 @@ void init_game_camera() {
 }
 
 void init_window() {
-  InitWindow(WIN_WIDTH, WIN_HEIGHT, "Mia: Autohacker");
+  InitWindow(WIN_WIDTH, WIN_HEIGHT, "Autohacker");
 
   if (!IsWindowReady())
     die("Failed to initialize window\n");
@@ -515,8 +516,9 @@ void set_initial_screen(const char *game_mode) {
   }
 }
 
-// Why is game development so hard?
 int main(int argc, char *argv[]) {
+  // TODO: Find a new way to enjoy programming through personal projects.
+
   if (argc != 3) {
     printf("usage: autohacka [gamemode] [level_file]\n");
     return 1;
