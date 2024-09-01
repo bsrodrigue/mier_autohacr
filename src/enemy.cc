@@ -4,7 +4,7 @@ Enemy create_base_enemy() {
   Enemy enemy;
 
   enemy.health = 5;
-  enemy.shooting_interval = 0.5;
+  enemy.shooting_interval = 0.3;
   enemy.last_shot = 0;
   enemy.vision_radius = 50 * 3;
   enemy.type = BASE;

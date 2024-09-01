@@ -112,7 +112,7 @@ void init_game_camera() {
 }
 
 void init_window() {
-  InitWindow(WIN_WIDTH, WIN_HEIGHT, "Autohacker");
+  InitWindow(WIN_WIDTH, WIN_HEIGHT, "Project Autohacker");
 
   if (!IsWindowReady())
     die("Failed to initialize window\n");
@@ -517,7 +517,6 @@ void set_initial_screen(const char *game_mode) {
 }
 
 int main(int argc, char *argv[]) {
-  // TODO: Find a new way to enjoy programming through personal projects.
 
   if (argc != 3) {
     printf("usage: autohacka [gamemode] [level_file]\n");
