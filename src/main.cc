@@ -11,6 +11,7 @@
 #include "screen.h"
 #include "textures.h"
 #include "wall.h"
+#include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <raylib.h>
@@ -34,7 +35,7 @@ Level level;
 
 char *level_file;
 
-// TODO: Maybe create a config file for plater stats
+// TODO: Maybe create a config file for player stats
 float player_bullet_damage = 1;
 float projectile_speed = 10;
 
@@ -52,8 +53,20 @@ Player player;
 
 void enemy_shoot(Enemy enemy, Vector2 target) {
   int result = enemy_projectiles.get_free_projectile();
+
+  // Projectile pool is not exhausted
   if (result != -1) {
     enemy_projectiles.allocate_projectile(result, enemy.position, target);
+  }
+}
+
+void enemy_shoot_direction(Enemy enemy, Vector2 direction) {
+  int result = enemy_projectiles.get_free_projectile();
+
+  // Projectile pool is not exhausted
+  if (result != -1) {
+    enemy_projectiles.allocate_projectile_by_direction(result, enemy.position,
+                                                       direction);
   }
 }
 
@@ -108,7 +121,7 @@ void init_game_camera() {
   camera.target = player.position;
   camera.offset = {(float)WIN_WIDTH / 2, (float)WIN_HEIGHT / 2};
   camera.rotation = 0;
-  camera.zoom = 2;
+  camera.zoom = 3;
 }
 
 void init_window() {
@@ -259,55 +272,65 @@ void update_player_projectiles() {
   }
 }
 
-void handle_enemy_shoot(Enemy *enemy, bool is_in_range) {
+void handle_enemy_shoot(Enemy *enemy) {
   float time = GetTime();
 
   if ((time - enemy->last_shot) >= enemy->shooting_interval) {
     enemy->last_shot = time;
 
-    if (is_in_range) {
-      switch (enemy->type) {
-      case BASE:
+    switch (enemy->type) {
+    case BASE:
+      if (enemy->tracks_player) {
         enemy_shoot_player(*enemy, player.position);
-        break;
-      case SENTRY_A:
-        enemy_shoot_star(*enemy);
-        break;
       }
+
+      else {
+        Vector2 direction = (Vector2){cosf(enemy->shooting_angle * DEG2RAD),
+                                      sinf(enemy->shooting_angle * DEG2RAD)};
+
+        enemy_shoot_direction(*enemy, direction);
+        enemy->shooting_angle += 10;
+      }
+      break;
+    case SENTRY_A:
+      enemy_shoot_star(*enemy);
+      break;
     }
   }
 }
 
 void handle_enemy_behaviour() {
   for (int i = 0; i < enemy_count; i++) {
+
     if (enemies[i].state == DEAD)
       continue;
 
     bool is_in_range = CheckCollisionPointCircle(
         player.position, enemies[i].position, enemies[i].vision_radius);
 
-    handle_enemy_shoot(&enemies[i], is_in_range);
-
     if (is_in_range) {
 
-      switch (enemies[i].type) {
-      case BASE: {
+      if (enemies[i].tracks_player) {
         enemies[i].shooting_angle =
             get_angle_relative_to(player.position, enemies[i].position);
-        Vector2 next_position =
-            Vector2MoveTowards(enemies[i].position, player.position, 2);
-
-        if (check_wall_collision(walls, next_position) == -1) {
-          enemies[i].position = next_position;
-        }
-      } break;
-      case SENTRY_A:
-        break;
       }
 
-      DrawCircleV(enemies[i].position, enemies[i].vision_radius,
-                  ColorAlpha(RED, 0.5));
+      handle_enemy_shoot(&enemies[i]);
     }
+
+    if (enemies[i].can_move) {
+      Vector2 next_position =
+          Vector2MoveTowards(enemies[i].position, player.position, 2);
+
+      if (check_wall_collision(walls, next_position) == -1) {
+        enemies[i].position = next_position;
+      }
+    }
+
+#ifdef DEBUG
+    DrawCircleV(enemies[i].position, enemies[i].vision_radius,
+                ColorAlpha(RED, 0.5));
+#endif // DEBUG
   }
 }
 

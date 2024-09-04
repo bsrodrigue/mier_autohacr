@@ -44,6 +44,18 @@ void ProjectilePool::allocate_projectile(int index, Vector2 entity_position,
       get_angle_relative_to(target_position, entity_position);
 }
 
+void ProjectilePool::allocate_projectile_by_direction(int index,
+                                                      Vector2 entity_position,
+                                                      Vector2 direction) {
+  this->pool[index].position = entity_position;
+  this->pool[index].is_shooting = true;
+  this->pool[index].direction = direction;
+
+  float angle_rad = atan2f(direction.y, direction.x);
+
+  this->pool[index].angle = angle_rad * RAD2DEG;
+}
+
 void ProjectilePool::deallocate_projectile(int index) {
   pool[index].position = {0, 0};
   pool[index].is_shooting = false;

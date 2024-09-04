@@ -27,6 +27,9 @@ public:
   void allocate_projectile(int index, Vector2 entity_position,
                            Vector2 target_position);
 
+  void allocate_projectile_by_direction(int index, Vector2 entity_position,
+                                        Vector2 direction);
+
   void deallocate_projectile(int index);
 };
 
