@@ -15,6 +15,7 @@ public:
   float angle;
   float speed;
   float health;
+  float max_health;
   Player();
   Player(Vector2 position);
   void handle_player_movement(std::vector<Wall> walls);

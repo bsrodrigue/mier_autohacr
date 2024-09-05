@@ -387,6 +387,28 @@ void draw_projectiles() {
   draw_player_projectiles();
 }
 
+void draw_healthbar(Vector2 position, float max_health, float health, int width,
+                    int height) {
+  float health_percentage = health / max_health;
+  int max_width = 32, min_width = 1;
+
+  int rectWidth =
+      min_width + (int)((max_width - min_width) * health_percentage);
+
+  Color color = GREEN;
+
+  if (health_percentage < 0.3) {
+    color = RED;
+  }
+
+  else if (health_percentage < 0.6) {
+    color = ORANGE;
+  }
+
+  DrawRectangle((position.x - (int)(width / 2)), (position.y - 25), rectWidth,
+                5, color);
+}
+
 // TODO: Use this and think about creating maybe a universal utility for drawing
 // entities
 void draw_enemies() {
@@ -397,6 +419,8 @@ void draw_enemies() {
     switch (enemies[i].type) {
     case BASE: {
       Vector2 position = enemies[i].position;
+      draw_healthbar(position, enemies[i].max_health, enemies[i].health, 32,
+                     32);
       DrawTexturePro(
           sentinel_barrel_texture, {.x = 0, .y = 0, .width = 32, .height = 32},
           {.x = (position.x), .y = (position.y), .width = 32, .height = 32},
@@ -433,11 +457,31 @@ void draw_player_target() {
       {16, 16}, player.angle + 90, WHITE);
 }
 
+void draw_player_healthbar(Player player) {
+  // Calculate the width of the rectangle based on health
+  float healthPercentage = (float)player.health / player.max_health;
+  int rectWidth = 1 + (int)((32 - 1) * healthPercentage);
+
+  Color color = GREEN;
+
+  if (healthPercentage < 0.3) {
+    color = RED;
+  }
+
+  else if (healthPercentage < 0.6) {
+    color = ORANGE;
+  }
+
+  DrawRectangle((player.position.x - 16), (player.position.y - 25), rectWidth,
+                5, color);
+}
+
 void render_game() {
   draw_floor();
   draw_arena(walls, ubwall_texture, bwall_texture);
   draw_projectiles();
   draw_enemies();
+  draw_player_healthbar(player);
   player.draw();
   draw_player_target();
 }

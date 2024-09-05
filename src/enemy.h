@@ -21,6 +21,7 @@ typedef struct {
   EnemyState state;
   Vector2 position;
   float health;
+  float max_health;
   float shooting_interval;
   float shooting_angle;
   float last_shot;
