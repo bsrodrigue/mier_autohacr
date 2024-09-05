@@ -1,13 +1,14 @@
 #include "config.h"
 #include "enemy.h"
 #include "entities.h"
+#include "item.h"
 #include "wall.h"
 #include <raylib.h>
 
 #ifndef LEVEL_EDITOR_H
 #define LEVEL_EDITOR_H
 
-#define TYPE_COUNT 7
+#define TYPE_COUNT 8
 
 // Their positions are already infered from their grid indices
 typedef struct {
@@ -26,12 +27,17 @@ typedef struct {
 } EditorWarpzone;
 
 typedef struct {
+  ItemEffect effect;
+} EditorItem;
+
+typedef struct {
   EntityType type;
   union {
     EditorWall wall;
     EditorEnemy enemy;
     EditorWarpzone warpzone;
     EditorPlayer player;
+    EditorItem item;
   };
 } EditorGridCell;
 
@@ -49,8 +55,8 @@ public:
   EditorGridCell grid[CELL_COUNT][CELL_COUNT];
 
   int current_entity_index = 1;
-  EntityType types[TYPE_COUNT] = {EMPTY,      BWALL,          UBWALL,  PLAYER,
-                                  BASE_ENEMY, SENTRY_A_ENEMY, WARPZONE};
+  EntityType types[TYPE_COUNT] = {EMPTY,      BWALL,          UBWALL,   PLAYER,
+                                  BASE_ENEMY, SENTRY_A_ENEMY, WARPZONE, ITEM};
 
   LevelEditor();
   LevelEditor(const char *filename);

@@ -5,8 +5,8 @@ Enemy create_base_enemy() {
   Enemy enemy;
 
   // TODO: Implement healthbar
-  enemy.health = 5;
-  enemy.max_health = 5;
+  enemy.health = 50;
+  enemy.max_health = 50;
   enemy.shooting_interval = 0.1;
   enemy.last_shot = 0;
   enemy.vision_radius = 50 * 50;

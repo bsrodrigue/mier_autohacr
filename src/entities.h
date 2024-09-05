@@ -11,7 +11,8 @@ typedef enum {
   PLAYER,
   BASE_ENEMY,
   SENTRY_A_ENEMY,
-  WARPZONE
+  WARPZONE,
+  ITEM,
 } EntityType;
 
 const char *get_entity_type_name(EntityType type);

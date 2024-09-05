@@ -32,6 +32,7 @@ LevelEditor level_editor;
 void load_level_editor(const char *filename) {
   level_editor.filename = filename;
 
+  // TODO: Allow nesting
   if (!FileExists(filename)) {
     level_editor.create_level_data();
   }
@@ -43,7 +44,7 @@ void render_entities() {
   for (int y = 0; y < CELL_COUNT; y++) {
     for (int x = 0; x < CELL_COUNT; x++) {
       int type = level_editor.grid[y][x].type;
-      draw_entity((EntityType)type, {(float)x, (float)y});
+      draw_editor_entity((EntityType)type, {(float)x, (float)y});
     }
   }
 }
@@ -78,17 +79,23 @@ void handle_editor_input(Camera2D *camera, int pressed_key) {
 
 void render_mouse_position(Camera2D camera, Vector2 mouse) {
   Vector2 hud_position = camera.target;
-  const char *message = TextFormat("MOUSE: (%d,%d)", MOUSE_TO_GRID(mouse.x),
+
+  const char *message = TextFormat("CELL: (%d,%d)", MOUSE_TO_GRID(mouse.x),
                                    MOUSE_TO_GRID(mouse.y));
+
   DrawText(message, hud_position.x, hud_position.y, 14, RED);
 }
 
 void render_current_entity_type(Camera2D camera) {
+  Vector2 hud_position = camera.target;
+  float offset = 20;
+
   const char *message =
       TextFormat("ENTITY TYPE: %s",
                  get_entity_type_name(
                      level_editor.types[level_editor.current_entity_index]));
-  DrawText(message, TEXT_POS(1), TEXT_POS(10), 14, RED);
+
+  DrawText(message, hud_position.x, hud_position.y + offset, 14, RED);
 }
 
 void render_hud(Camera2D *camera, Vector2 mouse) {

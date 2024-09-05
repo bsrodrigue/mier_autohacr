@@ -46,6 +46,9 @@ static std::vector<Wall> walls;
 static int enemy_count = 0;
 Enemy enemies[MAX_ENEMIES];
 
+static int item_count = 0;
+BaseItem items[MAX_ITEMS];
+
 ProjectilePool player_projectiles;
 ProjectilePool enemy_projectiles;
 
@@ -86,20 +89,21 @@ void player_shoot() {
   player.shoot(mouse);
 }
 
-void load_enemies() {
+void load_entities() {
   for (int y = 0; y < CELL_COUNT; y++) {
     for (int x = 0; x < CELL_COUNT; x++) {
       int type = level.grid[y][x].type;
+
       if (type == BASE_ENEMY) {
         Enemy enemy =
             create_enemy({(float)CELL_OFFSET(x), (float)CELL_OFFSET(y)}, BASE);
         enemies[enemy_count++] = enemy;
       }
 
-      else if (type == SENTRY_A_ENEMY) {
-        Enemy enemy = create_enemy(
-            {(float)CELL_OFFSET(x), (float)CELL_OFFSET(y)}, SENTRY_A);
-        enemies[enemy_count++] = enemy;
+      else if (type == ITEM) {
+        BaseItem item = create_base_item(
+            {(float)CELL_OFFSET(x), (float)CELL_OFFSET(y)}, HEALING);
+        items[item_count++] = item;
       }
     }
   }
@@ -160,6 +164,26 @@ void handle_input(int pressed_key) {
   }
 }
 
+template <typename E> void heal(E *entity, float health) {
+  entity->health = (entity->health + health) >= entity->max_health
+                       ? entity->max_health
+                       : (entity->health + health);
+}
+
+void pick_item(int index, Player *player) {
+  BaseItem item = items[index];
+
+  switch (item.effect) {
+  case HEALING:
+    heal(player, 10);
+    break;
+  case SPECIAL:
+    break;
+  }
+
+  items[index].picked = true;
+}
+
 void damage_enemy(int index) {
   if ((enemies[index].health - player_bullet_damage) <= 0) {
     enemies[index].state = DEAD;
@@ -191,6 +215,18 @@ int check_enemy_collision(Vector2 position, float radius) {
     if (enemies[i].state == DEAD)
       continue;
     if (CheckCollisionCircles(position, radius, enemies[i].position, 10))
+      return i;
+  }
+
+  return -1;
+}
+
+int check_items_collision(Vector2 position, float radius) {
+  for (int i = 0; i < item_count; i++) {
+    if (items[i].picked)
+      continue;
+
+    if (CheckCollisionCircles(position, radius, items[i].position, 10))
       return i;
   }
 
@@ -339,6 +375,14 @@ void update_positions() {
   handle_enemy_behaviour();
   update_enemy_projectiles();
   update_player_projectiles();
+
+  // Handle Item Picking
+
+  int item_index = check_items_collision(player.position, 10);
+
+  if (item_index != -1) {
+    pick_item(item_index, &player);
+  }
 }
 
 void update_player_angle() {
@@ -358,6 +402,20 @@ void handle_updates() {
     break;
   case LEVEL_EDITOR:
     break;
+  }
+}
+
+void draw_items() {
+  for (int i = 0; i < MAX_ITEMS; i++) {
+    if (!items[i].picked) {
+
+      DrawCircleV(
+          {
+              items[i].position.x,
+              items[i].position.y,
+          },
+          10, ColorAlpha(GREEN, 1));
+    }
   }
 }
 
@@ -483,6 +541,7 @@ void render_game() {
   draw_enemies();
   draw_player_healthbar(player);
   player.draw();
+  draw_items();
   draw_player_target();
 }
 
@@ -528,7 +587,7 @@ void render() {
 // TODO: Optimize level loading
 void load_level() {
   load_walls(walls, level.grid);
-  load_enemies();
+  load_entities();
 }
 
 void init_player() {

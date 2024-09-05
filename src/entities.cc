@@ -16,6 +16,8 @@ const char *get_entity_type_name(EntityType type) {
     return "Sentry A Enemy";
   case WARPZONE:
     return "Warp Zone";
+  case ITEM:
+    return "Item";
   default:
     return "";
   }
