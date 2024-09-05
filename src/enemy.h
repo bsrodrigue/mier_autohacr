@@ -7,7 +7,6 @@
 
 typedef enum {
   BASE,
-  SENTRY_A,
 } EnemyType;
 
 typedef enum {

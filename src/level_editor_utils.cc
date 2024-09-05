@@ -92,11 +92,10 @@ void LevelEditor::place_entity(Vector2 mouse) {
   case BASE_ENEMY:
     cell->enemy.type = BASE;
     break;
-  case SENTRY_A_ENEMY:
-    cell->enemy.type = SENTRY_A;
-    break;
   case WARPZONE:
     // TODO: Handle warpzone
+    break;
+  case ITEM:
     break;
   }
 }

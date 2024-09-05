@@ -42,10 +42,6 @@ void draw_editor_entity(EntityType type, Vector2 position) {
     DrawCircleV({MOUSE_TO_CIRCLE(position.x), MOUSE_TO_CIRCLE(position.y)}, 10,
                 ColorAlpha(RED, 1));
     break;
-  case SENTRY_A_ENEMY:
-    DrawCircleV({MOUSE_TO_CIRCLE(position.x), MOUSE_TO_CIRCLE(position.y)}, 10,
-                ColorAlpha(PURPLE, 1));
-    break;
   case WARPZONE:
     draw_warpzone(position);
     break;
@@ -77,11 +73,6 @@ void render_mouse_hover_grid(Vector2 mouse, EntityType type) {
   case EMPTY:
     draw_wall({(float)MOUSE_TO_GRID(mouse.x), (float)MOUSE_TO_GRID(mouse.y)},
               floor_texture);
-    break;
-  case SENTRY_A_ENEMY:
-    DrawCircleV({MOUSE_TO_CIRCLE((int)(mouse.x / CELL_SIZE)),
-                 MOUSE_TO_CIRCLE((int)(mouse.y / CELL_SIZE))},
-                10, ColorAlpha(PURPLE, 0.5));
     break;
   case WARPZONE:
     draw_warpzone(

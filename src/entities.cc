@@ -12,8 +12,6 @@ const char *get_entity_type_name(EntityType type) {
     return "Player";
   case BASE_ENEMY:
     return "Base Enemy";
-  case SENTRY_A_ENEMY:
-    return "Sentry A Enemy";
   case WARPZONE:
     return "Warp Zone";
   case ITEM:

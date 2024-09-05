@@ -7,8 +7,8 @@
 
 typedef enum {
   HEALING,
-  SPECIAL
-
+  PROJECTILE_BOOST,
+  SPECIAL,
 } ItemEffect;
 
 typedef struct {

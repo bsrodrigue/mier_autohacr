@@ -10,7 +10,6 @@ typedef enum {
   BWALL,
   PLAYER,
   BASE_ENEMY,
-  SENTRY_A_ENEMY,
   WARPZONE,
   ITEM,
 } EntityType;

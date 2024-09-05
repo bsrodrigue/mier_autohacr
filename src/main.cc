@@ -102,7 +102,7 @@ void load_entities() {
 
       else if (type == ITEM) {
         BaseItem item = create_base_item(
-            {(float)CELL_OFFSET(x), (float)CELL_OFFSET(y)}, HEALING);
+            {(float)CELL_OFFSET(x), (float)CELL_OFFSET(y)}, PROJECTILE_BOOST);
         items[item_count++] = item;
       }
     }
@@ -176,6 +176,9 @@ void pick_item(int index, Player *player) {
   switch (item.effect) {
   case HEALING:
     heal(player, 10);
+    break;
+  case PROJECTILE_BOOST:
+    player_bullet_damage += 5;
     break;
   case SPECIAL:
     break;
@@ -327,9 +330,6 @@ void handle_enemy_shoot(Enemy *enemy) {
         enemy_shoot_direction(*enemy, direction);
         enemy->shooting_angle += 10;
       }
-      break;
-    case SENTRY_A:
-      enemy_shoot_star(*enemy);
       break;
     }
   }
@@ -487,13 +487,6 @@ void draw_enemies() {
       draw_game_texture(enemies[i].position, enemies[i].shooting_angle + 90,
                         sentinel_head_texture);
     } break;
-    case SENTRY_A:
-      Vector2 position = enemies[i].position;
-      DrawTexturePro(
-          sentinel_texture, {.x = 0, .y = 0, .width = 64, .height = 64},
-          {.x = (position.x), .y = (position.y), .width = 32, .height = 32},
-          {16, 16}, 0, WHITE);
-      break;
     }
   }
 }
