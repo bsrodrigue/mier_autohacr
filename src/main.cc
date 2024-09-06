@@ -54,39 +54,39 @@ ProjectilePool enemy_projectiles;
 
 Player player;
 
-void enemy_shoot(Enemy enemy, Vector2 target) {
-  int result = enemy_projectiles.get_free_projectile();
+void shoot_target(Vector2 source, Vector2 target, ProjectilePool &pool) {
+  int index = pool.get_free_projectile();
 
-  // Projectile pool is not exhausted
-  if (result != -1) {
-    enemy_projectiles.allocate_projectile(result, enemy.position, target);
+  if (index != -1) {
+    pool.allocate_projectile(index);
+
+    pool.pool[index].position = source;
+    pool.pool[index].direction =
+        Vector2Normalize(Vector2Subtract(target, source));
+
+    pool.pool[index].angle = get_angle_relative_to(target, source);
   }
 }
 
-void enemy_shoot_direction(Enemy enemy, Vector2 direction) {
-  int result = enemy_projectiles.get_free_projectile();
+void shoot_straight(Vector2 source, Vector2 direction, ProjectilePool &pool) {
+  int index = pool.get_free_projectile();
 
-  // Projectile pool is not exhausted
-  if (result != -1) {
-    enemy_projectiles.allocate_projectile_by_direction(result, enemy.position,
-                                                       direction);
+  if (index != -1) {
+    pool.allocate_projectile(index);
+
+    pool.pool[index].position = source;
+    pool.pool[index].is_shooting = true;
+    pool.pool[index].direction = direction;
+
+    float angle_rad = atan2f(direction.y, direction.x);
+
+    pool.pool[index].angle = angle_rad * RAD2DEG;
   }
-}
-
-void enemy_shoot_player(Enemy enemy, Vector2 player_position) {
-  enemy_shoot(enemy, player_position);
-}
-
-void enemy_shoot_star(Enemy enemy) {
-  enemy_shoot(enemy, Vector2Add(enemy.position, {0, -1}));
-  enemy_shoot(enemy, Vector2Add(enemy.position, {1, 0}));
-  enemy_shoot(enemy, Vector2Add(enemy.position, {0, 1}));
-  enemy_shoot(enemy, Vector2Add(enemy.position, {-1, 0}));
 }
 
 void player_shoot() {
   Vector2 mouse = get_world_mouse(camera);
-  player.shoot(mouse);
+  shoot_target(player.position, mouse, player_projectiles);
 }
 
 void load_entities() {
@@ -139,13 +139,10 @@ void init_window() {
   HideCursor();
 }
 
-void handle_single_press_input() {
+void handle_game_input() {
   if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
     player_shoot();
-}
 
-void handle_game_input() {
-  handle_single_press_input();
   player.handle_player_movement(walls);
 }
 
@@ -217,6 +214,7 @@ int check_enemy_collision(Vector2 position, float radius) {
   for (int i = 0; i < enemy_count; i++) {
     if (enemies[i].state == DEAD)
       continue;
+
     if (CheckCollisionCircles(position, radius, enemies[i].position, 10))
       return i;
   }
@@ -320,14 +318,14 @@ void handle_enemy_shoot(Enemy *enemy) {
     switch (enemy->type) {
     case BASE:
       if (enemy->tracks_player) {
-        enemy_shoot_player(*enemy, player.position);
+        shoot_target(enemy->position, player.position, enemy_projectiles);
       }
 
       else {
         Vector2 direction = (Vector2){cosf(enemy->shooting_angle * DEG2RAD),
                                       sinf(enemy->shooting_angle * DEG2RAD)};
 
-        enemy_shoot_direction(*enemy, direction);
+        shoot_straight(enemy->position, direction, enemy_projectiles);
         enemy->shooting_angle += 10;
       }
       break;
@@ -584,7 +582,6 @@ void load_level() {
 }
 
 void init_player() {
-  player.subscribe_to_projectile_pool(&player_projectiles);
   player.load_texture(player_texture);
   player.position = get_player_position(level.grid);
 }

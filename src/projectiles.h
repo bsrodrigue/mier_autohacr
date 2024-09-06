@@ -24,11 +24,7 @@ public:
 
   int get_free_projectile();
 
-  void allocate_projectile(int index, Vector2 entity_position,
-                           Vector2 target_position);
-
-  void allocate_projectile_by_direction(int index, Vector2 entity_position,
-                                        Vector2 direction);
+  void allocate_projectile(int index);
 
   void deallocate_projectile(int index);
 };
