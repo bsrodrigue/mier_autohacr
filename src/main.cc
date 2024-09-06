@@ -102,7 +102,7 @@ void load_entities() {
 
       else if (type == ITEM) {
         BaseItem item = create_base_item(
-            {(float)CELL_OFFSET(x), (float)CELL_OFFSET(y)}, PROJECTILE_BOOST);
+            {(float)CELL_OFFSET(x), (float)CELL_OFFSET(y)}, HEALING);
         items[item_count++] = item;
       }
     }
@@ -187,6 +187,14 @@ void pick_item(int index, Player *player) {
 void damage_enemy(int index) {
   if ((enemies[index].health - player_bullet_damage) <= 0) {
     enemies[index].state = DEAD;
+
+    if (enemies[index].drops_items) {
+      BaseItem item =
+          create_base_item(enemies[index].position, PROJECTILE_BOOST);
+
+      // TODO: Check if max items reached in level
+      items[item_count++] = item;
+    }
   }
 
   enemies[index].health = enemies[index].health - player_bullet_damage;

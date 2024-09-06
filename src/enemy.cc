@@ -10,12 +10,15 @@ Enemy create_base_enemy() {
   enemy.shooting_interval = 0.1;
   enemy.last_shot = 0;
   enemy.vision_radius = 50 * 50;
+  enemy.shooting_angle = 0;
   enemy.type = BASE;
   enemy.state = ALIVE;
+
+  // Flags
   enemy.can_move = false;
   enemy.tracks_player = false;
   enemy.aimless_shooting = true;
-  enemy.shooting_angle = 0;
+  enemy.drops_items = true;
   return enemy;
 }
 
