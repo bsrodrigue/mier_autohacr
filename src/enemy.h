@@ -25,6 +25,9 @@ typedef struct {
   float shooting_angle;
   float last_shot;
   float vision_radius;
+
+  int projectile_rate;
+
   bool can_move;
   bool tracks_player;
   // Does not need to aim for player to shoot

@@ -330,10 +330,20 @@ void handle_enemy_shoot(Enemy *enemy) {
       }
 
       else {
-        Vector2 direction = (Vector2){cosf(enemy->shooting_angle * DEG2RAD),
-                                      sinf(enemy->shooting_angle * DEG2RAD)};
+        Vector2 direction;
+        float shooting_angle = enemy->shooting_angle;
 
-        shoot_straight(enemy->position, direction, enemy_projectiles);
+        // TODO: Extract this logic
+        for (int i = 0; i < enemy->projectile_rate; i++) {
+
+          direction = (Vector2){cosf(shooting_angle * DEG2RAD),
+                                sinf(shooting_angle * DEG2RAD)};
+
+          shoot_straight(enemy->position, direction, enemy_projectiles);
+
+          shooting_angle += 10;
+        }
+
         enemy->shooting_angle += 10;
       }
       break;
