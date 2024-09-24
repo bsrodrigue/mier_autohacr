@@ -97,5 +97,7 @@ void LevelEditor::place_entity(Vector2 mouse) {
     break;
   case ITEM:
     break;
+  case GATE:
+    break;
   }
 }

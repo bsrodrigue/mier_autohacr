@@ -6,12 +6,12 @@ Enemy create_base_enemy() {
 
   enemy.health = 50;
   enemy.max_health = 50;
-  enemy.shooting_interval = 0.001;
+  enemy.shooting_interval = 1;
   enemy.last_shot = 0;
   enemy.vision_radius = 50 * 50;
   enemy.shooting_angle = 0;
 
-  enemy.projectile_rate = 1 * 1;
+  enemy.projectile_rate = 1;
 
   enemy.type = BASE;
   enemy.state = ALIVE;

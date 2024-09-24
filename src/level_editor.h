@@ -8,7 +8,7 @@
 #ifndef LEVEL_EDITOR_H
 #define LEVEL_EDITOR_H
 
-#define TYPE_COUNT 7
+#define TYPE_COUNT 8
 
 // Their positions are already infered from their grid indices
 typedef struct {
@@ -31,6 +31,9 @@ typedef struct {
 } EditorItem;
 
 typedef struct {
+} EditorGate;
+
+typedef struct {
   EntityType type;
   union {
     EditorWall wall;
@@ -38,6 +41,7 @@ typedef struct {
     EditorWarpzone warpzone;
     EditorPlayer player;
     EditorItem item;
+    EditorGate gate;
   };
 } EditorGridCell;
 
@@ -56,7 +60,7 @@ public:
 
   int current_entity_index = 1;
   EntityType types[TYPE_COUNT] = {EMPTY,      BWALL,    UBWALL, PLAYER,
-                                  BASE_ENEMY, WARPZONE, ITEM};
+                                  BASE_ENEMY, WARPZONE, ITEM,   GATE};
 
   LevelEditor();
   LevelEditor(const char *filename);

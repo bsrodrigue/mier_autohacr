@@ -3,7 +3,7 @@
 #ifndef PROJECTILES_H
 #define PROJECTILES_H
 
-#define MAX_PROJECTILES 10000 // 10k
+#define MAX_PROJECTILES 500
 
 class Projectile {
 public:

@@ -16,6 +16,8 @@ const char *get_entity_type_name(EntityType type) {
     return "Warp Zone";
   case ITEM:
     return "Item";
+  case GATE:
+    return "GATE";
   default:
     return "";
   }

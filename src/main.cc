@@ -1,8 +1,10 @@
+#include "collision.h"
 #include "common.h"
 #include "config.h"
 #include "enemy.h"
 #include "entities.h"
 #include "game.h"
+#include "gate.h"
 #include "level.h"
 #include "level_editor.h"
 #include "player.h"
@@ -17,6 +19,7 @@
 #include <raylib.h>
 #include <raymath.h>
 #include <string.h>
+#include <vector>
 
 Texture2D player_texture;
 Texture2D ubwall_texture;
@@ -38,10 +41,16 @@ char *level_file;
 // TODO: Maybe create a config file for player stats
 float player_bullet_damage = 1;
 float projectile_speed = 10;
+float last_shot = 0;
+float shooting_interval = 0.1;
 
 static Camera2D camera;
 
 static std::vector<Wall> walls;
+static std::vector<Vector2> wall_positions;
+
+static std::vector<Gate> gates;
+static std::vector<Vector2> gate_positions;
 
 static int enemy_count = 0;
 Enemy enemies[MAX_ENEMIES];
@@ -75,7 +84,6 @@ void shoot_straight(Vector2 source, Vector2 direction, ProjectilePool &pool) {
     pool.allocate_projectile(index);
 
     pool.pool[index].position = source;
-    pool.pool[index].is_shooting = true;
     pool.pool[index].direction = direction;
 
     float angle_rad = atan2f(direction.y, direction.x);
@@ -89,21 +97,46 @@ void player_shoot() {
   shoot_target(player.position, mouse, player_projectiles);
 }
 
+Vector2 get_offset_position(float x, float y) {
+  return {(float)CELL_OFFSET(x), (float)CELL_OFFSET(y)};
+}
+
 void load_entities() {
   for (int y = 0; y < CELL_COUNT; y++) {
     for (int x = 0; x < CELL_COUNT; x++) {
       int type = level.grid[y][x].type;
 
-      if (type == BASE_ENEMY) {
-        Enemy enemy =
-            create_enemy({(float)CELL_OFFSET(x), (float)CELL_OFFSET(y)}, BASE);
+      if (type == UBWALL) {
+        Wall w = create_ubreakable_wall(get_offset_position(x, y));
+        walls.push_back(w);
+        wall_positions.push_back(w.position);
+      }
+
+      else if (type == BWALL) {
+        Wall w = create_breakable_wall(get_offset_position(x, y));
+        walls.push_back(w);
+        wall_positions.push_back(w.position);
+      }
+
+      else if (type == BASE_ENEMY) {
+        Enemy enemy = create_enemy(get_offset_position(x, y), BASE);
         enemies[enemy_count++] = enemy;
       }
 
       else if (type == ITEM) {
-        BaseItem item = create_base_item(
-            {(float)CELL_OFFSET(x), (float)CELL_OFFSET(y)}, HEALING);
+        BaseItem item = create_base_item(get_offset_position(x, y), HEALING);
         items[item_count++] = item;
+      }
+
+      else if (type == GATE) {
+        Gate gate;
+
+        gate.opened = false;
+        gate.type = BASE_GATE;
+        gate.position = get_offset_position(x, y);
+
+        gates.push_back(gate);
+        gate_positions.push_back(gate.position);
       }
     }
   }
@@ -140,10 +173,42 @@ void init_window() {
 }
 
 void handle_game_input() {
-  if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+  float now = GetTime();
+  if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) &&
+      (now - last_shot) > shooting_interval) {
     player_shoot();
+    last_shot = now;
+  }
 
-  player.handle_player_movement(walls);
+  Vector2 next_position = player.get_next_position();
+
+  std::vector<Vector2> colliders = wall_positions;
+
+  colliders.insert(colliders.end(), gate_positions.begin(),
+                   gate_positions.end());
+
+  player.handle_player_movement(colliders);
+
+  int gate_index = -1;
+
+  for (int i = 0; i < gates.size(); i++) {
+    if (CheckCollisionPointCircle(player.position,
+                                  {
+                                      .x = gates[i].position.x + 12.5f,
+                                      .y = gates[i].position.y + 12.5f,
+                                  },
+                                  20)) {
+      gate_index = i;
+      break;
+    }
+  }
+
+  if (IsKeyPressed(KEY_SPACE) && (gate_index != -1)) {
+    gates[gate_index].opened = true;
+
+    gate_positions.erase(gate_positions.begin() + gate_index);
+    gates.erase(gates.begin() + gate_index);
+  }
 }
 
 void handle_input(int pressed_key) {
@@ -202,7 +267,9 @@ void damage_enemy(int index) {
 
 void damage_wall(int index) {
   if ((walls[index].health - player_bullet_damage) <= 0) {
+    // walls[index].state = DESTROYED;
     walls.erase(walls.begin() + index);
+    wall_positions.erase(wall_positions.begin() + index);
   }
 
   walls.at(index).health = walls.at(index).health - player_bullet_damage;
@@ -253,8 +320,8 @@ void update_enemy_projectiles() {
     }
 
     // Find better way to check many-to-many collisions
-    int touched =
-        check_wall_collision(walls, enemy_projectiles.pool[i].position);
+    int touched = check_wall_collision(wall_positions,
+                                       enemy_projectiles.pool[i].position);
 
     if (touched != -1) {
       switch (walls[touched].type) {
@@ -294,8 +361,8 @@ void update_player_projectiles() {
 
     // Recycle in object pool for optimal memory usage
     // Find better way to check many-to-many collisions
-    int touched =
-        check_wall_collision(walls, player_projectiles.pool[i].position);
+    int touched = check_wall_collision(wall_positions,
+                                       player_projectiles.pool[i].position);
 
     if (touched != -1) {
       switch (walls[touched].type) {
@@ -374,7 +441,7 @@ void handle_enemy_behaviour() {
       Vector2 next_position =
           Vector2MoveTowards(enemies[i].position, player.position, 2);
 
-      if (check_wall_collision(walls, next_position) == -1) {
+      if (check_wall_collision(wall_positions, next_position) == -1) {
         enemies[i].position = next_position;
       }
     }
@@ -393,7 +460,6 @@ void update_positions() {
   update_player_projectiles();
 
   // Handle Item Picking
-
   int item_index = check_items_collision(player.position, 10);
 
   if (item_index != -1) {
@@ -435,30 +501,28 @@ void draw_items() {
   }
 }
 
-void draw_player_projectiles() {
-  for (int i = 0; i < MAX_PROJECTILES; i++) {
-    if (player_projectiles.pool[i].is_shooting) {
-      draw_game_texture(player_projectiles.pool[i].position,
-                        player_projectiles.pool[i].angle + 90,
-                        projectile_texture);
+void draw_gates() {
+  for (int i = 0; i < gates.size(); i++) {
+    if (!gates[i].opened) {
+
+      DrawCircleV(
+          {
+              gate_positions[i].x + 12.5f,
+              gate_positions[i].y + 12.5f,
+          },
+          12.5f, ColorAlpha(ORANGE, 1));
     }
   }
 }
 
-void draw_enemy_projectiles() {
+void draw_projectiles(ProjectilePool projectile_pool) {
   for (int i = 0; i < MAX_PROJECTILES; i++) {
-    if (enemy_projectiles.pool[i].is_shooting) {
-
-      draw_game_texture(enemy_projectiles.pool[i].position,
-                        enemy_projectiles.pool[i].angle + 90,
-                        projectile_texture);
+    if (projectile_pool.pool[i].is_shooting) {
+      TraceLog(LOG_INFO, "projectile %d", i);
+      draw_game_texture(projectile_pool.pool[i].position,
+                        projectile_pool.pool[i].angle + 90, projectile_texture);
     }
   }
-}
-
-void draw_projectiles() {
-  draw_enemy_projectiles();
-  draw_player_projectiles();
 }
 
 void draw_healthbar(Vector2 position, float max_health, float health, int width,
@@ -510,7 +574,7 @@ void draw_enemies() {
 void draw_floor() {
   for (int y = 0; y < CELL_COUNT; y++) {
     for (int x = 0; x < CELL_COUNT; x++) {
-      draw_wall({(float)x, (float)y}, floor_texture);
+      draw_wall(get_offset_position(x, y), floor_texture);
     }
   }
 }
@@ -546,11 +610,16 @@ void draw_player_healthbar(Player player) {
 void render_game() {
   draw_floor();
   draw_arena(walls, ubwall_texture, bwall_texture);
-  draw_projectiles();
-  draw_enemies();
+
+  draw_projectiles(enemy_projectiles);
+  draw_projectiles(player_projectiles);
+
   draw_player_healthbar(player);
+  draw_enemies();
   player.draw();
   draw_items();
+  draw_gates();
+
   draw_player_target();
 }
 
@@ -590,14 +659,12 @@ void render() {
     break;
   }
 
+  // Global HUD
   render_global();
 }
 
 // TODO: Optimize level loading
-void load_level() {
-  load_walls(walls, level.grid);
-  load_entities();
-}
+void load_level() { load_entities(); }
 
 void init_player() {
   player.load_texture(player_texture);
@@ -673,9 +740,13 @@ int main(int argc, char *argv[]) {
 
     int pressed_key = GetKeyPressed();
 
+    // Input
     handle_input(pressed_key);
+
+    // State
     handle_updates();
 
+    // UI
     render();
 
     EndMode2D();

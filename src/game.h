@@ -6,8 +6,6 @@
 
 #ifndef GAME_H
 #define GAME_H
-void load_walls(std::vector<Wall> &walls,
-                EditorGridCell level_grid[CELL_COUNT][CELL_COUNT]);
 
 void draw_arena(std::vector<Wall> &walls, Texture2D ubwall_texture,
                 Texture2D bwall_texture);

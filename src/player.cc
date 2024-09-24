@@ -1,6 +1,6 @@
 #include "player.h"
+#include "collision.h"
 #include "entities.h"
-#include "wall.h"
 #include <raylib.h>
 #include <raymath.h>
 
@@ -26,7 +26,7 @@ Player::Player(Vector2 position) {
 
 void Player::load_texture(Texture2D texture) { this->texture = texture; }
 
-void Player::handle_player_movement(std::vector<Wall> walls) {
+Vector2 Player::get_next_position() {
   Vector2 movement = {0, 0};
 
   if (IsKeyDown(KEY_W))
@@ -40,12 +40,28 @@ void Player::handle_player_movement(std::vector<Wall> walls) {
 
   Vector2 next_position = Vector2Add(position, movement);
 
-  if (check_wall_collision(walls, {position.x, next_position.y}) == -1) {
-    position.y = next_position.y;
+  return next_position;
+}
+
+Vector2 Player::get_confirmed_position(Vector2 next_position,
+                                       std::vector<Vector2> cell_positions) {
+
+  Vector2 confirmed_position = this->position;
+  if (check_cells_collision(cell_positions, {position.x, next_position.y}) ==
+      -1) {
+    confirmed_position.y = next_position.y;
   }
-  if (check_wall_collision(walls, {next_position.x, position.y}) == -1) {
-    position.x = next_position.x;
+  if (check_cells_collision(cell_positions, {next_position.x, position.y}) ==
+      -1) {
+    confirmed_position.x = next_position.x;
   }
+
+  return confirmed_position;
+}
+
+void Player::handle_player_movement(std::vector<Vector2> wall_positions) {
+  Vector2 next_position = get_next_position();
+  this->position = get_confirmed_position(next_position, wall_positions);
 }
 
 void Player::draw() {

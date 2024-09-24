@@ -49,6 +49,10 @@ void draw_editor_entity(EntityType type, Vector2 position) {
     DrawCircleV({MOUSE_TO_CIRCLE(position.x), MOUSE_TO_CIRCLE(position.y)}, 10,
                 ColorAlpha(GREEN, 1));
     break;
+  case GATE:
+    DrawCircleV({MOUSE_TO_CIRCLE(position.x), MOUSE_TO_CIRCLE(position.y)}, 16,
+                ColorAlpha(ORANGE, 1));
+    break;
   }
 }
 
@@ -82,6 +86,11 @@ void render_mouse_hover_grid(Vector2 mouse, EntityType type) {
     DrawCircleV({MOUSE_TO_CIRCLE((int)(mouse.x / CELL_SIZE)),
                  MOUSE_TO_CIRCLE((int)(mouse.y / CELL_SIZE))},
                 10, ColorAlpha(GREEN, 0.5));
+    break;
+  case GATE:
+    DrawCircleV({MOUSE_TO_CIRCLE((int)(mouse.x / CELL_SIZE)),
+                 MOUSE_TO_CIRCLE((int)(mouse.y / CELL_SIZE))},
+                16, ColorAlpha(ORANGE, 0.5));
     break;
   }
 }
