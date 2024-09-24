@@ -7,7 +7,6 @@
 
 typedef enum {
   BASE,
-  SENTRY_A,
 } EnemyType;
 
 typedef enum {
@@ -15,15 +14,25 @@ typedef enum {
   DEAD,
 } EnemyState;
 
+// TODO: Find a better way of handling flags
 typedef struct {
+  EnemyType type;
+  EnemyState state;
+  Vector2 position;
   float health;
+  float max_health;
   float shooting_interval;
   float shooting_angle;
   float last_shot;
-  Vector2 position;
   float vision_radius;
-  EnemyType type;
-  EnemyState state;
+
+  int projectile_rate;
+
+  bool can_move;
+  bool tracks_player;
+  // Does not need to aim for player to shoot
+  bool aimless_shooting;
+  bool drops_items;
 } Enemy;
 
 Enemy create_enemy(Vector2 position, EnemyType type);

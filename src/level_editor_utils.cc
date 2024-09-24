@@ -10,6 +10,7 @@ void LevelEditor::load_level_data() {
 }
 
 void LevelEditor::create_level_data() {
+  // TODO: Get user input for level name and author.
   create_level_file(this->filename, "New Level", "Sawcekeeper");
 }
 
@@ -26,12 +27,13 @@ Vector2 LevelEditor::get_player_position() {
 }
 
 void LevelEditor::next_type() {
-  if (current_entity_index + 1 >= TYPE_COUNT) {
-    current_entity_index = 0;
+  if (!this->can_change_entity) {
+    // TODO: Handle this situation.
     return;
   }
 
-  current_entity_index++;
+  bool reached_end = current_entity_index + 1 >= TYPE_COUNT;
+  current_entity_index = reached_end ? 0 : (current_entity_index + 1);
 }
 
 template <typename T> int LevelEditor::get_free_editor_entity(T entities[100]) {
@@ -50,7 +52,9 @@ void LevelEditor::place_entity(Vector2 mouse) {
     return;
   }
 
-  if (this->types[this->current_entity_index] == PLAYER) {
+  EntityType type = this->types[this->current_entity_index];
+
+  if (type == PLAYER) {
     Vector2 previous_pos = this->get_player_position();
 
     if (previous_pos.x != -1) {
@@ -60,10 +64,20 @@ void LevelEditor::place_entity(Vector2 mouse) {
     }
   }
 
+  if (type == WARPZONE && !this->origin_warpzone_placed) {
+    this->origin_warpzone_placed = true;
+    this->can_change_entity = false;
+  }
+
+  if (type == WARPZONE && this->origin_warpzone_placed) {
+    this->origin_warpzone_placed = false;
+    this->can_change_entity = true;
+  }
+
   EditorGridCell *cell =
       &this->grid[MOUSE_TO_GRID(mouse.y)][MOUSE_TO_GRID(mouse.x)];
 
-  cell->type = this->types[this->current_entity_index];
+  cell->type = type;
 
   switch (cell->type) {
   case EMPTY:
@@ -78,11 +92,12 @@ void LevelEditor::place_entity(Vector2 mouse) {
   case BASE_ENEMY:
     cell->enemy.type = BASE;
     break;
-  case SENTRY_A_ENEMY:
-    cell->enemy.type = SENTRY_A;
-    break;
   case WARPZONE:
     // TODO: Handle warpzone
+    break;
+  case ITEM:
+    break;
+  case GATE:
     break;
   }
 }

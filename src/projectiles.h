@@ -3,7 +3,7 @@
 #ifndef PROJECTILES_H
 #define PROJECTILES_H
 
-#define MAX_PROJECTILES 50
+#define MAX_PROJECTILES 500
 
 class Projectile {
 public:
@@ -24,8 +24,7 @@ public:
 
   int get_free_projectile();
 
-  void allocate_projectile(int index, Vector2 entity_position,
-                           Vector2 target_position);
+  void allocate_projectile(int index);
 
   void deallocate_projectile(int index);
 };

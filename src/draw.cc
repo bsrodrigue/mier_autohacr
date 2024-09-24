@@ -1,3 +1,4 @@
+#include "entities.h"
 #include "textures.h"
 #include "wall.h"
 
@@ -22,7 +23,7 @@ void draw_ship(Vector2 position) {
                  {0, 0}, 0, WHITE);
 }
 
-void draw_entity(EntityType type, Vector2 position) {
+void draw_editor_entity(EntityType type, Vector2 position) {
   // TODO: This does not belong here
   draw_wall(position, floor_texture);
   switch (type) {
@@ -41,12 +42,55 @@ void draw_entity(EntityType type, Vector2 position) {
     DrawCircleV({MOUSE_TO_CIRCLE(position.x), MOUSE_TO_CIRCLE(position.y)}, 10,
                 ColorAlpha(RED, 1));
     break;
-  case SENTRY_A_ENEMY:
-    DrawCircleV({MOUSE_TO_CIRCLE(position.x), MOUSE_TO_CIRCLE(position.y)}, 10,
-                ColorAlpha(PURPLE, 1));
-    break;
   case WARPZONE:
     draw_warpzone(position);
+    break;
+  case ITEM:
+    DrawCircleV({MOUSE_TO_CIRCLE(position.x), MOUSE_TO_CIRCLE(position.y)}, 10,
+                ColorAlpha(GREEN, 1));
+    break;
+  case GATE:
+    DrawCircleV({MOUSE_TO_CIRCLE(position.x), MOUSE_TO_CIRCLE(position.y)}, 16,
+                ColorAlpha(ORANGE, 1));
+    break;
+  }
+}
+
+void render_mouse_hover_grid(Vector2 mouse, EntityType type) {
+  switch (type) {
+  case UBWALL:
+    draw_wall({(float)MOUSE_TO_GRID(mouse.x), (float)MOUSE_TO_GRID(mouse.y)},
+              ubwall_texture);
+    break;
+  case BWALL:
+    draw_wall({(float)MOUSE_TO_GRID(mouse.x), (float)MOUSE_TO_GRID(mouse.y)},
+              bwall_texture);
+    break;
+  case PLAYER:
+    draw_ship({(float)MOUSE_TO_GRID(mouse.x), (float)MOUSE_TO_GRID(mouse.y)});
+    break;
+  case BASE_ENEMY:
+    DrawCircleV({MOUSE_TO_CIRCLE((int)(mouse.x / CELL_SIZE)),
+                 MOUSE_TO_CIRCLE((int)(mouse.y / CELL_SIZE))},
+                10, ColorAlpha(RED, 0.5));
+    break;
+  case EMPTY:
+    draw_wall({(float)MOUSE_TO_GRID(mouse.x), (float)MOUSE_TO_GRID(mouse.y)},
+              floor_texture);
+    break;
+  case WARPZONE:
+    draw_warpzone(
+        {(float)MOUSE_TO_GRID(mouse.x), (float)MOUSE_TO_GRID(mouse.y)});
+    break;
+  case ITEM:
+    DrawCircleV({MOUSE_TO_CIRCLE((int)(mouse.x / CELL_SIZE)),
+                 MOUSE_TO_CIRCLE((int)(mouse.y / CELL_SIZE))},
+                10, ColorAlpha(GREEN, 0.5));
+    break;
+  case GATE:
+    DrawCircleV({MOUSE_TO_CIRCLE((int)(mouse.x / CELL_SIZE)),
+                 MOUSE_TO_CIRCLE((int)(mouse.y / CELL_SIZE))},
+                16, ColorAlpha(ORANGE, 0.5));
     break;
   }
 }

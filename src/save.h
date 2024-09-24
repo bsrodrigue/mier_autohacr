@@ -5,6 +5,9 @@
 #ifndef SAVE_H
 #define SAVE_H
 
+// TODO: You need a better file format because whenever you change the size of a
+// grid cell type, the file format becomes obsolete
+
 //======== File Format =======//
 #define FORMAT_VERSION 0.2
 #define LEN_SIZE 4
