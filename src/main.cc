@@ -5,6 +5,7 @@
 #include "entities.h"
 #include "game.h"
 #include "gate.h"
+#include "item_drop.h"
 #include "level.h"
 #include "level_editor.h"
 #include "player.h"
@@ -106,6 +107,8 @@ void load_entities() {
     for (int x = 0; x < CELL_COUNT; x++) {
       int type = level.grid[y][x].type;
 
+      // Currently, the entity loader is creating entities with default settings
+
       if (type == UBWALL) {
         Wall w = create_ubreakable_wall(get_offset_position(x, y));
         walls.push_back(w);
@@ -124,7 +127,8 @@ void load_entities() {
       }
 
       else if (type == ITEM) {
-        BaseItem item = create_base_item(get_offset_position(x, y), HEALING);
+        BaseItem item = create_base_item(HEALING_EFFECT, INSTANT_USAGE,
+                                         get_offset_position(x, y));
         items[item_count++] = item;
       }
 
@@ -172,7 +176,8 @@ void init_window() {
   HideCursor();
 }
 
-void handle_game_input() {
+void handle_game_input(int pressed_key) {
+  // Handle player shooting
   float now = GetTime();
   if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) &&
       (now - last_shot) > shooting_interval) {
@@ -218,7 +223,7 @@ void handle_input(int pressed_key) {
   case MENU:
     break;
   case GAME:
-    handle_game_input();
+    handle_game_input(pressed_key);
     break;
   case LEVEL_EDITOR:
     handle_editor_input(&camera, pressed_key);
@@ -232,34 +237,50 @@ template <typename E> void heal(E *entity, float health) {
                        : (entity->health + health);
 }
 
+void use_item(Player *player, ItemEffect effect) {
+  switch (effect) {
+  case HEALING_EFFECT:
+    heal(player, 10);
+    break;
+  case PROJECTILE_BOOST_EFFECT:
+    player_bullet_damage += 5;
+    break;
+  case SPECIAL_EFFECT:
+    break;
+  case NO_EFFECT:
+    break;
+  case KEY_EFFECT:
+    break;
+  }
+}
+
 void pick_item(int index, Player *player) {
   BaseItem item = items[index];
 
-  switch (item.effect) {
-  case HEALING:
-    heal(player, 10);
-    break;
-  case PROJECTILE_BOOST:
-    player_bullet_damage += 5;
-    break;
-  case SPECIAL:
-    break;
-  }
+  if (item.usage == INSTANT_USAGE)
+    use_item(player, item.effect);
 
   items[index].picked = true;
+}
+
+void handle_enemy_death(Enemy *enemy) {
+  if (enemy->drops_items) {
+
+    // Drop all items
+    for (int i = 0; i < enemy->item_drop.count; i++) {
+      // TODO: Drop item randomly around the origin (enemy position)
+
+      BaseItem item = drop(enemy->item_drop, enemy->position);
+      items[item_count++] = item;
+    }
+  }
 }
 
 void damage_enemy(int index) {
   if ((enemies[index].health - player_bullet_damage) <= 0) {
     enemies[index].state = DEAD;
 
-    if (enemies[index].drops_items) {
-      BaseItem item =
-          create_base_item(enemies[index].position, PROJECTILE_BOOST);
-
-      // TODO: Check if max items reached in level
-      items[item_count++] = item;
-    }
+    handle_enemy_death(&enemies[index]);
   }
 
   enemies[index].health = enemies[index].health - player_bullet_damage;

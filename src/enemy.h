@@ -1,3 +1,4 @@
+#include "item_drop.h"
 #include <raylib.h>
 
 #ifndef ENEMY_H
@@ -32,7 +33,9 @@ typedef struct {
   bool tracks_player;
   // Does not need to aim for player to shoot
   bool aimless_shooting;
+
   bool drops_items;
+  ItemDrop item_drop;
 } Enemy;
 
 Enemy create_enemy(Vector2 position, EnemyType type);
