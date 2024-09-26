@@ -17,6 +17,10 @@ typedef enum {
 } ItemType;
 
 typedef enum {
+  HEALING_CHIP_TEXTURE,
+} ItemTexture;
+
+typedef enum {
   NO_EFFECT,
   HEALING_EFFECT,
   PROJECTILE_BOOST_EFFECT,
@@ -35,11 +39,13 @@ typedef enum {
 typedef struct {
   ItemEffect effect;
   ItemUsage usage;
+  ItemTexture texture;
   Vector2 position;
   bool picked;
 } BaseItem;
 
-BaseItem create_base_item(ItemEffect effect, ItemUsage usage, Vector2 position);
+BaseItem create_base_item(ItemEffect effect, ItemUsage usage,
+                          ItemTexture texture, Vector2 position);
 
 BaseItem create_static_item(ItemType type, Vector2 position);
 

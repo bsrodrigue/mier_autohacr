@@ -38,6 +38,10 @@ void draw_floor(Vector2 position) {
   draw_texture_cell(position, floor_texture);
 }
 
+void draw_target_cursor(Vector2 position, float rotation) {
+  draw_texture_cell(position, target_texture, rotation);
+}
+
 void draw_wall(Vector2 position, WallType type) {
   switch (type) {
   case BREAKABLE_WALL:
@@ -53,8 +57,12 @@ void draw_warpzone(Vector2 position) {
   draw_texture_cell(position, warpzone_texture);
 }
 
-void draw_ship(Vector2 position) {
-  draw_texture_cell(position, player_texture);
+void draw_ship(Vector2 position, float rotation) {
+  draw_game_texture(position, player_texture, rotation);
+}
+
+void draw_ship_editor(Vector2 position, float rotation) {
+  draw_texture_cell(position, player_texture, rotation);
 }
 
 void draw_base_enemy(Vector2 position, float rotation = 0) {
@@ -70,6 +78,10 @@ void draw_projectile(Vector2 position, float rotation) {
   draw_game_texture(position, projectile_texture, rotation);
 }
 
+void draw_healing_chip(Vector2 position, float rotation) {
+  draw_game_texture(position, healing_chip_texture, rotation, 15, 15);
+}
+
 void draw_editor_entity(EntityType type, Vector2 position) {
   switch (type) {
   case EMPTY_ENTITY:
@@ -81,7 +93,7 @@ void draw_editor_entity(EntityType type, Vector2 position) {
     draw_wall(position, BREAKABLE_WALL);
     break;
   case PLAYER_ENTITY:
-    draw_ship(position);
+    draw_ship_editor(position, 0);
     break;
   case BASE_ENEMY_ENTITY: {
     Vector2 offset = {GAME_TEXTURE_SIZE / 2.0f, GAME_TEXTURE_SIZE / 2.0f};

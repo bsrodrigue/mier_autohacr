@@ -1,40 +1,37 @@
-
 #include "textures.h"
 #include <raylib.h>
 
-void load_actor_textures() { player_texture = LoadTexture(PLAYER_TEXTURE_SRC); }
+Texture2D player_texture;
+Texture2D ubwall_texture;
+Texture2D bwall_texture;
+Texture2D floor_texture;
+Texture2D target_texture;
+Texture2D sentinel_texture;
+Texture2D warpzone_texture;
+Texture2D projectile_texture;
+Texture2D sentinel_head_texture;
+Texture2D sentinel_barrel_texture;
+Texture2D healing_chip_texture;
 
-void load_wall_textures() {
-  ubwall_texture = LoadTexture(UBWALL_TEXTURE_SRC);
-  bwall_texture = LoadTexture(BWALL_TEXTURE_SRC);
-}
+TextureInfo textures[NUM_TEXTURES] = {
+    {"./assets/textures/environment/wall.png", &ubwall_texture},
+    {"./assets/textures/environment/bwall.png", &bwall_texture},
+    {"./assets/textures/environment/floor.png", &floor_texture},
 
-void load_floor_textures() { floor_texture = LoadTexture(FLOOR_TEXTURE_SRC); }
+    {"./assets/textures/transport/Warpzone.png", &warpzone_texture},
 
-void load_target_textures() {
-  target_texture = LoadTexture(TARGET_TEXTURE_SRC);
-}
+    {"./assets/textures/projectiles/Projectile.png", &projectile_texture},
 
-void load_enemies_textures() {
-  sentinel_texture = LoadTexture(SENTINEL_TEXTURE_SRC);
-  sentinel_head_texture = LoadTexture(SENTINEL_HEAD_TEXTURE_SRC);
-  sentinel_barrel_texture = LoadTexture(SENTINEL_BARREL_TEXTURE_SRC);
-}
+    {"./assets/textures/actors/ship.png", &player_texture},
+    {"./assets/textures/actors/target.png", &target_texture},
+    {"./assets/textures/actors/sentinel.png", &sentinel_texture},
+    {"./assets/textures/actors/Sentinel_Head.png", &sentinel_head_texture},
+    {"./assets/textures/actors/Sentinel_Barrel.png", &sentinel_barrel_texture},
 
-void load_transport_textures() {
-  warpzone_texture = LoadTexture(WARPZONE_TEXTURE_SRC);
-}
-
-void load_projectile_textures() {
-  projectile_texture = LoadTexture(PROJECTILE_TEXTURE_SRC);
-}
+    {"./assets/textures/items/healing_chip.png", &healing_chip_texture}};
 
 void load_textures() {
-  load_actor_textures();
-  load_target_textures();
-  load_wall_textures();
-  load_floor_textures();
-  load_enemies_textures();
-  load_transport_textures();
-  load_projectile_textures();
+  for (int i = 0; i < NUM_TEXTURES; i++) {
+    *textures[i].texture = LoadTexture(textures[i].path);
+  }
 }

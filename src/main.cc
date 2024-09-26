@@ -18,6 +18,7 @@
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
+#include <ctime>
 #include <raylib.h>
 #include <raymath.h>
 #include <string.h>
@@ -25,17 +26,6 @@
 
 #define RAYGUI_IMPLEMENTATION
 // #include "raygui.h"
-
-Texture2D player_texture;
-Texture2D ubwall_texture;
-Texture2D bwall_texture;
-Texture2D floor_texture;
-Texture2D target_texture;
-Texture2D sentinel_texture;
-Texture2D sentinel_head_texture;
-Texture2D sentinel_barrel_texture;
-Texture2D warpzone_texture;
-Texture2D projectile_texture;
 
 ScreenManager screen_manager;
 
@@ -127,8 +117,9 @@ void load_entities() {
       }
 
       else if (type == ITEM_ENTITY) {
-        BaseItem item = create_base_item(HEALING_EFFECT, INSTANT_USAGE,
-                                         get_offset_position(x, y));
+        BaseItem item =
+            create_base_item(HEALING_EFFECT, INSTANT_USAGE,
+                             HEALING_CHIP_TEXTURE, get_offset_position(x, y));
         items[item_count++] = item;
       }
 
@@ -259,11 +250,19 @@ void pick_item(int index, Player *player) {
 void handle_enemy_death(Enemy *enemy) {
   if (enemy->drops_items) {
 
+    float drop_radius = 20.0f;
+
     // Drop all items
     for (int i = 0; i < enemy->item_drop.count; i++) {
-      // TODO: Drop item randomly around the origin (enemy position)
+      float drop_angle = GetRandomValue(0, 360);
+
+      Vector2 drop_position = {
+          .x = enemy->position.x + cosf(drop_angle * DEG2RAD) * drop_radius,
+          .y = enemy->position.y + sinf(drop_angle * DEG2RAD) * drop_radius,
+      };
 
       BaseItem item = drop(enemy->item_drop, enemy->position);
+      item.position = drop_position;
       items[item_count++] = item;
     }
   }
@@ -505,12 +504,11 @@ void draw_items() {
   for (int i = 0; i < MAX_ITEMS; i++) {
     if (!items[i].picked) {
 
-      DrawCircleV(
-          {
-              items[i].position.x,
-              items[i].position.y,
-          },
-          10, ColorAlpha(GREEN, 1));
+      switch (items[i].texture) {
+      case HEALING_CHIP_TEXTURE:
+        draw_healing_chip(items[i].position, 0);
+        break;
+      }
     }
   }
 }
@@ -584,10 +582,7 @@ void render_floor() {
 void draw_player_target() {
   Vector2 position = GetScreenToWorld2D(GetMousePosition(), camera);
 
-  DrawTexturePro(
-      target_texture, {.x = 0, .y = 0, .width = 32, .height = 32},
-      {.x = (position.x), .y = (position.y), .width = 32, .height = 32},
-      {16, 16}, player.angle + 90, WHITE);
+  draw_target_cursor(position, player.angle);
 }
 
 void draw_player_healthbar(Player player) {
@@ -668,10 +663,7 @@ void render() {
 // TODO: Optimize level loading
 void load_level() { load_entities(); }
 
-void init_player() {
-  player.load_texture(player_texture);
-  player.position = get_player_position(level.grid);
-}
+void init_player() { player.position = get_player_position(level.grid); }
 
 void ScreenManager::init_game_screen() {
   level.filename = level_file;
@@ -725,6 +717,10 @@ int main(int argc, char *argv[]) {
     printf("usage: autohacka [gamemode] [level_file]\n");
     return 1;
   }
+
+  unsigned int seed = time(0);
+
+  SetRandomSeed(seed);
 
   init_window();
   load_textures();

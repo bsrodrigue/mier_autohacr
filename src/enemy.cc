@@ -4,7 +4,7 @@
 Enemy create_base_enemy() {
   Enemy enemy;
 
-  enemy.health = 50;
+  enemy.health = 25;
   enemy.max_health = enemy.health;
   enemy.shooting_interval = 0.1;
   enemy.last_shot = 0;
@@ -26,9 +26,10 @@ Enemy create_base_enemy() {
 
   ItemDrop item_drop;
 
-  item_drop.item_effect = KEY_EFFECT;
-  item_drop.item_usage = INVENTORY_USAGE;
-  item_drop.count = 3;
+  item_drop.item_effect = HEALING_EFFECT;
+  item_drop.item_usage = INSTANT_USAGE;
+  item_drop.texture = HEALING_CHIP_TEXTURE;
+  item_drop.count = 10;
 
   enemy.item_drop = item_drop;
 

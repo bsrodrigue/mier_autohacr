@@ -6,6 +6,7 @@
 typedef struct {
   ItemEffect item_effect;
   ItemUsage item_usage;
+  ItemTexture texture;
   int count;
 
 } ItemDrop;
