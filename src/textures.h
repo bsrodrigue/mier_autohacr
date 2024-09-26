@@ -28,7 +28,7 @@ extern Texture2D bwall_texture;
 extern Texture2D floor_texture;
 extern Texture2D target_texture;
 extern Texture2D sentinel_texture;
-extern Texture2D warzone_texture;
+extern Texture2D warpzone_texture;
 extern Texture2D projectile_texture;
 extern Texture2D sentinel_head_texture;
 extern Texture2D sentinel_barrel_texture;

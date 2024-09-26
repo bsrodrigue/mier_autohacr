@@ -7,8 +7,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-void draw_arena(std::vector<Wall> &walls, Texture2D ubwall_texture,
-                Texture2D bwall_texture);
+void draw_arena(std::vector<Wall> &walls);
 
 Wall create_breakable_wall(Vector2 position);
 

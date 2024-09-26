@@ -1,6 +1,7 @@
 #include "collision.h"
 #include "common.h"
 #include "config.h"
+#include "draw.h"
 #include "enemy.h"
 #include "entities.h"
 #include "game.h"
@@ -33,7 +34,7 @@ Texture2D target_texture;
 Texture2D sentinel_texture;
 Texture2D sentinel_head_texture;
 Texture2D sentinel_barrel_texture;
-Texture2D warzone_texture;
+Texture2D warpzone_texture;
 Texture2D projectile_texture;
 
 ScreenManager screen_manager;
@@ -101,10 +102,6 @@ void player_shoot() {
   shoot_target(player.position, mouse, player_projectiles);
 }
 
-Vector2 get_offset_position(float x, float y) {
-  return {(float)CELL_OFFSET(x), (float)CELL_OFFSET(y)};
-}
-
 void load_entities() {
   for (int y = 0; y < CELL_COUNT; y++) {
     for (int x = 0; x < CELL_COUNT; x++) {
@@ -147,13 +144,6 @@ void load_entities() {
       }
     }
   }
-}
-
-void draw_game_texture(Vector2 position, float angle, Texture2D texture) {
-  DrawTexturePro(
-      texture, {.x = 0, .y = 0, .width = 32, .height = 32},
-      {.x = (position.x), .y = (position.y), .width = 32, .height = 32},
-      {16, 16}, angle, WHITE);
 }
 
 void die(const char *message) {
@@ -349,11 +339,11 @@ void update_enemy_projectiles() {
 
     if (touched != -1) {
       switch (walls[touched].type) {
-      case BREAKABLE:
+      case BREAKABLE_WALL:
         // Should enemies be able to destroy walls?
         damage_wall(touched);
         break;
-      case UNBREAKABLE:
+      case UNBREAKABLE_WALL:
         break;
       }
 
@@ -390,10 +380,10 @@ void update_player_projectiles() {
 
     if (touched != -1) {
       switch (walls[touched].type) {
-      case BREAKABLE:
+      case BREAKABLE_WALL:
         damage_wall(touched);
         break;
-      case UNBREAKABLE:
+      case UNBREAKABLE_WALL:
         break;
       }
       player_projectiles.deallocate_projectile(i);
@@ -528,13 +518,7 @@ void draw_items() {
 void draw_gates() {
   for (int i = 0; i < gates.size(); i++) {
     if (!gates[i].opened) {
-
-      DrawCircleV(
-          {
-              gate_positions[i].x + 12.5f,
-              gate_positions[i].y + 12.5f,
-          },
-          12.5f, ColorAlpha(ORANGE, 1));
+      draw_warpzone(gates[i].position);
     }
   }
 }
@@ -542,8 +526,8 @@ void draw_gates() {
 void draw_projectiles(ProjectilePool projectile_pool) {
   for (int i = 0; i < MAX_PROJECTILES; i++) {
     if (projectile_pool.pool[i].is_shooting) {
-      draw_game_texture(projectile_pool.pool[i].position,
-                        projectile_pool.pool[i].angle + 90, projectile_texture);
+      draw_projectile(projectile_pool.pool[i].position,
+                      projectile_pool.pool[i].angle + 90.0f);
     }
   }
 }
@@ -582,22 +566,17 @@ void draw_enemies() {
       Vector2 position = enemies[i].position;
       draw_healthbar(position, enemies[i].max_health, enemies[i].health, 32,
                      32);
-      DrawTexturePro(
-          sentinel_barrel_texture, {.x = 0, .y = 0, .width = 32, .height = 32},
-          {.x = (position.x), .y = (position.y), .width = 32, .height = 32},
-          {16, 32}, enemies[i].shooting_angle + 90, WHITE);
 
-      draw_game_texture(enemies[i].position, enemies[i].shooting_angle + 90,
-                        sentinel_head_texture);
+      draw_base_enemy(enemies[i].position, enemies[i].shooting_angle);
     } break;
     }
   }
 }
 
-void draw_floor() {
+void render_floor() {
   for (int y = 0; y < CELL_COUNT; y++) {
     for (int x = 0; x < CELL_COUNT; x++) {
-      draw_wall(get_offset_position(x, y), floor_texture);
+      draw_floor(get_offset_position(x, y));
     }
   }
 }
@@ -631,8 +610,8 @@ void draw_player_healthbar(Player player) {
 }
 
 void render_game() {
-  draw_floor();
-  draw_arena(walls, ubwall_texture, bwall_texture);
+  render_floor();
+  draw_arena(walls);
 
   draw_projectiles(enemy_projectiles);
   draw_projectiles(player_projectiles);

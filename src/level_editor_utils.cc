@@ -87,10 +87,10 @@ void LevelEditor::place_entity(Vector2 mouse) {
   case GATE_ENTITY:
     break;
   case UBWALL_ENTITY:
-    cell->wall.type = UNBREAKABLE;
+    cell->wall.type = UNBREAKABLE_WALL;
     break;
   case BWALL_ENTITY:
-    cell->wall.type = BREAKABLE;
+    cell->wall.type = BREAKABLE_WALL;
     break;
   case BASE_ENEMY_ENTITY:
     cell->enemy.type = BASE_ENEMY;

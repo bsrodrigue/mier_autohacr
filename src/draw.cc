@@ -1,95 +1,106 @@
+#include "draw.h"
+#include "common.h"
+#include "config.h"
 #include "entities.h"
 #include "textures.h"
 #include "wall.h"
+#include <raylib.h>
+#include <raymath.h>
 
-void draw_ubwall(Vector2 position) { draw_wall(position, ubwall_texture); }
-void draw_bwall(Vector2 position) { draw_wall(position, bwall_texture); }
+void draw_texture_cell(Vector2 position, Texture2D texture,
+                       float rotation = 0) {
+  DrawTexturePro(
+      texture,
+      {.x = 0, .y = 0, .width = GAME_TEXTURE_SIZE, .height = GAME_TEXTURE_SIZE},
+      {.x = (position.x),
+       .y = (position.y),
+       .width = CELL_SIZE,
+       .height = CELL_SIZE},
+      {0, 0}, rotation, WHITE);
+}
+
+void draw_game_texture_editor(Vector2 position, Texture2D texture,
+                              float rotation, Vector2 origin) {
+
+  draw_game_texture(position, texture, rotation, CELL_SIZE, CELL_SIZE, origin);
+}
+
+void draw_game_texture(Vector2 position, Texture2D texture, float rotation,
+                       float width, float height, Vector2 origin) {
+  DrawTexturePro(
+      texture,
+      {.x = 0, .y = 0, .width = GAME_TEXTURE_SIZE, .height = GAME_TEXTURE_SIZE},
+      {.x = (position.x), .y = (position.y), .width = width, .height = height},
+      origin, rotation, WHITE);
+}
+
+void draw_floor(Vector2 position) {
+  draw_texture_cell(position, floor_texture);
+}
+
+void draw_wall(Vector2 position, WallType type) {
+  switch (type) {
+  case BREAKABLE_WALL:
+    draw_texture_cell(position, bwall_texture);
+    break;
+  case UNBREAKABLE_WALL:
+    draw_texture_cell(position, ubwall_texture);
+    break;
+  }
+}
 
 void draw_warpzone(Vector2 position) {
-  DrawTexturePro(warzone_texture, {.x = 0, .y = 0, .width = 32, .height = 32},
-                 {.x = (position.x * CELL_SIZE),
-                  .y = (position.y * CELL_SIZE),
-                  .width = 25,
-                  .height = 25},
-                 {0, 0}, 0, WHITE);
+  draw_texture_cell(position, warpzone_texture);
 }
 
 void draw_ship(Vector2 position) {
-  DrawTexturePro(player_texture, {.x = 0, .y = 0, .width = 32, .height = 32},
-                 {.x = (position.x * CELL_SIZE),
-                  .y = (position.y * CELL_SIZE),
-                  .width = 25,
-                  .height = 25},
-                 {0, 0}, 0, WHITE);
+  draw_texture_cell(position, player_texture);
+}
+
+void draw_base_enemy(Vector2 position, float rotation = 0) {
+
+  draw_game_texture(Vector2Add(position, {0, 0}), sentinel_barrel_texture,
+                    rotation + 90, GAME_TEXTURE_SIZE, GAME_TEXTURE_SIZE,
+                    {.x = (GAME_TEXTURE_SIZE / 2.0f), .y = GAME_TEXTURE_SIZE});
+
+  draw_game_texture(position, sentinel_head_texture, rotation + 90);
+}
+
+void draw_projectile(Vector2 position, float rotation) {
+  draw_game_texture(position, projectile_texture, rotation);
 }
 
 void draw_editor_entity(EntityType type, Vector2 position) {
-  draw_wall(position, floor_texture);
   switch (type) {
   case EMPTY_ENTITY:
     break;
   case UBWALL_ENTITY:
-    draw_wall(position, ubwall_texture);
+    draw_wall(position, UNBREAKABLE_WALL);
     break;
   case BWALL_ENTITY:
-    draw_wall(position, bwall_texture);
+    draw_wall(position, BREAKABLE_WALL);
     break;
   case PLAYER_ENTITY:
     draw_ship(position);
     break;
-  case BASE_ENEMY_ENTITY:
-    DrawCircleV({MOUSE_TO_CIRCLE(position.x), MOUSE_TO_CIRCLE(position.y)}, 10,
-                ColorAlpha(RED, 1));
-    break;
+  case BASE_ENEMY_ENTITY: {
+    Vector2 offset = {GAME_TEXTURE_SIZE / 2.0f, GAME_TEXTURE_SIZE / 2.0f};
+    draw_base_enemy(Vector2Add(position, offset), 90.0f);
+  } break;
   case WARPZONE_ENTITY:
     draw_warpzone(position);
     break;
   case ITEM_ENTITY:
-    DrawCircleV({MOUSE_TO_CIRCLE(position.x), MOUSE_TO_CIRCLE(position.y)}, 10,
-                ColorAlpha(GREEN, 1));
+    draw_warpzone(position);
     break;
   case GATE_ENTITY:
-    DrawCircleV({MOUSE_TO_CIRCLE(position.x), MOUSE_TO_CIRCLE(position.y)}, 16,
-                ColorAlpha(ORANGE, 1));
+    draw_warpzone(position);
     break;
   }
 }
 
 void render_mouse_hover_grid(Vector2 mouse, EntityType type) {
-  switch (type) {
-  case UBWALL_ENTITY:
-    draw_wall({(float)MOUSE_TO_GRID(mouse.x), (float)MOUSE_TO_GRID(mouse.y)},
-              ubwall_texture);
-    break;
-  case BWALL_ENTITY:
-    draw_wall({(float)MOUSE_TO_GRID(mouse.x), (float)MOUSE_TO_GRID(mouse.y)},
-              bwall_texture);
-    break;
-  case PLAYER_ENTITY:
-    draw_ship({(float)MOUSE_TO_GRID(mouse.x), (float)MOUSE_TO_GRID(mouse.y)});
-    break;
-  case BASE_ENEMY_ENTITY:
-    DrawCircleV({MOUSE_TO_CIRCLE((int)(mouse.x / CELL_SIZE)),
-                 MOUSE_TO_CIRCLE((int)(mouse.y / CELL_SIZE))},
-                10, ColorAlpha(RED, 0.5));
-    break;
-  case EMPTY_ENTITY:
-    draw_wall({(float)MOUSE_TO_GRID(mouse.x), (float)MOUSE_TO_GRID(mouse.y)},
-              floor_texture);
-    break;
-  case WARPZONE_ENTITY:
-    draw_warpzone(
-        {(float)MOUSE_TO_GRID(mouse.x), (float)MOUSE_TO_GRID(mouse.y)});
-    break;
-  case ITEM_ENTITY:
-    DrawCircleV({MOUSE_TO_CIRCLE((int)(mouse.x / CELL_SIZE)),
-                 MOUSE_TO_CIRCLE((int)(mouse.y / CELL_SIZE))},
-                10, ColorAlpha(GREEN, 0.5));
-    break;
-  case GATE_ENTITY:
-    DrawCircleV({MOUSE_TO_CIRCLE((int)(mouse.x / CELL_SIZE)),
-                 MOUSE_TO_CIRCLE((int)(mouse.y / CELL_SIZE))},
-                16, ColorAlpha(ORANGE, 0.5));
-    break;
-  }
+  Vector2 position =
+      get_offset_position(MOUSE_TO_GRID(mouse.x), MOUSE_TO_GRID(mouse.y));
+  draw_editor_entity(type, position);
 }

@@ -19,7 +19,6 @@
 
 #define CELL_OFFSET(x) (x * (CELL_SIZE))
 #define MOUSE_TO_GRID(x) (int)(x / CELL_SIZE)
-#define MOUSE_TO_CIRCLE(x) (float)(x * CELL_SIZE + (int)(CELL_SIZE / 2))
 
 #define BREAKABLE_WALL_HEALTH 1
 

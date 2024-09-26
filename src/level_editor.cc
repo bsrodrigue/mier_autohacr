@@ -43,8 +43,12 @@ void load_level_editor(const char *filename) {
 void render_entities() {
   for (int y = 0; y < CELL_COUNT; y++) {
     for (int x = 0; x < CELL_COUNT; x++) {
+
+      // Fill entire space with floor texture beforehand
+      draw_floor(get_offset_position(x, y));
+
       int type = level_editor.grid[y][x].type;
-      draw_editor_entity((EntityType)type, {(float)x, (float)y});
+      draw_editor_entity((EntityType)type, get_offset_position(x, y));
     }
   }
 }

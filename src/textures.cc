@@ -22,7 +22,7 @@ void load_enemies_textures() {
 }
 
 void load_transport_textures() {
-  warzone_texture = LoadTexture(WARPZONE_TEXTURE_SRC);
+  warpzone_texture = LoadTexture(WARPZONE_TEXTURE_SRC);
 }
 
 void load_projectile_textures() {
