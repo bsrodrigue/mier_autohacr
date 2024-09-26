@@ -7,7 +7,7 @@
 #define MAX_ENEMIES 50
 
 typedef enum {
-  BASE,
+  BASE_ENEMY,
 } EnemyType;
 
 typedef enum {

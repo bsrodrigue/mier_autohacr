@@ -19,7 +19,7 @@ Vector2 get_player_position(EditorGridCell (*grid)[100]) {
   for (int y = 0; y < CELL_COUNT; y++) {
     for (int x = 0; x < CELL_COUNT; x++) {
       EntityType type = grid[y][x].type;
-      if (type == PLAYER)
+      if (type == PLAYER_ENTITY)
         return {(float)(x * CELL_SIZE), (float)(y * CELL_SIZE)};
     }
   }
@@ -67,7 +67,7 @@ void handle_editor_actions(Camera2D *camera, int pressed_key) {
   if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
     Vector2 mouse = get_world_mouse(*camera);
     level_editor.grid[MOUSE_TO_GRID(mouse.y)][MOUSE_TO_GRID(mouse.x)].type =
-        EMPTY;
+        EMPTY_ENTITY;
   }
 }
 

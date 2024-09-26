@@ -22,6 +22,9 @@
 #include <string.h>
 #include <vector>
 
+#define RAYGUI_IMPLEMENTATION
+// #include "raygui.h"
+
 Texture2D player_texture;
 Texture2D ubwall_texture;
 Texture2D bwall_texture;
@@ -109,30 +112,30 @@ void load_entities() {
 
       // Currently, the entity loader is creating entities with default settings
 
-      if (type == UBWALL) {
+      if (type == UBWALL_ENTITY) {
         Wall w = create_ubreakable_wall(get_offset_position(x, y));
         walls.push_back(w);
         wall_positions.push_back(w.position);
       }
 
-      else if (type == BWALL) {
+      else if (type == BWALL_ENTITY) {
         Wall w = create_breakable_wall(get_offset_position(x, y));
         walls.push_back(w);
         wall_positions.push_back(w.position);
       }
 
-      else if (type == BASE_ENEMY) {
-        Enemy enemy = create_enemy(get_offset_position(x, y), BASE);
+      else if (type == BASE_ENEMY_ENTITY) {
+        Enemy enemy = create_enemy(get_offset_position(x, y), BASE_ENEMY);
         enemies[enemy_count++] = enemy;
       }
 
-      else if (type == ITEM) {
+      else if (type == ITEM_ENTITY) {
         BaseItem item = create_base_item(HEALING_EFFECT, INSTANT_USAGE,
                                          get_offset_position(x, y));
         items[item_count++] = item;
       }
 
-      else if (type == GATE) {
+      else if (type == GATE_ENTITY) {
         Gate gate;
 
         gate.opened = false;
@@ -412,7 +415,7 @@ void handle_enemy_shoot(Enemy *enemy) {
     enemy->last_shot = time;
 
     switch (enemy->type) {
-    case BASE:
+    case BASE_ENEMY:
       if (enemy->tracks_player) {
         shoot_target(enemy->position, player.position, enemy_projectiles);
       }
@@ -539,7 +542,6 @@ void draw_gates() {
 void draw_projectiles(ProjectilePool projectile_pool) {
   for (int i = 0; i < MAX_PROJECTILES; i++) {
     if (projectile_pool.pool[i].is_shooting) {
-      TraceLog(LOG_INFO, "projectile %d", i);
       draw_game_texture(projectile_pool.pool[i].position,
                         projectile_pool.pool[i].angle + 90, projectile_texture);
     }
@@ -576,7 +578,7 @@ void draw_enemies() {
       continue;
 
     switch (enemies[i].type) {
-    case BASE: {
+    case BASE_ENEMY: {
       Vector2 position = enemies[i].position;
       draw_healthbar(position, enemies[i].max_health, enemies[i].health, 32,
                      32);

@@ -21,7 +21,7 @@ void create_level_file(const char *filename, const char *level_name,
 
   for (int i = 0; i < CELL_COUNT; i++) {
     for (int j = 0; j < CELL_COUNT; j++) {
-      cells->type = EMPTY;
+      cells->type = EMPTY_ENTITY;
       cells++;
     }
   }

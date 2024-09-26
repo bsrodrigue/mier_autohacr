@@ -59,8 +59,9 @@ public:
   EditorGridCell grid[CELL_COUNT][CELL_COUNT];
 
   int current_entity_index = 1;
-  EntityType types[TYPE_COUNT] = {EMPTY,      BWALL,    UBWALL, PLAYER,
-                                  BASE_ENEMY, WARPZONE, ITEM,   GATE};
+  EntityType types[TYPE_COUNT] = {
+      EMPTY_ENTITY,      BWALL_ENTITY,    UBWALL_ENTITY, PLAYER_ENTITY,
+      BASE_ENEMY_ENTITY, WARPZONE_ENTITY, ITEM_ENTITY,   GATE_ENTITY};
 
   LevelEditor();
   LevelEditor(const char *filename);

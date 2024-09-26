@@ -5,14 +5,14 @@
 #define ENTITIES_H
 
 typedef enum {
-  EMPTY,
-  UBWALL,
-  BWALL,
-  PLAYER,
-  BASE_ENEMY,
-  WARPZONE,
-  ITEM,
-  GATE,
+  EMPTY_ENTITY,
+  UBWALL_ENTITY,
+  BWALL_ENTITY,
+  PLAYER_ENTITY,
+  BASE_ENEMY_ENTITY,
+  WARPZONE_ENTITY,
+  ITEM_ENTITY,
+  GATE_ENTITY,
 } EntityType;
 
 const char *get_entity_type_name(EntityType type);

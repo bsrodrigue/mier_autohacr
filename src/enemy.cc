@@ -13,7 +13,7 @@ Enemy create_base_enemy() {
 
   enemy.projectile_rate = 1;
 
-  enemy.type = BASE;
+  enemy.type = BASE_ENEMY;
   enemy.state = ALIVE;
 
   // Flags
@@ -39,7 +39,7 @@ Enemy create_enemy(Vector2 position, EnemyType type) {
   Enemy enemy;
 
   switch (type) {
-  case BASE:
+  case BASE_ENEMY:
     enemy = create_base_enemy();
     break;
   }
