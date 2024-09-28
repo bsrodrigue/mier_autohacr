@@ -56,6 +56,9 @@ void draw_wall(Vector2 position, WallType type) {
 void draw_warpzone(Vector2 position) {
   draw_texture_cell(position, warpzone_texture);
 }
+void draw_gate_key(Vector2 position, float rotation) {
+  draw_game_texture(position, gate_key_texture, rotation, 15, 15);
+}
 
 void draw_ship(Vector2 position, float rotation) {
   draw_game_texture(position, player_texture, rotation);

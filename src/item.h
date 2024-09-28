@@ -7,6 +7,7 @@
 
 // Premade (Static) Items
 typedef enum {
+  NO_TYPE_ITEM,
   // Healing
   BASE_HEALING_ITEM,
   MEDIUM_HEAING_ITEM,
@@ -17,7 +18,9 @@ typedef enum {
 } ItemType;
 
 typedef enum {
+  NO_TEXTURE,
   HEALING_CHIP_TEXTURE,
+  KEY_TEXTURE,
 } ItemTexture;
 
 typedef enum {
@@ -42,6 +45,7 @@ typedef struct {
   ItemTexture texture;
   Vector2 position;
   bool picked;
+  bool used;
 } BaseItem;
 
 BaseItem create_base_item(ItemEffect effect, ItemUsage usage,

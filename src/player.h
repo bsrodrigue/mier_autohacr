@@ -8,17 +8,6 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#define MAX_INVENTORY_ITEMS 10
-
-typedef struct {
-  BaseItem items[MAX_INVENTORY_ITEMS];
-  int item_count;
-  int current_item_index;
-} Inventory;
-
-int inventory_add_item(Inventory *inventory, BaseItem item);
-void init_inventory(Inventory *inventory);
-
 class Player {
 public:
   Vector2 position;

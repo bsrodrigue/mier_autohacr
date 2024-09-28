@@ -26,9 +26,9 @@ Enemy create_base_enemy() {
 
   ItemDrop item_drop;
 
-  item_drop.item_effect = HEALING_EFFECT;
-  item_drop.item_usage = INSTANT_USAGE;
-  item_drop.texture = HEALING_CHIP_TEXTURE;
+  item_drop.item_effect = KEY_EFFECT;
+  item_drop.item_usage = INVENTORY_USAGE;
+  item_drop.texture = KEY_TEXTURE;
   item_drop.count = 10;
 
   enemy.item_drop = item_drop;

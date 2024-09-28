@@ -3,7 +3,7 @@
 #ifndef TEXTURES_H
 #define TEXTURES_H
 
-#define NUM_TEXTURES 11
+#define NUM_TEXTURES 12
 
 typedef struct {
   const char *path;
@@ -21,6 +21,7 @@ extern Texture2D projectile_texture;
 extern Texture2D sentinel_head_texture;
 extern Texture2D sentinel_barrel_texture;
 extern Texture2D healing_chip_texture;
+extern Texture2D gate_key_texture;
 
 void load_textures();
 

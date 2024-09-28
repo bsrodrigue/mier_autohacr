@@ -1,4 +1,5 @@
 #include <raylib.h>
+#include <string>
 #include <vector>
 
 #ifndef ENTITIES_H
@@ -16,5 +17,7 @@ typedef enum {
 } EntityType;
 
 const char *get_entity_type_name(EntityType type);
+
+std::string get_enum_string(const char delimiter = ';');
 
 #endif

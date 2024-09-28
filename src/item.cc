@@ -11,6 +11,7 @@ BaseItem create_base_item(ItemEffect effect, ItemUsage usage,
 
   item.position = position;
   item.picked = false;
+  item.used = false;
 
   return item;
 }

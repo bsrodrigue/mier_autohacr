@@ -1,4 +1,6 @@
 #include "entities.h"
+#include <string>
+#include <vector>
 
 const char *get_entity_type_name(EntityType type) {
   switch (type) {
@@ -21,4 +23,21 @@ const char *get_entity_type_name(EntityType type) {
   default:
     return "";
   }
+}
+
+std::string get_enum_string(const char delimiter) {
+  std::vector<std::string> names;
+
+  for (int i = EMPTY_ENTITY; i <= GATE_ENTITY; i++) {
+    names.push_back(get_entity_type_name((EntityType)i));
+  }
+
+  std::string result = "";
+  for (int i = 0; i < names.size(); i++) {
+    result += names[i];
+    if (i < names.size() - 1)
+      result += delimiter;
+  }
+
+  return result;
 }

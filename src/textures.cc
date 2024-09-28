@@ -12,6 +12,7 @@ Texture2D projectile_texture;
 Texture2D sentinel_head_texture;
 Texture2D sentinel_barrel_texture;
 Texture2D healing_chip_texture;
+Texture2D gate_key_texture;
 
 TextureInfo textures[NUM_TEXTURES] = {
     {"./assets/textures/environment/wall.png", &ubwall_texture},
@@ -28,7 +29,8 @@ TextureInfo textures[NUM_TEXTURES] = {
     {"./assets/textures/actors/Sentinel_Head.png", &sentinel_head_texture},
     {"./assets/textures/actors/Sentinel_Barrel.png", &sentinel_barrel_texture},
 
-    {"./assets/textures/items/healing_chip.png", &healing_chip_texture}};
+    {"./assets/textures/items/healing_chip.png", &healing_chip_texture},
+    {"./assets/textures/items/gate_key.png", &gate_key_texture}};
 
 void load_textures() {
   for (int i = 0; i < NUM_TEXTURES; i++) {

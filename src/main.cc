@@ -6,6 +6,7 @@
 #include "entities.h"
 #include "game.h"
 #include "gate.h"
+#include "inventory.h"
 #include "item_drop.h"
 #include "level.h"
 #include "level_editor.h"
@@ -25,7 +26,7 @@
 #include <vector>
 
 #define RAYGUI_IMPLEMENTATION
-// #include "raygui.h"
+#include "raygui.h"
 
 ScreenManager screen_manager;
 
@@ -57,6 +58,8 @@ ProjectilePool player_projectiles;
 ProjectilePool enemy_projectiles;
 
 Player player;
+
+Inventory inventory;
 
 void shoot_target(Vector2 source, Vector2 target, ProjectilePool &pool) {
   int index = pool.get_free_projectile();
@@ -157,7 +160,7 @@ void init_window() {
 
   SetTargetFPS(FPS);
 
-  HideCursor();
+  // HideCursor();
 }
 
 void handle_game_input(int pressed_key) {
@@ -178,6 +181,8 @@ void handle_game_input(int pressed_key) {
 
   player.handle_player_movement(colliders);
 
+  // Handle Gate opening logic
+  float proximity_radius = 20.0f;
   int gate_index = -1;
 
   for (int i = 0; i < gates.size(); i++) {
@@ -186,13 +191,22 @@ void handle_game_input(int pressed_key) {
                                       .x = gates[i].position.x + 12.5f,
                                       .y = gates[i].position.y + 12.5f,
                                   },
-                                  20)) {
+                                  proximity_radius)) {
       gate_index = i;
       break;
     }
   }
 
   if (IsKeyPressed(KEY_SPACE) && (gate_index != -1)) {
+
+    int key_item_index = find_iventory_item_by_effect(inventory, KEY_EFFECT);
+
+    if (key_item_index == -1 || inventory.items[key_item_index].used) {
+      // Don't have a key? Fight some enemies, some of them drop keys...
+      TraceLog(LOG_INFO, "You don't have a key");
+      return;
+    }
+
     gates[gate_index].opened = true;
 
     gate_positions.erase(gate_positions.begin() + gate_index);
@@ -243,6 +257,9 @@ void pick_item(int index, Player *player) {
 
   if (item.usage == INSTANT_USAGE)
     use_item(player, item.effect);
+
+  inventory_add_item(&inventory, item);
+  TraceLog(LOG_INFO, "Picked item %d", index);
 
   items[index].picked = true;
 }
@@ -503,10 +520,14 @@ void handle_updates() {
 void draw_items() {
   for (int i = 0; i < MAX_ITEMS; i++) {
     if (!items[i].picked) {
-
       switch (items[i].texture) {
+      case NO_TEXTURE:
+        break;
       case HEALING_CHIP_TEXTURE:
         draw_healing_chip(items[i].position, 0);
+        break;
+      case KEY_TEXTURE:
+        draw_gate_key(items[i].position, 0);
         break;
       }
     }
@@ -620,46 +641,6 @@ void render_game() {
   draw_player_target();
 }
 
-const char *get_current_screen_title() {
-  switch (screen_manager.active_screen) {
-  case UNKNOWN:
-    return "unkown";
-  case MENU:
-    return "menu";
-  case GAME:
-    return "game";
-  case LEVEL_EDITOR:
-    return "level-editor";
-    break;
-  default:
-    return "unkown";
-  }
-}
-
-void render_current_screen() {
-  DrawText(get_current_screen_title(), TEXT_POS(1), TEXT_POS(1), 14, WHITE);
-}
-
-void render_global() { render_current_screen(); }
-
-void render() {
-  switch (screen_manager.active_screen) {
-  case UNKNOWN:
-    break;
-  case MENU:
-    break;
-  case GAME:
-    render_game();
-    break;
-  case LEVEL_EDITOR:
-    render_level_editor(&camera);
-    break;
-  }
-
-  // Global HUD
-  render_global();
-}
-
 // TODO: Optimize level loading
 void load_level() { load_entities(); }
 
@@ -669,6 +650,8 @@ void ScreenManager::init_game_screen() {
   level.filename = level_file;
   level.load_level_data();
   init_player();
+
+  init_inventory(&inventory);
   load_level();
   init_game_camera();
 }
@@ -711,6 +694,8 @@ void set_initial_screen(const char *game_mode) {
   }
 }
 
+bool show_message = false;
+
 int main(int argc, char *argv[]) {
 
   if (argc != 3) {
@@ -734,6 +719,7 @@ int main(int argc, char *argv[]) {
     screen_manager.handle_screen_change();
     BeginDrawing();
     ClearBackground(BLACK);
+
     BeginMode2D(camera);
 
     int pressed_key = GetKeyPressed();
@@ -745,9 +731,20 @@ int main(int argc, char *argv[]) {
     handle_updates();
 
     // UI
-    render();
+    if (screen_manager.active_screen == GAME) {
+      render_game();
+    }
+
+    if (screen_manager.active_screen == LEVEL_EDITOR) {
+      render_level_editor(&camera);
+    }
 
     EndMode2D();
+
+    if (screen_manager.active_screen == LEVEL_EDITOR) {
+      render_entity_dropdown();
+    }
+
     EndDrawing();
   }
 

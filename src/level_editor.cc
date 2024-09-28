@@ -5,6 +5,7 @@
 #include "draw.h"
 #include "entities.h"
 #include "level.h"
+#include "raygui.h"
 #include "save.h"
 #include "textures.h"
 #include "wall.h"
@@ -90,21 +91,24 @@ void render_mouse_position(Camera2D camera, Vector2 mouse) {
   DrawText(message, hud_position.x, hud_position.y, 14, RED);
 }
 
-void render_current_entity_type(Camera2D camera) {
-  Vector2 hud_position = camera.target;
-  float offset = 20;
-
-  const char *message =
-      TextFormat("ENTITY TYPE: %s",
-                 get_entity_type_name(
-                     level_editor.types[level_editor.current_entity_index]));
-
-  DrawText(message, hud_position.x, hud_position.y + offset, 14, RED);
-}
-
 void render_hud(Camera2D *camera, Vector2 mouse) {
   render_mouse_position(*camera, mouse);
-  render_current_entity_type(*camera);
+}
+
+std::string entity_types_str = get_enum_string();
+const char *dropdown_items = entity_types_str.c_str();
+
+void render_entity_dropdown() {
+  float width = 300;
+  float x = WIN_WIDTH - width;
+
+  if (GuiDropdownBox((Rectangle){x, 0, width, 100}, dropdown_items,
+                     &level_editor.current_entity_index,
+                     level_editor.entity_dropdown_is_open)) {
+
+    level_editor.entity_dropdown_is_open =
+        !level_editor.entity_dropdown_is_open;
+  }
 }
 
 void render_level_editor(Camera2D *camera) {

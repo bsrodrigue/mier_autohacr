@@ -49,19 +49,23 @@ class LevelEditor {
 public:
   const char *filename;
 
+  EntityType types[TYPE_COUNT] = {
+      EMPTY_ENTITY,      BWALL_ENTITY,    UBWALL_ENTITY, PLAYER_ENTITY,
+      BASE_ENEMY_ENTITY, WARPZONE_ENTITY, ITEM_ENTITY,   GATE_ENTITY};
+
   // ------------------------[ Editor State ]------------------------------ //
 
   bool origin_warpzone_placed = false;
   bool can_change_entity = true;
 
+  // ------[ Entity Dropdown ]----- //
+
+  bool entity_dropdown_is_open = false;
+  int current_entity_index = 0;
+
   // ----------------------------[ Grid ]---------------------------------- //
 
   EditorGridCell grid[CELL_COUNT][CELL_COUNT];
-
-  int current_entity_index = 1;
-  EntityType types[TYPE_COUNT] = {
-      EMPTY_ENTITY,      BWALL_ENTITY,    UBWALL_ENTITY, PLAYER_ENTITY,
-      BASE_ENEMY_ENTITY, WARPZONE_ENTITY, ITEM_ENTITY,   GATE_ENTITY};
 
   LevelEditor();
   LevelEditor(const char *filename);
@@ -83,5 +87,6 @@ void render_level_editor(Camera2D *camera);
 void handle_editor_input(Camera2D *camera, int pressed_key);
 Vector2 get_player_position(EditorGridCell grid[CELL_COUNT][CELL_COUNT]);
 void load_level_editor(const char *filename);
+void render_entity_dropdown();
 
 #endif

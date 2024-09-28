@@ -46,9 +46,14 @@ template <typename T> int LevelEditor::get_free_editor_entity(T entities[100]) {
 }
 
 void LevelEditor::place_entity(Vector2 mouse) {
-  // Out of bounds
-  if (MOUSE_TO_GRID(mouse.x) >= CELL_COUNT ||
-      MOUSE_TO_GRID(mouse.y) >= CELL_COUNT) {
+
+  // Check horizontal bounds
+  if (MOUSE_TO_GRID(mouse.x) < 0 || MOUSE_TO_GRID(mouse.x) >= CELL_COUNT) {
+    return;
+  }
+
+  // Check vertical bounds
+  if (MOUSE_TO_GRID(mouse.y) < 0 || MOUSE_TO_GRID(mouse.y) >= CELL_COUNT) {
     return;
   }
 
