@@ -14,4 +14,7 @@ Wall create_breakable_wall(Vector2 position);
 Wall create_ubreakable_wall(Vector2 position);
 
 void generate_walls(std::vector<Wall> &walls);
+
+Vector2
+get_player_position_for_game(EditorGridCell grid[CELL_COUNT][CELL_COUNT]);
 #endif

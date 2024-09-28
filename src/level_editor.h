@@ -1,3 +1,6 @@
+#ifndef LEVEL_EDITOR_H
+#define LEVEL_EDITOR_H
+
 #include "config.h"
 #include "enemy.h"
 #include "entities.h"
@@ -5,55 +8,55 @@
 #include "wall.h"
 #include <raylib.h>
 #include <sys/types.h>
+#include <variant>
 
-#ifndef LEVEL_EDITOR_H
-#define LEVEL_EDITOR_H
+constexpr int TYPE_COUNT = 8;
+constexpr float ENTITY_DROPDOWN_HEIGHT = 25;
+constexpr float ENTITY_DROPDOWN_WIDTH = 300;
 
-#define TYPE_COUNT 8
-
-#define ENTITY_DROPDOWN_HEIGHT 25
-#define ENTITY_DROPDOWN_WIDTH 300
+// Forward Declarations
+struct EditorPlayer;
+struct EditorWall;
+struct EditorVoid;
+struct EditorEnemy;
+struct EditorWarpzone;
+struct EditorItem;
+struct EditorGate;
 
 // Their positions are already infered from their grid indices
-typedef struct {
-} EditorPlayer;
+struct EditorPlayer {};
 
-typedef struct {
+struct EditorVoid {
+  int voidness;
+};
+
+struct EditorWall {
   WallType type;
-} EditorWall;
+};
 
-typedef struct {
+struct EditorEnemy {
   EnemyType type;
-} EditorEnemy;
+};
 
-typedef struct {
+struct EditorWarpzone {
   Vector2 destination;
-} EditorWarpzone;
+};
 
-typedef struct {
+struct EditorItem {
   ItemEffect effect;
   ItemUsage usage;
-} EditorItem;
+};
 
-typedef struct {
-} EditorGate;
+struct EditorGate {};
 
-typedef struct {
+struct EditorGridCell {
   EntityType type;
-  union {
-    EditorWall wall;
-    EditorEnemy enemy;
-    EditorWarpzone warpzone;
-    EditorPlayer player;
-    EditorItem item;
-    EditorGate gate;
-  };
-} EditorGridCell;
+  std::variant<EditorVoid, EditorWall, EditorEnemy, EditorWarpzone,
+               EditorPlayer, EditorItem, EditorGate>
+      entity;
+};
 
-typedef struct {
-  ItemEffect effect;
-  ItemUsage usage;
-} ItemParams;
+using ItemParams = EditorItem;
 
 class LevelEditor {
 public:
@@ -68,9 +71,9 @@ public:
   // ------[ Entity Dropdown ]----- //
 
   bool entity_dropdown_is_open = false;
-  EntityType current_entity = EMPTY_ENTITY;
+  EntityType current_entity = PLAYER_ENTITY;
 
-  // --- [Items]
+  // ----[Items]
   ItemParams item_params;
 
   // ----------------------------[ Grid ]---------------------------------- //
@@ -78,7 +81,7 @@ public:
   EditorGridCell grid[CELL_COUNT][CELL_COUNT];
 
   LevelEditor();
-  LevelEditor(const char *filename);
+  explicit LevelEditor(const char *filename);
 
   void init_editor();
   void load_level_data();
@@ -87,7 +90,6 @@ public:
 
   Vector2 get_player_position();
 
-  template <typename T> int get_free_editor_entity(T entities[100]);
   void place_entity(Vector2 mouse);
 };
 
@@ -95,7 +97,5 @@ void render_level_editor(Camera2D *camera);
 void handle_editor_input(Camera2D *camera, int pressed_key);
 void load_level_editor(const char *filename);
 void render_entity_dropdown();
-
-Vector2 get_player_position(EditorGridCell grid[CELL_COUNT][CELL_COUNT]);
 
 #endif

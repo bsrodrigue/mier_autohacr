@@ -2,6 +2,7 @@
 #include "common.h"
 #include "config.h"
 #include "entities.h"
+#include "level_editor.h"
 #include "textures.h"
 #include "wall.h"
 #include <raylib.h>
@@ -88,8 +89,54 @@ void draw_healing_chip(Vector2 position, float rotation) {
 void draw_editor_entity(EditorGridCell cell, Vector2 position) {
   EntityType type = cell.type;
 
+  if (std::holds_alternative<EditorWall>(cell.entity)) {
+    const EditorWall &wall = std::get<EditorWall>(cell.entity);
+
+    draw_wall(position, wall.type);
+  }
+
+  else if (std::holds_alternative<EditorPlayer>(cell.entity)) {
+    draw_ship_editor(position, 0);
+  }
+
+  else if (std::holds_alternative<EditorEnemy>(cell.entity)) {
+    // const EditorEnemy &enemy = std::get<EditorEnemy>(cell.entity);
+
+    Vector2 offset = {GAME_TEXTURE_SIZE / 2.0f, GAME_TEXTURE_SIZE / 2.0f};
+    draw_base_enemy(Vector2Add(position, offset), 90.0f);
+  }
+
+  else if (std::holds_alternative<EditorWarpzone>(cell.entity)) {
+    // const EditorEnemy &enemy = std::get<EditorEnemy>(cell.entity);
+
+    draw_warpzone(position);
+  }
+
+  else if (std::holds_alternative<EditorItem>(cell.entity)) {
+    const EditorItem &item = std::get<EditorItem>(cell.entity);
+
+    if (item.effect == HEALING_EFFECT) {
+      draw_healing_chip(position, 90.0f);
+    }
+
+    else if (item.effect == KEY_EFFECT) {
+      draw_gate_key(position, 90.0f);
+    }
+  }
+
+  else if (std::holds_alternative<EditorGate>(cell.entity)) {
+    const EditorGate &gate = std::get<EditorGate>(cell.entity);
+    draw_warpzone(position);
+  }
+}
+
+void render_mouse_hover_grid(EntityType type, Vector2 mouse) {
+  Vector2 position =
+      get_offset_position(MOUSE_TO_GRID(mouse.x), MOUSE_TO_GRID(mouse.y));
+
   switch (type) {
   case EMPTY_ENTITY:
+    draw_floor(position);
     break;
   case UBWALL_ENTITY:
     draw_wall(position, UNBREAKABLE_WALL);
@@ -98,7 +145,7 @@ void draw_editor_entity(EditorGridCell cell, Vector2 position) {
     draw_wall(position, BREAKABLE_WALL);
     break;
   case PLAYER_ENTITY:
-    draw_ship_editor(position, 0);
+    draw_texture_cell(position, player_texture);
     break;
   case BASE_ENEMY_ENTITY: {
     Vector2 offset = {GAME_TEXTURE_SIZE / 2.0f, GAME_TEXTURE_SIZE / 2.0f};
@@ -108,18 +155,10 @@ void draw_editor_entity(EditorGridCell cell, Vector2 position) {
     draw_warpzone(position);
     break;
   case ITEM_ENTITY:
-    if (cell.item.effect == HEALING_EFFECT) {
-      draw_healing_chip(position, 0);
-    }
+    draw_healing_chip(position, 90.0f);
     break;
   case GATE_ENTITY:
     draw_warpzone(position);
     break;
   }
-}
-
-void render_mouse_hover_grid(EditorGridCell cell, Vector2 mouse) {
-  Vector2 position =
-      get_offset_position(MOUSE_TO_GRID(mouse.x), MOUSE_TO_GRID(mouse.y));
-  draw_editor_entity(cell, position);
 }

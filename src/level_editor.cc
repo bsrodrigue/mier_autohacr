@@ -16,18 +16,6 @@
 // TODO: Provide simple GUI to switch between entity types
 // TODO: Add undo action
 
-Vector2 get_player_position(EditorGridCell (*grid)[100]) {
-  for (int y = 0; y < CELL_COUNT; y++) {
-    for (int x = 0; x < CELL_COUNT; x++) {
-      EntityType type = grid[y][x].type;
-      if (type == PLAYER_ENTITY)
-        return {(float)(x * CELL_SIZE), (float)(y * CELL_SIZE)};
-    }
-  }
-
-  return {-1, -1};
-}
-
 LevelEditor level_editor;
 
 void load_level_editor(const char *filename) {
@@ -146,10 +134,8 @@ void render_entity_dropdown() {
 void render_level_editor(Camera2D *camera) {
   Vector2 mouse = get_world_mouse(*camera);
 
-  EditorGridCell cell;
-  cell.type = level_editor.current_entity;
-
   render_entities();
-  render_mouse_hover_grid(cell, mouse);
+  render_mouse_hover_grid(level_editor.current_entity, mouse);
+
   render_hud(camera, mouse);
 }

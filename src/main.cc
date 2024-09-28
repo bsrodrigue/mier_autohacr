@@ -23,6 +23,7 @@
 #include <raylib.h>
 #include <raymath.h>
 #include <string.h>
+#include <variant>
 #include <vector>
 
 #define RAYGUI_IMPLEMENTATION
@@ -98,49 +99,58 @@ void player_shoot() {
 void load_entities() {
   for (int y = 0; y < CELL_COUNT; y++) {
     for (int x = 0; x < CELL_COUNT; x++) {
-      EditorGridCell cell = level.grid[y][x];
+      Vector2 position = get_offset_position(x, y);
+      const auto &cell = level.grid[y][x];
       int type = cell.type;
 
       // Currently, the entity loader is creating entities with default settings
       // except items
 
-      if (type == UBWALL_ENTITY) {
-        Wall w = create_ubreakable_wall(get_offset_position(x, y));
+      if (std::holds_alternative<EditorWall>(cell.entity)) {
+        const EditorWall &wall = std::get<EditorWall>(cell.entity);
+
+        Wall w = (wall.type == UNBREAKABLE_WALL)
+                     ? create_ubreakable_wall(position)
+                     : create_breakable_wall(position);
+
         walls.push_back(w);
         wall_positions.push_back(w.position);
       }
 
-      else if (type == BWALL_ENTITY) {
-        Wall w = create_breakable_wall(get_offset_position(x, y));
-        walls.push_back(w);
-        wall_positions.push_back(w.position);
+      else if (std::holds_alternative<EditorEnemy>(cell.entity)) {
+        const EditorEnemy &enemy = std::get<EditorEnemy>(cell.entity);
+
+        // Currently we only have base enemies
+
+        Enemy e = create_enemy(position, BASE_ENEMY);
+        enemies[enemy_count++] = e;
       }
 
-      else if (type == BASE_ENEMY_ENTITY) {
-        Enemy enemy = create_enemy(get_offset_position(x, y), BASE_ENEMY);
-        enemies[enemy_count++] = enemy;
-      }
+      else if (std::holds_alternative<EditorItem>(cell.entity)) {
+        const EditorItem &item = std::get<EditorItem>(cell.entity);
 
-      else if (type == ITEM_ENTITY) {
-        ItemTexture texture = (cell.item.effect == HEALING_EFFECT)
+        // Currently we only have base items
+
+        ItemTexture texture = (item.effect == HEALING_EFFECT)
                                   ? HEALING_CHIP_TEXTURE
                                   : KEY_TEXTURE;
 
-        BaseItem item = create_base_item(cell.item.effect, cell.item.usage,
-                                         texture, get_offset_position(x, y));
-
-        items[item_count++] = item;
+        BaseItem i =
+            create_base_item(item.effect, item.usage, texture, position);
+        items[item_count++] = i;
       }
 
-      else if (type == GATE_ENTITY) {
-        Gate gate;
+      else if (std::holds_alternative<EditorGate>(cell.entity)) {
+        const EditorGate &gate = std::get<EditorGate>(cell.entity);
 
-        gate.opened = false;
-        gate.type = BASE_GATE;
-        gate.position = get_offset_position(x, y);
+        Gate g;
 
-        gates.push_back(gate);
-        gate_positions.push_back(gate.position);
+        g.opened = false;
+        g.position = position;
+        g.type = BASE_GATE;
+
+        gates.push_back(g);
+        gate_positions.push_back(g.position);
       }
     }
   }
@@ -650,7 +660,9 @@ void render_game() {
 // TODO: Optimize level loading
 void load_level() { load_entities(); }
 
-void init_player() { player.position = get_player_position(level.grid); }
+void init_player() {
+  player.position = get_player_position_for_game(level.grid);
+}
 
 void ScreenManager::init_game_screen() {
   level.filename = level_file;

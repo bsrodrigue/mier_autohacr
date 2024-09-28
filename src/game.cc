@@ -12,3 +12,17 @@ void draw_arena(std::vector<Wall> &walls) {
     draw_wall(position, walls[i].type);
   }
 }
+
+Vector2 get_player_position_for_game(EditorGridCell (*grid)[100]) {
+  for (int y = 0; y < CELL_COUNT; y++) {
+    for (int x = 0; x < CELL_COUNT; x++) {
+      EditorGridCell cell = grid[y][x];
+
+      if (std::holds_alternative<EditorPlayer>(cell.entity)) {
+        return {(float)(x * CELL_SIZE), (float)(y * CELL_SIZE)};
+      }
+    }
+  }
+
+  return {-1, -1};
+}

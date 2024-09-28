@@ -29,6 +29,6 @@ void draw_base_enemy(Vector2 position, float rotation);
 void draw_target_cursor(Vector2 position, float rotation);
 void draw_projectile(Vector2 position, float rotation);
 void draw_editor_entity(EditorGridCell cell, Vector2 position);
-void render_mouse_hover_grid(EditorGridCell cell, Vector2 mouse);
+void render_mouse_hover_grid(EntityType type, Vector2 mouse);
 
 #endif
