@@ -85,7 +85,9 @@ void draw_healing_chip(Vector2 position, float rotation) {
   draw_game_texture(position, healing_chip_texture, rotation, 15, 15);
 }
 
-void draw_editor_entity(EntityType type, Vector2 position) {
+void draw_editor_entity(EditorGridCell cell, Vector2 position) {
+  EntityType type = cell.type;
+
   switch (type) {
   case EMPTY_ENTITY:
     break;
@@ -106,7 +108,9 @@ void draw_editor_entity(EntityType type, Vector2 position) {
     draw_warpzone(position);
     break;
   case ITEM_ENTITY:
-    draw_warpzone(position);
+    if (cell.item.effect == HEALING_EFFECT) {
+      draw_healing_chip(position, 0);
+    }
     break;
   case GATE_ENTITY:
     draw_warpzone(position);
@@ -114,8 +118,8 @@ void draw_editor_entity(EntityType type, Vector2 position) {
   }
 }
 
-void render_mouse_hover_grid(Vector2 mouse, EntityType type) {
+void render_mouse_hover_grid(EditorGridCell cell, Vector2 mouse) {
   Vector2 position =
       get_offset_position(MOUSE_TO_GRID(mouse.x), MOUSE_TO_GRID(mouse.y));
-  draw_editor_entity(type, position);
+  draw_editor_entity(cell, position);
 }

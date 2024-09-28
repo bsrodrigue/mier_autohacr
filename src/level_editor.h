@@ -4,11 +4,15 @@
 #include "item.h"
 #include "wall.h"
 #include <raylib.h>
+#include <sys/types.h>
 
 #ifndef LEVEL_EDITOR_H
 #define LEVEL_EDITOR_H
 
 #define TYPE_COUNT 8
+
+#define ENTITY_DROPDOWN_HEIGHT 25
+#define ENTITY_DROPDOWN_WIDTH 300
 
 // Their positions are already infered from their grid indices
 typedef struct {
@@ -28,6 +32,7 @@ typedef struct {
 
 typedef struct {
   ItemEffect effect;
+  ItemUsage usage;
 } EditorItem;
 
 typedef struct {
@@ -45,23 +50,28 @@ typedef struct {
   };
 } EditorGridCell;
 
+typedef struct {
+  ItemEffect effect;
+  ItemUsage usage;
+} ItemParams;
+
 class LevelEditor {
 public:
   const char *filename;
-
-  EntityType types[TYPE_COUNT] = {
-      EMPTY_ENTITY,      BWALL_ENTITY,    UBWALL_ENTITY, PLAYER_ENTITY,
-      BASE_ENEMY_ENTITY, WARPZONE_ENTITY, ITEM_ENTITY,   GATE_ENTITY};
 
   // ------------------------[ Editor State ]------------------------------ //
 
   bool origin_warpzone_placed = false;
   bool can_change_entity = true;
+  bool placing_mode = false;
 
   // ------[ Entity Dropdown ]----- //
 
   bool entity_dropdown_is_open = false;
-  int current_entity_index = 0;
+  EntityType current_entity = EMPTY_ENTITY;
+
+  // --- [Items]
+  ItemParams item_params;
 
   // ----------------------------[ Grid ]---------------------------------- //
 
@@ -79,14 +89,13 @@ public:
 
   template <typename T> int get_free_editor_entity(T entities[100]);
   void place_entity(Vector2 mouse);
-
-  void next_type();
 };
 
 void render_level_editor(Camera2D *camera);
 void handle_editor_input(Camera2D *camera, int pressed_key);
-Vector2 get_player_position(EditorGridCell grid[CELL_COUNT][CELL_COUNT]);
 void load_level_editor(const char *filename);
 void render_entity_dropdown();
+
+Vector2 get_player_position(EditorGridCell grid[CELL_COUNT][CELL_COUNT]);
 
 #endif

@@ -98,9 +98,11 @@ void player_shoot() {
 void load_entities() {
   for (int y = 0; y < CELL_COUNT; y++) {
     for (int x = 0; x < CELL_COUNT; x++) {
-      int type = level.grid[y][x].type;
+      EditorGridCell cell = level.grid[y][x];
+      int type = cell.type;
 
       // Currently, the entity loader is creating entities with default settings
+      // except items
 
       if (type == UBWALL_ENTITY) {
         Wall w = create_ubreakable_wall(get_offset_position(x, y));
@@ -120,9 +122,13 @@ void load_entities() {
       }
 
       else if (type == ITEM_ENTITY) {
-        BaseItem item =
-            create_base_item(HEALING_EFFECT, INSTANT_USAGE,
-                             HEALING_CHIP_TEXTURE, get_offset_position(x, y));
+        ItemTexture texture = (cell.item.effect == HEALING_EFFECT)
+                                  ? HEALING_CHIP_TEXTURE
+                                  : KEY_TEXTURE;
+
+        BaseItem item = create_base_item(cell.item.effect, cell.item.usage,
+                                         texture, get_offset_position(x, y));
+
         items[item_count++] = item;
       }
 
@@ -714,6 +720,7 @@ int main(int argc, char *argv[]) {
   level_file = argv[2];
 
   set_initial_screen(game_mode);
+  SetExitKey(0);
 
   while (!WindowShouldClose()) {
     screen_manager.handle_screen_change();

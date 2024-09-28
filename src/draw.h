@@ -1,5 +1,6 @@
 #include "enemy.h"
 #include "entities.h"
+#include "level_editor.h"
 #include "raylib.h"
 #include "wall.h"
 
@@ -27,7 +28,7 @@ void draw_gate_key(Vector2 position, float rotation);
 void draw_base_enemy(Vector2 position, float rotation);
 void draw_target_cursor(Vector2 position, float rotation);
 void draw_projectile(Vector2 position, float rotation);
-void draw_editor_entity(EntityType type, Vector2 position);
-void render_mouse_hover_grid(Vector2 mouse, EntityType type);
+void draw_editor_entity(EditorGridCell cell, Vector2 position);
+void render_mouse_hover_grid(EditorGridCell cell, Vector2 mouse);
 
 #endif

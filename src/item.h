@@ -1,4 +1,5 @@
 #include <raylib.h>
+#include <string>
 
 #ifndef ITEM_H
 #define ITEM_H
@@ -53,4 +54,5 @@ BaseItem create_base_item(ItemEffect effect, ItemUsage usage,
 
 BaseItem create_static_item(ItemType type, Vector2 position);
 
+std::string get_item_effect_enum_string(const char delimiter = ';');
 #endif

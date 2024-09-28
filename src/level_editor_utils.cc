@@ -26,16 +26,6 @@ Vector2 LevelEditor::get_player_position() {
   return {-1, -1};
 }
 
-void LevelEditor::next_type() {
-  if (!this->can_change_entity) {
-    // TODO: Handle this situation.
-    return;
-  }
-
-  bool reached_end = current_entity_index + 1 >= TYPE_COUNT;
-  current_entity_index = reached_end ? 0 : (current_entity_index + 1);
-}
-
 template <typename T> int LevelEditor::get_free_editor_entity(T entities[100]) {
   for (int i = 0; i < 100; i++) {
     if (entities[i].free)
@@ -46,18 +36,16 @@ template <typename T> int LevelEditor::get_free_editor_entity(T entities[100]) {
 }
 
 void LevelEditor::place_entity(Vector2 mouse) {
+  if (!placing_mode)
+    return;
 
-  // Check horizontal bounds
-  if (MOUSE_TO_GRID(mouse.x) < 0 || MOUSE_TO_GRID(mouse.x) >= CELL_COUNT) {
+  // Check out of bounds
+  if (MOUSE_TO_GRID(mouse.x) < 0 || MOUSE_TO_GRID(mouse.x) >= CELL_COUNT ||
+      MOUSE_TO_GRID(mouse.y) < 0 || MOUSE_TO_GRID(mouse.y) >= CELL_COUNT) {
     return;
   }
 
-  // Check vertical bounds
-  if (MOUSE_TO_GRID(mouse.y) < 0 || MOUSE_TO_GRID(mouse.y) >= CELL_COUNT) {
-    return;
-  }
-
-  EntityType type = this->types[this->current_entity_index];
+  EntityType type = this->current_entity;
 
   if (type == PLAYER_ENTITY) {
     Vector2 previous_pos = this->get_player_position();
@@ -89,6 +77,8 @@ void LevelEditor::place_entity(Vector2 mouse) {
   case PLAYER_ENTITY:
   case WARPZONE_ENTITY:
   case ITEM_ENTITY:
+    cell->item.effect = item_params.effect;
+    cell->item.usage = item_params.usage;
   case GATE_ENTITY:
     break;
   case UBWALL_ENTITY:

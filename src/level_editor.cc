@@ -48,19 +48,20 @@ void render_entities() {
       // Fill entire space with floor texture beforehand
       draw_floor(get_offset_position(x, y));
 
-      int type = level_editor.grid[y][x].type;
-      draw_editor_entity((EntityType)type, get_offset_position(x, y));
+      EditorGridCell cell = level_editor.grid[y][x];
+      draw_editor_entity(cell, get_offset_position(x, y));
     }
   }
 }
 
 void handle_editor_actions(Camera2D *camera, int pressed_key) {
   switch (pressed_key) {
+  case KEY_ESCAPE:
+    level_editor.placing_mode = false;
+    level_editor.current_entity = EMPTY_ENTITY;
+    break;
   case KEY_M:
     level_editor.save_level();
-    break;
-  case KEY_SPACE:
-    level_editor.next_type();
     break;
   }
 
@@ -96,26 +97,59 @@ void render_hud(Camera2D *camera, Vector2 mouse) {
 }
 
 std::string entity_types_str = get_enum_string();
+std::string item_effect_str = get_item_effect_enum_string();
+
 const char *dropdown_items = entity_types_str.c_str();
+const char *item_effect_dropdown_items = item_effect_str.c_str();
+
+bool item_effect_dropdown_is_open = false;
 
 void render_entity_dropdown() {
-  float width = 300;
+  float width = ENTITY_DROPDOWN_WIDTH;
+  float height = ENTITY_DROPDOWN_HEIGHT;
   float x = WIN_WIDTH - width;
 
-  if (GuiDropdownBox((Rectangle){x, 0, width, 100}, dropdown_items,
-                     &level_editor.current_entity_index,
+  if (GuiDropdownBox((Rectangle){x, 0, width, height}, dropdown_items,
+                     (int *)&level_editor.current_entity,
                      level_editor.entity_dropdown_is_open)) {
 
     level_editor.entity_dropdown_is_open =
         !level_editor.entity_dropdown_is_open;
+
+    // Only Item Entity can have sub-dropdown
+    if (!level_editor.entity_dropdown_is_open &&
+        (level_editor.current_entity != ITEM_ENTITY)) {
+      level_editor.placing_mode = true;
+    }
+  }
+
+  // Sub-dropdowns
+  if (level_editor.current_entity == ITEM_ENTITY) {
+
+    float item_effect_height =
+        (level_editor.entity_dropdown_is_open) ? (height * (8 + 2)) : (height);
+
+    if (GuiDropdownBox((Rectangle){x, item_effect_height, width, height},
+                       item_effect_dropdown_items,
+                       (int *)&level_editor.item_params.effect,
+                       item_effect_dropdown_is_open)) {
+
+      item_effect_dropdown_is_open = !item_effect_dropdown_is_open;
+
+      if (!level_editor.entity_dropdown_is_open) {
+        level_editor.placing_mode = true;
+      }
+    }
   }
 }
 
 void render_level_editor(Camera2D *camera) {
   Vector2 mouse = get_world_mouse(*camera);
 
+  EditorGridCell cell;
+  cell.type = level_editor.current_entity;
+
   render_entities();
-  render_mouse_hover_grid(
-      mouse, level_editor.types[level_editor.current_entity_index]);
+  render_mouse_hover_grid(cell, mouse);
   render_hud(camera, mouse);
 }
