@@ -4,6 +4,7 @@
 #include "draw.h"
 #include "enemy.h"
 #include "entities.h"
+#include "entity_loader.h"
 #include "game.h"
 #include "gate.h"
 #include "inventory.h"
@@ -14,8 +15,10 @@
 #include "projectiles.h"
 #include "save.h"
 #include "screen.h"
+#include "shoot.h"
 #include "textures.h"
 #include "wall.h"
+#include "warpzone.h"
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -55,13 +58,6 @@ Enemy enemies[MAX_ENEMIES];
 static int item_count = 0;
 BaseItem items[MAX_ITEMS];
 
-struct Warpzone;
-
-struct Warpzone {
-  Vector2 position;
-  Vector2 destination;
-};
-
 static int warpzone_count = 0;
 Warpzone warpzones[10];
 
@@ -72,102 +68,23 @@ Player player;
 
 Inventory inventory;
 
-void shoot_target(Vector2 source, Vector2 target, ProjectilePool &pool) {
-  int index = pool.get_free_projectile();
-
-  if (index != -1) {
-    pool.allocate_projectile(index);
-
-    pool.pool[index].position = source;
-    pool.pool[index].direction =
-        Vector2Normalize(Vector2Subtract(target, source));
-
-    pool.pool[index].angle = get_angle_relative_to(target, source);
-  }
-}
-
-void shoot_straight(Vector2 source, Vector2 direction, ProjectilePool &pool) {
-  int index = pool.get_free_projectile();
-
-  if (index != -1) {
-    pool.allocate_projectile(index);
-
-    pool.pool[index].position = source;
-    pool.pool[index].direction = direction;
-
-    float angle_rad = atan2f(direction.y, direction.x);
-
-    pool.pool[index].angle = angle_rad * RAD2DEG;
-  }
-}
-
 void player_shoot() {
   Vector2 mouse = get_world_mouse(camera);
   shoot_target(player.position, mouse, player_projectiles);
 }
 
 void load_entities() {
+  EntityLoader loader({0, 0}, walls, wall_positions, gates, gate_positions,
+                      enemies, enemy_count, warpzones, warpzone_count, items,
+                      item_count);
+
   for (int y = 0; y < CELL_COUNT; y++) {
     for (int x = 0; x < CELL_COUNT; x++) {
-      Vector2 position = get_offset_position(x, y);
-      const auto &cell = level.grid[y][x];
-      int type = cell.type;
+      const EditorGridCell &cell = level.grid[y][x];
+      loader.position = get_offset_position(x, y);
 
-      // Currently, the entity loader is creating entities with default settings
-      // except items
-
-      if (std::holds_alternative<EditorWall>(cell.entity)) {
-        const EditorWall &wall = std::get<EditorWall>(cell.entity);
-
-        Wall w = (wall.type == UNBREAKABLE_WALL)
-                     ? create_ubreakable_wall(position)
-                     : create_breakable_wall(position);
-
-        walls.push_back(w);
-        wall_positions.push_back(w.position);
-      }
-
-      else if (std::holds_alternative<EditorEnemy>(cell.entity)) {
-        const EditorEnemy &enemy = std::get<EditorEnemy>(cell.entity);
-
-        // Currently we only have base enemies
-
-        Enemy e = create_enemy(position, BASE_ENEMY);
-        enemies[enemy_count++] = e;
-      }
-
-      else if (std::holds_alternative<EditorItem>(cell.entity)) {
-        const EditorItem &item = std::get<EditorItem>(cell.entity);
-
-        // Currently we only have base items
-
-        ItemTexture texture = (item.effect == HEALING_EFFECT)
-                                  ? HEALING_CHIP_TEXTURE
-                                  : KEY_TEXTURE;
-
-        BaseItem i =
-            create_base_item(item.effect, item.usage, texture, position);
-        items[item_count++] = i;
-      }
-
-      else if (std::holds_alternative<EditorWarpzone>(cell.entity)) {
-        const EditorWarpzone &warpzone = std::get<EditorWarpzone>(cell.entity);
-
-        warpzones[warpzone_count++] = {position, warpzone.destination};
-      }
-
-      else if (std::holds_alternative<EditorGate>(cell.entity)) {
-        const EditorGate &gate = std::get<EditorGate>(cell.entity);
-
-        Gate g;
-
-        g.opened = false;
-        g.position = position;
-        g.type = BASE_GATE;
-
-        gates.push_back(g);
-        gate_positions.push_back(g.position);
-      }
+      std::visit([&](const Entity &entity) { entity.accept(loader); },
+                 cell.entity);
     }
   }
 }
@@ -497,7 +414,7 @@ void handle_enemy_shoot(Enemy *enemy) {
           shooting_angle += 10;
         }
 
-        enemy->shooting_angle += 10;
+        enemy->shooting_angle += 1;
       }
       break;
     }

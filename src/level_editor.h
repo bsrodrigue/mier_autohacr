@@ -23,31 +23,77 @@ struct EditorWarpzone;
 struct EditorItem;
 struct EditorGate;
 
-// Their positions are already infered from their grid indices
-struct EditorPlayer {};
+using ItemParams = EditorItem;
 
-struct EditorVoid {
-  int voidness;
+class EntityVisitor {
+public:
+  virtual void visit(const EditorVoid &entity) = 0;
+  virtual void visit(const EditorWall &entity) = 0;
+  virtual void visit(const EditorEnemy &entity) = 0;
+  virtual void visit(const EditorWarpzone &entity) = 0;
+  virtual void visit(const EditorPlayer &entity) = 0;
+  virtual void visit(const EditorItem &entity) = 0;
+  virtual void visit(const EditorGate &entity) = 0;
+
+  virtual ~EntityVisitor() = default;
 };
 
-struct EditorWall {
-  WallType type;
+class Entity {
+public:
+  virtual void accept(EntityVisitor &visitor) const = 0;
+  virtual ~Entity() = default;
 };
 
-struct EditorEnemy {
-  EnemyType type;
+struct EditorVoid : public Entity {
+  EditorVoid() {}
+
+  void accept(EntityVisitor &visitor) const override { visitor.visit(*this); }
 };
 
-struct EditorWarpzone {
+struct EditorWarpzone : public Entity {
   Vector2 destination;
+
+  EditorWarpzone(Vector2 dest) : destination(dest) {}
+
+  void accept(EntityVisitor &visitor) const override { visitor.visit(*this); }
 };
 
-struct EditorItem {
+struct EditorItem : public Entity {
   ItemEffect effect;
   ItemUsage usage;
+
+  EditorItem(ItemEffect e, ItemUsage u) : effect(e), usage(u) {}
+
+  void accept(EntityVisitor &visitor) const override { visitor.visit(*this); }
 };
 
-struct EditorGate {};
+struct EditorWall : public Entity {
+  WallType type;
+
+  EditorWall(WallType t) : type(t) {}
+
+  void accept(EntityVisitor &visitor) const override { visitor.visit(*this); }
+};
+
+struct EditorEnemy : public Entity {
+  EnemyType type;
+
+  EditorEnemy(EnemyType t) : type(t) {}
+
+  void accept(EntityVisitor &visitor) const override { visitor.visit(*this); }
+};
+
+struct EditorGate : public Entity {
+  EditorGate() {}
+
+  void accept(EntityVisitor &visitor) const override { visitor.visit(*this); }
+};
+
+struct EditorPlayer : public Entity {
+  EditorPlayer() {}
+
+  void accept(EntityVisitor &visitor) const override { visitor.visit(*this); }
+};
 
 struct EditorGridCell {
   EntityType type;
@@ -55,8 +101,6 @@ struct EditorGridCell {
                EditorPlayer, EditorItem, EditorGate>
       entity;
 };
-
-using ItemParams = EditorItem;
 
 class LevelEditor {
 public:
@@ -76,14 +120,13 @@ public:
   EntityType current_entity = PLAYER_ENTITY;
 
   // ----[Items]
-  ItemParams item_params;
+  ItemParams item_params{ItemEffect::NO_EFFECT, ItemUsage::NO_USAGE};
 
   // ----------------------------[ Grid ]---------------------------------- //
 
   EditorGridCell grid[CELL_COUNT][CELL_COUNT];
 
-  LevelEditor();
-  explicit LevelEditor(const char *filename);
+  LevelEditor() {}
 
   void init_editor();
   void load_level_data();

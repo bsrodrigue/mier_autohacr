@@ -2,8 +2,6 @@
 #include "save.h"
 #include <raylib.h>
 
-LevelEditor::LevelEditor() = default;
-
 void LevelEditor::save_level() { save_level_file(this->filename, this->grid); }
 
 void LevelEditor::load_level_data() {
