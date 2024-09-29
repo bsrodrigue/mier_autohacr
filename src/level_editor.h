@@ -64,9 +64,11 @@ public:
 
   // ------------------------[ Editor State ]------------------------------ //
 
-  bool origin_warpzone_placed = false;
+  bool is_placing_warpzone_origin = true;
   bool can_change_entity = true;
   bool placing_mode = false;
+
+  Vector2 warpzone_origin_pos = {-1, -1};
 
   // ------[ Entity Dropdown ]----- //
 
@@ -90,7 +92,9 @@ public:
 
   Vector2 get_player_position();
 
+  void handle_player_position_clearing();
   void place_entity(Vector2 mouse);
+  void handle_entity_placement(Vector2 mouse, EntityType type);
 };
 
 void render_level_editor(Camera2D *camera);

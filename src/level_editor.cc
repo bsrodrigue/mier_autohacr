@@ -53,15 +53,20 @@ void handle_editor_actions(Camera2D *camera, int pressed_key) {
     break;
   }
 
-  if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+  if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) ||
+      (IsKeyDown(KEY_LEFT_SHIFT) && IsMouseButtonDown(MOUSE_BUTTON_LEFT))) {
     Vector2 mouse = get_world_mouse(*camera);
     level_editor.place_entity(mouse);
   }
 
   if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
     Vector2 mouse = get_world_mouse(*camera);
-    level_editor.grid[MOUSE_TO_GRID(mouse.y)][MOUSE_TO_GRID(mouse.x)].type =
-        EMPTY_ENTITY;
+
+    EditorGridCell *cell =
+        &level_editor.grid[MOUSE_TO_GRID(mouse.y)][MOUSE_TO_GRID(mouse.x)];
+
+    cell->entity = EditorVoid{};
+    cell->type = EMPTY_ENTITY;
   }
 }
 
@@ -93,6 +98,9 @@ const char *item_effect_dropdown_items = item_effect_str.c_str();
 bool item_effect_dropdown_is_open = false;
 
 void render_entity_dropdown() {
+  if (!level_editor.can_change_entity)
+    return;
+
   float width = ENTITY_DROPDOWN_WIDTH;
   float height = ENTITY_DROPDOWN_HEIGHT;
   float x = WIN_WIDTH - width;

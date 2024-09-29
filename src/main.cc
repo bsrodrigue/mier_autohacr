@@ -55,6 +55,16 @@ Enemy enemies[MAX_ENEMIES];
 static int item_count = 0;
 BaseItem items[MAX_ITEMS];
 
+struct Warpzone;
+
+struct Warpzone {
+  Vector2 position;
+  Vector2 destination;
+};
+
+static int warpzone_count = 0;
+Warpzone warpzones[10];
+
 ProjectilePool player_projectiles;
 ProjectilePool enemy_projectiles;
 
@@ -140,6 +150,12 @@ void load_entities() {
         items[item_count++] = i;
       }
 
+      else if (std::holds_alternative<EditorWarpzone>(cell.entity)) {
+        const EditorWarpzone &warpzone = std::get<EditorWarpzone>(cell.entity);
+
+        warpzones[warpzone_count++] = {position, warpzone.destination};
+      }
+
       else if (std::holds_alternative<EditorGate>(cell.entity)) {
         const EditorGate &gate = std::get<EditorGate>(cell.entity);
 
@@ -179,25 +195,7 @@ void init_window() {
   // HideCursor();
 }
 
-void handle_game_input(int pressed_key) {
-  // Handle player shooting
-  float now = GetTime();
-  if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) &&
-      (now - last_shot) > shooting_interval) {
-    player_shoot();
-    last_shot = now;
-  }
-
-  Vector2 next_position = player.get_next_position();
-
-  std::vector<Vector2> colliders = wall_positions;
-
-  colliders.insert(colliders.end(), gate_positions.begin(),
-                   gate_positions.end());
-
-  player.handle_player_movement(colliders);
-
-  // Handle Gate opening logic
+void handle_gate_opening() {
   float proximity_radius = 20.0f;
   int gate_index = -1;
 
@@ -227,6 +225,48 @@ void handle_game_input(int pressed_key) {
 
     gate_positions.erase(gate_positions.begin() + gate_index);
     gates.erase(gates.begin() + gate_index);
+  }
+}
+
+void handle_game_input(int pressed_key) {
+  // Handle player shooting
+  float now = GetTime();
+  if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) &&
+      (now - last_shot) > shooting_interval) {
+    player_shoot();
+    last_shot = now;
+  }
+
+  Vector2 next_position = player.get_next_position();
+
+  std::vector<Vector2> colliders = wall_positions;
+
+  colliders.insert(colliders.end(), gate_positions.begin(),
+                   gate_positions.end());
+
+  player.handle_player_movement(colliders);
+
+  // Handle Gate opening logic
+  handle_gate_opening();
+
+  // Handle Warpzone logic
+  int warpzone_index = -1;
+  for (int i = 0; i < warpzone_count; i++) {
+    if (CheckCollisionPointCircle(player.position,
+                                  {
+                                      .x = warpzones[i].position.x + 12.5f,
+                                      .y = warpzones[i].position.y + 12.5f,
+                                  },
+                                  12.5f)) {
+      warpzone_index = i;
+      break;
+    }
+  }
+
+  if (warpzone_index != -1) {
+    const Vector2 destination = warpzones[warpzone_index].destination;
+
+    player.position = destination;
   }
 }
 
@@ -641,6 +681,12 @@ void draw_player_healthbar(Player player) {
                 5, color);
 }
 
+void draw_warpzones() {
+  for (int i = 0; i < warpzone_count; i++) {
+    draw_warpzone(warpzones[i].position);
+  }
+}
+
 void render_game() {
   render_floor();
   draw_arena(walls);
@@ -654,6 +700,7 @@ void render_game() {
   draw_items();
   draw_gates();
 
+  draw_warpzones();
   draw_player_target();
 }
 

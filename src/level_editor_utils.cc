@@ -1,5 +1,6 @@
 #include "level_editor.h"
 #include "save.h"
+#include <raylib.h>
 
 LevelEditor::LevelEditor() = default;
 
@@ -26,41 +27,21 @@ Vector2 LevelEditor::get_player_position() {
   return {-1, -1};
 }
 
-void LevelEditor::place_entity(Vector2 mouse) {
-  if (!placing_mode)
-    return;
+void LevelEditor::handle_player_position_clearing() {
+  Vector2 previous_pos = get_player_position();
 
-  // Check out of bounds
-  if (MOUSE_TO_GRID(mouse.x) < 0 || MOUSE_TO_GRID(mouse.x) >= CELL_COUNT ||
-      MOUSE_TO_GRID(mouse.y) < 0 || MOUSE_TO_GRID(mouse.y) >= CELL_COUNT) {
-    return;
+  // Actually had an active position
+  if (previous_pos.x != -1) {
+    EditorGridCell *cell =
+        &grid[(int)previous_pos.y / CELL_SIZE][(int)previous_pos.x / CELL_SIZE];
+
+    // Clear position
+    cell->type = EMPTY_ENTITY;
+    cell->entity = EditorVoid{};
   }
+}
 
-  EntityType type = this->current_entity;
-
-  if (type == PLAYER_ENTITY) {
-    Vector2 previous_pos = this->get_player_position();
-
-    if (previous_pos.x != -1) {
-      EditorGridCell *previous_cell =
-          &this->grid[(int)previous_pos.y / CELL_SIZE]
-                     [(int)previous_pos.x / CELL_SIZE];
-
-      previous_cell->type = EMPTY_ENTITY;
-      previous_cell->entity = EditorVoid{};
-    }
-  }
-
-  if (type == WARPZONE_ENTITY && !this->origin_warpzone_placed) {
-    this->origin_warpzone_placed = true;
-    this->can_change_entity = false;
-  }
-
-  if (type == WARPZONE_ENTITY && this->origin_warpzone_placed) {
-    this->origin_warpzone_placed = false;
-    this->can_change_entity = true;
-  }
-
+void LevelEditor::handle_entity_placement(Vector2 mouse, EntityType type) {
   EditorGridCell *cell =
       &this->grid[MOUSE_TO_GRID(mouse.y)][MOUSE_TO_GRID(mouse.x)];
 
@@ -90,4 +71,55 @@ void LevelEditor::place_entity(Vector2 mouse) {
     cell->entity = EditorEnemy{BASE_ENEMY};
     break;
   }
+}
+
+void LevelEditor::place_entity(Vector2 mouse) {
+  if (!placing_mode)
+    return;
+
+  // Check out of bounds
+  if (MOUSE_TO_GRID(mouse.x) < 0 || MOUSE_TO_GRID(mouse.x) >= CELL_COUNT ||
+      MOUSE_TO_GRID(mouse.y) < 0 || MOUSE_TO_GRID(mouse.y) >= CELL_COUNT) {
+    return;
+  }
+
+  EntityType type = current_entity;
+
+  if (type == PLAYER_ENTITY)
+    handle_player_position_clearing();
+
+  if (type == WARPZONE_ENTITY) {
+
+    if (is_placing_warpzone_origin) {
+      is_placing_warpzone_origin = false;
+      can_change_entity = false;
+
+      // Place destination before commiting
+
+      warpzone_origin_pos = {(float)MOUSE_TO_GRID(mouse.x),
+                             (float)MOUSE_TO_GRID(mouse.y)};
+
+      TraceLog(LOG_INFO, "Warpzone Origin: %f, %f", warpzone_origin_pos.x,
+               warpzone_origin_pos.y);
+      return;
+    }
+
+    else {
+      is_placing_warpzone_origin = true;
+      can_change_entity = true;
+
+      // Get cell from the warpzone origin position
+      EditorGridCell *cell =
+          &grid[(int)warpzone_origin_pos.y][(int)warpzone_origin_pos.x];
+
+      TraceLog(LOG_INFO, "Warpzone Destination: %f, %f", MOUSE_TO_GRID(mouse.x),
+               MOUSE_TO_GRID(mouse.y));
+
+      cell->entity = EditorWarpzone{mouse};
+
+      return;
+    }
+  }
+
+  handle_entity_placement(mouse, type);
 }
