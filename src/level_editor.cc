@@ -13,7 +13,6 @@
 #include <raymath.h>
 
 // TODO: Define flexible level structure and editing
-// TODO: Provide simple GUI to switch between entity types
 // TODO: Add undo action
 
 LevelEditor level_editor;
