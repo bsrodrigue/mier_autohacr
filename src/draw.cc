@@ -87,8 +87,6 @@ void draw_healing_chip(Vector2 position, float rotation) {
 }
 
 void draw_editor_entity(EditorGridCell cell, Vector2 position) {
-  EntityType type = cell.type;
-
   if (std::holds_alternative<EditorWall>(cell.entity)) {
     const EditorWall &wall = std::get<EditorWall>(cell.entity);
 
