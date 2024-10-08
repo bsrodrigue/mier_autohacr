@@ -6,6 +6,8 @@
 
 #define MAX_ENEMIES 50
 
+struct Hitbox;
+
 typedef enum {
   BASE_ENEMY,
 } EnemyType;
@@ -13,23 +15,45 @@ typedef enum {
 typedef enum {
   ALIVE,
   DEAD,
+  PATROLLING,
 } EnemyState;
+
+typedef enum {
+
+} PatrolingStrategy;
 
 // TODO: Find a better way of handling flags
 typedef struct {
-  EnemyType type;
-  EnemyState state;
-  Vector2 position;
+  // Health
   float health;
   float max_health;
-  float shooting_interval;
-  float shooting_angle;
-  float last_shot;
+
+  // Position
+  Vector2 position;
+
+  // Movement
+  bool can_move; // (mobile/immobile)
+  bool can_chase;
+
+  bool is_mobile;
+  bool is_patrolling;
+  bool is_chasing;
+
+  // Player Tracking
+  bool is_tracking;
+  bool can_track;
+
   float vision_radius;
 
-  int projectile_rate;
+  EnemyType type;
+  EnemyState state;
 
-  bool can_move;
+  int projectile_rate;    // How many projectiles per shot
+  float projectile_angle; // Angle between each projectile
+  float shooting_interval;
+  float shooting_angle; // Where projectiles are pointing
+  float last_shot;
+
   bool tracks_player;
   // Does not need to aim for player to shoot
   bool aimless_shooting;

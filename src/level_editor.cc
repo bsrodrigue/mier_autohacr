@@ -99,43 +99,6 @@ bool item_effect_dropdown_is_open = false;
 void render_entity_dropdown() {
   if (!level_editor.can_change_entity)
     return;
-
-  float width = ENTITY_DROPDOWN_WIDTH;
-  float height = ENTITY_DROPDOWN_HEIGHT;
-  float x = WIN_WIDTH - width;
-
-  if (GuiDropdownBox((Rectangle){x, 0, width, height}, dropdown_items,
-                     (int *)&level_editor.current_entity,
-                     level_editor.entity_dropdown_is_open)) {
-
-    level_editor.entity_dropdown_is_open =
-        !level_editor.entity_dropdown_is_open;
-
-    // Only Item Entity can have sub-dropdown
-    if (!level_editor.entity_dropdown_is_open &&
-        (level_editor.current_entity != ITEM_ENTITY)) {
-      level_editor.placing_mode = true;
-    }
-  }
-
-  // Sub-dropdowns
-  if (level_editor.current_entity == ITEM_ENTITY) {
-
-    float item_effect_height =
-        (level_editor.entity_dropdown_is_open) ? (height * (8 + 2)) : (height);
-
-    if (GuiDropdownBox((Rectangle){x, item_effect_height, width, height},
-                       item_effect_dropdown_items,
-                       (int *)&level_editor.item_params.effect,
-                       item_effect_dropdown_is_open)) {
-
-      item_effect_dropdown_is_open = !item_effect_dropdown_is_open;
-
-      if (!level_editor.entity_dropdown_is_open) {
-        level_editor.placing_mode = true;
-      }
-    }
-  }
 }
 
 void render_level_editor(Camera2D *camera) {

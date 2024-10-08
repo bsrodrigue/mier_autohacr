@@ -1,0 +1,3 @@
+/home/rodo/workspace/hobbies/gamedev/mier_autohacr/build/CMakeFiles/autohacka.dir
+/home/rodo/workspace/hobbies/gamedev/mier_autohacr/build/CMakeFiles/edit_cache.dir
+/home/rodo/workspace/hobbies/gamedev/mier_autohacr/build/CMakeFiles/rebuild_cache.dir

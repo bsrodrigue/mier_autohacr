@@ -112,23 +112,36 @@ void init_window() {
   // HideCursor();
 }
 
-void handle_gate_opening() {
-  float proximity_radius = 20.0f;
-  int gate_index = -1;
+template <typename T>
+int get_close_entity_index(const std::vector<T> &entities,
+                           const Vector2 &position,
+                           float proximity_radius = 20.0f,
+                           float entity_radius = 12.5f) {
+  int entity_index = -1;
 
-  for (int i = 0; i < gates.size(); i++) {
-    if (CheckCollisionPointCircle(player.position,
-                                  {
-                                      .x = gates[i].position.x + 12.5f,
-                                      .y = gates[i].position.y + 12.5f,
-                                  },
-                                  proximity_radius)) {
-      gate_index = i;
+  for (int i = 0; i < entities.size(); i++) {
+    if (CheckCollisionPointCircle(
+            position,
+            {
+                .x = entities[i].position.x + entity_radius,
+                .y = entities[i].position.y + entity_radius,
+            },
+            proximity_radius)) {
+      entity_index = i;
       break;
     }
   }
 
-  if (IsKeyPressed(KEY_SPACE) && (gate_index != -1)) {
+  return entity_index;
+}
+
+void handle_gate_opening() {
+  int gate_index = get_close_entity_index(gates, player.position);
+
+  if (gate_index == -1)
+    return;
+
+  if (IsKeyPressed(KEY_SPACE)) {
 
     int key_item_index = find_iventory_item_by_effect(inventory, KEY_EFFECT);
 
