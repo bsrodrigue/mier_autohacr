@@ -65,4 +65,4 @@ void Player::handle_player_movement(std::vector<Vector2> wall_positions) {
   this->position = get_confirmed_position(next_position, wall_positions);
 }
 
-void Player::draw() { draw_ship(position, angle + 90); }
+void Player::draw() { draw_ship(position, angle); }

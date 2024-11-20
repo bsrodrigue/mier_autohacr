@@ -72,10 +72,10 @@ void draw_ship_editor(Vector2 position, float rotation) {
 void draw_base_enemy(Vector2 position, float rotation = 0) {
 
   draw_game_texture(Vector2Add(position, {0, 0}), sentinel_barrel_texture,
-                    rotation + 90, GAME_TEXTURE_SIZE, GAME_TEXTURE_SIZE,
+                    rotation, GAME_TEXTURE_SIZE, GAME_TEXTURE_SIZE,
                     {.x = (GAME_TEXTURE_SIZE / 2.0f), .y = GAME_TEXTURE_SIZE});
 
-  draw_game_texture(position, sentinel_head_texture, rotation + 90);
+  draw_game_texture(position, sentinel_head_texture, rotation);
 }
 
 void draw_projectile(Vector2 position, float rotation) {
@@ -101,7 +101,7 @@ void draw_editor_entity(EditorGridCell cell, Vector2 position) {
     // const EditorEnemy &enemy = std::get<EditorEnemy>(cell.entity);
 
     Vector2 offset = {GAME_TEXTURE_SIZE / 2.0f, GAME_TEXTURE_SIZE / 2.0f};
-    draw_base_enemy(Vector2Add(position, offset), 90.0f);
+    draw_base_enemy(Vector2Add(position, offset));
   }
 
   else if (std::holds_alternative<EditorWarpzone>(cell.entity)) {
@@ -114,11 +114,11 @@ void draw_editor_entity(EditorGridCell cell, Vector2 position) {
     const EditorItem &item = std::get<EditorItem>(cell.entity);
 
     if (item.effect == HEALING_EFFECT) {
-      draw_healing_chip(position, 90.0f);
+      draw_healing_chip(position, 0);
     }
 
     else if (item.effect == KEY_EFFECT) {
-      draw_gate_key(position, 90.0f);
+      draw_gate_key(position, 0);
     }
   }
 
@@ -147,13 +147,13 @@ void render_mouse_hover_grid(EntityType type, Vector2 mouse) {
     break;
   case BASE_ENEMY_ENTITY: {
     Vector2 offset = {GAME_TEXTURE_SIZE / 2.0f, GAME_TEXTURE_SIZE / 2.0f};
-    draw_base_enemy(Vector2Add(position, offset), 90.0f);
+    draw_base_enemy(Vector2Add(position, offset));
   } break;
   case WARPZONE_ENTITY:
     draw_warpzone(position);
     break;
   case ITEM_ENTITY:
-    draw_healing_chip(position, 90.0f);
+    draw_healing_chip(position, 0);
     break;
   case GATE_ENTITY:
     draw_warpzone(position);

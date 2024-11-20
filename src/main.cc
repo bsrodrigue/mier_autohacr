@@ -244,7 +244,10 @@ void pick_item(int index, Player *player) {
   if (item.usage == INSTANT_USAGE)
     use_item(player, item.effect);
 
-  inventory_add_item(&inventory, item);
+  else {
+    inventory_add_item(&inventory, item);
+  }
+
   TraceLog(LOG_INFO, "Picked item %d", index);
 
   items[index].picked = true;
@@ -532,7 +535,7 @@ void draw_projectiles(ProjectilePool projectile_pool) {
   for (int i = 0; i < MAX_PROJECTILES; i++) {
     if (projectile_pool.pool[i].is_shooting) {
       draw_projectile(projectile_pool.pool[i].position,
-                      projectile_pool.pool[i].angle + 90.0f);
+                      projectile_pool.pool[i].angle);
     }
   }
 }
@@ -694,7 +697,8 @@ bool show_message = false;
 int main(int argc, char *argv[]) {
 
   if (argc != 3) {
-    printf("usage: autohacka [gamemode] [level_file]\n");
+    printf("usage: autohacka [mode] [level_file]\n");
+    printf("possible modes: game, editor\n");
     return 1;
   }
 

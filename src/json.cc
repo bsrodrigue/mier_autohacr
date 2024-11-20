@@ -5,7 +5,6 @@
 
 Vector2 parse_vector2(cJSON *json) {
   Vector2 vec = {0, 0}; // Default value
-  //
   if (cJSON_IsObject(json)) {
     cJSON *x = cJSON_GetObjectItem(json, "pos_x");
     cJSON *y = cJSON_GetObjectItem(json, "pos_y");
@@ -68,7 +67,6 @@ cJSON *serialize_vector2(const Vector2 &vec) {
   return json_vector;
 }
 
-// Serialize function for EditorVoid
 cJSON *serialize_editor_void(const EditorVoid &entity, int pos_y, int pos_x) {
   cJSON *json_void = cJSON_CreateObject();
   cJSON_AddNumberToObject(json_void, "pos_x", pos_x);
@@ -76,7 +74,6 @@ cJSON *serialize_editor_void(const EditorVoid &entity, int pos_y, int pos_x) {
   return json_void;
 }
 
-// Serialize function for EditorWall
 cJSON *serialize_editor_wall(const EditorWall &wall, int pos_y, int pos_x) {
   cJSON *json_wall = cJSON_CreateObject();
   cJSON_AddNumberToObject(
@@ -87,7 +84,6 @@ cJSON *serialize_editor_wall(const EditorWall &wall, int pos_y, int pos_x) {
   return json_wall;
 }
 
-// Serialize function for EditorEnemy
 cJSON *serialize_editor_enemy(const EditorEnemy &enemy, int pos_y, int pos_x) {
   cJSON *json_enemy = cJSON_CreateObject();
   cJSON_AddNumberToObject(
@@ -98,7 +94,6 @@ cJSON *serialize_editor_enemy(const EditorEnemy &enemy, int pos_y, int pos_x) {
   return json_enemy;
 }
 
-// Serialize function for EditorWarpzone
 cJSON *serialize_editor_warpzone(const EditorWarpzone &warpzone, int pos_y,
                                  int pos_x) {
   cJSON *json_warpzone = cJSON_CreateObject();
@@ -109,7 +104,6 @@ cJSON *serialize_editor_warpzone(const EditorWarpzone &warpzone, int pos_y,
   return json_warpzone;
 }
 
-// Serialize function for EditorItem
 cJSON *serialize_editor_item(const EditorItem &item, int pos_y, int pos_x) {
   cJSON *json_item = cJSON_CreateObject();
   cJSON_AddNumberToObject(
@@ -123,7 +117,6 @@ cJSON *serialize_editor_item(const EditorItem &item, int pos_y, int pos_x) {
   return json_item;
 }
 
-// Serialize function for EditorGate
 cJSON *serialize_editor_gate(const EditorGate &gate, int pos_y, int pos_x) {
   cJSON *json_gate = cJSON_CreateObject();
   cJSON_AddNumberToObject(json_gate, "pos_x", pos_x);
@@ -131,7 +124,6 @@ cJSON *serialize_editor_gate(const EditorGate &gate, int pos_y, int pos_x) {
   return json_gate;
 }
 
-// Serialize function for EditorPlayer
 cJSON *serialize_editor_player(const EditorPlayer &player, int pos_y,
                                int pos_x) {
   cJSON *json_player = cJSON_CreateObject();
