@@ -1,3 +1,4 @@
+#include "config.h"
 #include "level_editor.h"
 #include "save.h"
 #include <raylib.h>
@@ -31,7 +32,7 @@ void LevelEditor::handle_player_position_clearing() {
   // Actually had an active position
   if (previous_pos.x != -1) {
     EditorGridCell *cell =
-        &grid[(int)previous_pos.y / CELL_SIZE][(int)previous_pos.x / CELL_SIZE];
+        &grid[MOUSE_TO_GRID(previous_pos.y)][MOUSE_TO_GRID(previous_pos.x)];
 
     // Clear position
     cell->type = EMPTY_ENTITY;
@@ -72,9 +73,6 @@ void LevelEditor::handle_entity_placement(Vector2 mouse, EntityType type) {
 }
 
 void LevelEditor::place_entity(Vector2 mouse) {
-  if (!placing_mode)
-    return;
-
   // Check out of bounds
   if (MOUSE_TO_GRID(mouse.x) < 0 || MOUSE_TO_GRID(mouse.x) >= CELL_COUNT ||
       MOUSE_TO_GRID(mouse.y) < 0 || MOUSE_TO_GRID(mouse.y) >= CELL_COUNT) {

@@ -77,8 +77,9 @@ struct EditorWall : public Entity {
 
 struct EditorEnemy : public Entity {
   EnemyType type;
+  float enemy_health;
 
-  EditorEnemy(EnemyType t) : type(t) {}
+  EditorEnemy(EnemyType t, float h = 0) : type(t), enemy_health(h) {}
 
   void accept(EntityVisitor &visitor) const override { visitor.visit(*this); }
 };
@@ -111,13 +112,23 @@ public:
   bool can_change_entity = true;
   bool placing_mode = false;
 
-  // Warpzone
-  bool is_placing_warpzone_origin = true;
-  Vector2 warpzone_origin_pos = {-1, -1};
+  // Inspection
+  EditorGridCell *hovered_cell = nullptr;
+  EditorGridCell *inspected_cell = nullptr;
+  int inspected_cell_row = 0;
+  int inspected_cell_col = 0;
 
   // Entity Dropdown
   bool entity_dropdown_is_open = false;
   EntityType current_entity = BWALL_ENTITY;
+
+  // ----[Entities]
+  // Enemies
+  float enemy_health = 0;
+
+  // Warpzone
+  bool is_placing_warpzone_origin = true;
+  Vector2 warpzone_origin_pos = {-1, -1};
 
   // ----[Items]
   ItemParams item_params{ItemEffect::NO_EFFECT, ItemUsage::NO_USAGE};
@@ -140,7 +151,7 @@ public:
 };
 
 void render_level_editor(Camera2D *camera);
-void render_level_editor_ui();
+void render_level_editor_ui(Camera2D *camera);
 void handle_editor_input(Camera2D *camera, int pressed_key);
 void load_level_editor(const char *filename);
 #endif

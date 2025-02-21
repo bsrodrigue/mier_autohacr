@@ -122,4 +122,10 @@ CMakeFiles/autohacka.dir/src/json.cc.o: \
  /usr/include/c++/14.2.1/bits/enable_special_members.h \
  /usr/include/c++/14.2.1/bits/parse_numbers.h \
  /usr/include/c++/14.2.1/ext/aligned_buffer.h \
- /home/dnlbs/workspace/personal/mier_autohacr/include/level_editor.h
+ /home/dnlbs/workspace/personal/mier_autohacr/include/cJSON.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/level_editor.h \
+ /usr/include/c++/14.2.1/stdexcept /usr/include/c++/14.2.1/exception \
+ /usr/include/c++/14.2.1/bits/exception_ptr.h \
+ /usr/include/c++/14.2.1/bits/cxxabi_init_exception.h \
+ /usr/include/c++/14.2.1/typeinfo \
+ /usr/include/c++/14.2.1/bits/nested_exception.h

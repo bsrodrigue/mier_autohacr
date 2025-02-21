@@ -1,6 +1,7 @@
 CMakeFiles/autohacka.dir/src/level_editor_utils.cc.o: \
  /home/dnlbs/workspace/personal/mier_autohacr/src/level_editor_utils.cc \
  /usr/include/stdc-predef.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/config.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/level_editor.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/config.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/enemy.h \

@@ -67,6 +67,7 @@ void parse_entities(cJSON *json_array, EditorGridCell (*grid)[100],
           grid[(int)result.position.y][(int)result.position.x];
 
       cell.entity = result.entity;
+      cell.type = result.type;
     }
   }
 }

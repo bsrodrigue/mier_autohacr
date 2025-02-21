@@ -83,7 +83,7 @@ void load_entities() {
   for (int y = 0; y < CELL_COUNT; y++) {
     for (int x = 0; x < CELL_COUNT; x++) {
       const EditorGridCell &cell = level.grid[y][x];
-      loader.position = get_offset_position(x, y);
+      loader.position = get_absolute_position_from_grid_position(x, y);
 
       std::visit([&](const Entity &entity) { entity.accept(loader); },
                  cell.entity);
@@ -585,7 +585,7 @@ void draw_enemies() {
 void render_floor() {
   for (int y = 0; y < CELL_COUNT; y++) {
     for (int x = 0; x < CELL_COUNT; x++) {
-      draw_floor(get_offset_position(x, y));
+      draw_floor(get_absolute_position_from_grid_position(x, y));
     }
   }
 }
@@ -758,7 +758,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (screen_manager.active_screen == LEVEL_EDITOR) {
-      render_level_editor_ui();
+      render_level_editor_ui(&camera);
     }
     rlImGuiEnd();
     EndDrawing();

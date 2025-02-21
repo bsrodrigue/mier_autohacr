@@ -9,6 +9,7 @@ struct ParseResult {
   std::variant<EditorVoid, EditorWall, EditorEnemy, EditorWarpzone,
                EditorPlayer, EditorItem, EditorGate>
       entity;
+  EntityType type;
 };
 
 Vector2 parse_vector2(cJSON *json);

@@ -37,7 +37,7 @@ public:
   }
 
   void visit(const EditorEnemy &enemy) override {
-    Enemy e = create_enemy(position, enemy.type);
+    Enemy e = create_enemy(position, enemy.type, enemy.enemy_health);
     enemies[enemy_count++] = e;
   }
 

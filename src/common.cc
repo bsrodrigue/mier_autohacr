@@ -2,7 +2,8 @@
 #include <cmath>
 #include <raylib.h>
 
-Vector2 get_offset_position(float x, float y) {
+// Convert grid position to absolute position
+Vector2 get_absolute_position_from_grid_position(float x, float y) {
   return {(float)CELL_OFFSET(x), (float)CELL_OFFSET(y)};
 }
 

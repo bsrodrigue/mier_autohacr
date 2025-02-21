@@ -62,6 +62,6 @@ typedef struct {
   ItemDrop item_drop;
 } Enemy;
 
-Enemy create_enemy(Vector2 position, EnemyType type);
+Enemy create_enemy(Vector2 position, EnemyType type, float enemy_health);
 
 #endif

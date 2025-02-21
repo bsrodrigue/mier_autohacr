@@ -2781,9 +2781,11 @@ CMakeFiles/autohacka.dir/src/json.cc.o: /home/dnlbs/workspace/personal/mier_auto
   /usr/include/c++/14.2.1/bits/concept_check.h \
   /usr/include/c++/14.2.1/bits/cpp_type_traits.h \
   /usr/include/c++/14.2.1/bits/cxxabi_forced.h \
+  /usr/include/c++/14.2.1/bits/cxxabi_init_exception.h \
   /usr/include/c++/14.2.1/bits/enable_special_members.h \
   /usr/include/c++/14.2.1/bits/exception.h \
   /usr/include/c++/14.2.1/bits/exception_defines.h \
+  /usr/include/c++/14.2.1/bits/exception_ptr.h \
   /usr/include/c++/14.2.1/bits/functexcept.h \
   /usr/include/c++/14.2.1/bits/functional_hash.h \
   /usr/include/c++/14.2.1/bits/hash_bytes.h \
@@ -2792,6 +2794,7 @@ CMakeFiles/autohacka.dir/src/json.cc.o: /home/dnlbs/workspace/personal/mier_auto
   /usr/include/c++/14.2.1/bits/memory_resource.h \
   /usr/include/c++/14.2.1/bits/memoryfwd.h \
   /usr/include/c++/14.2.1/bits/move.h \
+  /usr/include/c++/14.2.1/bits/nested_exception.h \
   /usr/include/c++/14.2.1/bits/new_allocator.h \
   /usr/include/c++/14.2.1/bits/ostream_insert.h \
   /usr/include/c++/14.2.1/bits/parse_numbers.h \
@@ -2829,6 +2832,7 @@ CMakeFiles/autohacka.dir/src/json.cc.o: /home/dnlbs/workspace/personal/mier_auto
   /usr/include/c++/14.2.1/cwchar \
   /usr/include/c++/14.2.1/debug/assertions.h \
   /usr/include/c++/14.2.1/debug/debug.h \
+  /usr/include/c++/14.2.1/exception \
   /usr/include/c++/14.2.1/ext/aligned_buffer.h \
   /usr/include/c++/14.2.1/ext/alloc_traits.h \
   /usr/include/c++/14.2.1/ext/numeric_traits.h \
@@ -2838,10 +2842,12 @@ CMakeFiles/autohacka.dir/src/json.cc.o: /home/dnlbs/workspace/personal/mier_auto
   /usr/include/c++/14.2.1/iosfwd \
   /usr/include/c++/14.2.1/new \
   /usr/include/c++/14.2.1/pstl/pstl_config.h \
+  /usr/include/c++/14.2.1/stdexcept \
   /usr/include/c++/14.2.1/string \
   /usr/include/c++/14.2.1/string_view \
   /usr/include/c++/14.2.1/tuple \
   /usr/include/c++/14.2.1/type_traits \
+  /usr/include/c++/14.2.1/typeinfo \
   /usr/include/c++/14.2.1/variant \
   /usr/include/c++/14.2.1/vector \
   /usr/include/c++/14.2.1/x86_64-pc-linux-gnu/bits/c++allocator.h \
@@ -4488,6 +4494,14 @@ CMakeFiles/autohacka.dir/src/enemy.cc.o:
 
 /home/dnlbs/workspace/personal/mier_autohacr/include/raygui.h:
 
+/usr/include/c++/14.2.1/stdexcept:
+
+/usr/include/c++/14.2.1/bits/nested_exception.h:
+
+/usr/include/c++/14.2.1/bits/exception_ptr.h:
+
+/usr/include/c++/14.2.1/bits/cxxabi_init_exception.h:
+
 /home/dnlbs/workspace/personal/mier_autohacr/src/item_drop.cc:
 
 /home/dnlbs/workspace/personal/mier_autohacr/include/projectiles.h:
@@ -5083,6 +5097,8 @@ CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.o:
 /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/include/tmmintrin.h:
 
 /usr/include/c++/14.2.1/tr1/riemann_zeta.tcc:
+
+/usr/include/c++/14.2.1/exception:
 
 /usr/include/sys/types.h:
 

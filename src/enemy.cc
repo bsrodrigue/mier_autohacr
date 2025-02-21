@@ -1,10 +1,10 @@
 #include "enemy.h"
 
 // Find a way to not hardcode enemy types
-Enemy create_base_enemy() {
+Enemy create_base_enemy(float enemy_health) {
   Enemy enemy;
 
-  enemy.health = 10;
+  enemy.health = enemy_health;
   enemy.max_health = enemy.health;
   enemy.shooting_interval = 0.01;
   enemy.last_shot = 0;
@@ -36,12 +36,13 @@ Enemy create_base_enemy() {
   return enemy;
 }
 
-Enemy create_enemy(Vector2 position, EnemyType type) {
+//TODO: Find a more flexible way to handle dynamic entity creation
+Enemy create_enemy(Vector2 position, EnemyType type, float enemy_health) {
   Enemy enemy;
 
   switch (type) {
   case BASE_ENEMY:
-    enemy = create_base_enemy();
+    enemy = create_base_enemy(enemy_health);
     break;
   }
 
