@@ -25,8 +25,17 @@ bin/autohacka: \
   CMakeFiles/autohacka.dir/src/shoot.cc.o \
   CMakeFiles/autohacka.dir/src/textures.cc.o \
   CMakeFiles/autohacka.dir/src/wall.cc.o \
-  /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../../../lib/libraylib.so \
+  CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.o \
+  CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.o \
+  CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.o \
+  CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.o \
+  CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.o \
+  /usr/lib/libraylib.so \
   /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../../../lib/libstdc++.so \
+  /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../../../lib/libGL.so \
+  /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../../../lib/libpthread.a \
+  /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../../../lib/libdl.a \
+  /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../../../lib/libX11.so \
   /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../../../lib/libstdc++.so \
   /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../../../lib/libm.so \
   /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../../../lib/libm.so \
@@ -53,7 +62,17 @@ bin/autohacka: \
   /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/libgcc.a \
   /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/crtendS.o \
   /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../../../lib/crtn.o \
-  /usr/lib/ld-linux-x86-64.so.2
+  /usr/lib/ld-linux-x86-64.so.2 \
+  /usr/lib32/libGLdispatch.so.0 \
+  /usr/lib/libGLdispatch.so.0 \
+  /usr/lib32/libGLX.so.0 \
+  /usr/lib/libGLX.so.0 \
+  /usr/lib32/libxcb.so.1 \
+  /usr/lib/libxcb.so.1 \
+  /usr/lib32/libXau.so.6 \
+  /usr/lib/libXau.so.6 \
+  /usr/lib32/libXdmcp.so.6 \
+  /usr/lib/libXdmcp.so.6
 
 /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../../../lib/Scrt1.o:
 
@@ -107,9 +126,27 @@ CMakeFiles/autohacka.dir/src/textures.cc.o:
 
 CMakeFiles/autohacka.dir/src/wall.cc.o:
 
-/usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../../../lib/libraylib.so:
+CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.o:
+
+CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.o:
+
+CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.o:
+
+CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.o:
+
+CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.o:
+
+/usr/lib/libraylib.so:
 
 /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../../../lib/libstdc++.so:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../../../lib/libGL.so:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../../../lib/libpthread.a:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../../../lib/libdl.a:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../../../lib/libX11.so:
 
 /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../../../lib/libstdc++.so:
 
@@ -164,3 +201,23 @@ CMakeFiles/autohacka.dir/src/wall.cc.o:
 /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../../../lib/crtn.o:
 
 /usr/lib/ld-linux-x86-64.so.2:
+
+/usr/lib32/libGLdispatch.so.0:
+
+/usr/lib/libGLdispatch.so.0:
+
+/usr/lib32/libGLX.so.0:
+
+/usr/lib/libGLX.so.0:
+
+/usr/lib32/libxcb.so.1:
+
+/usr/lib/libxcb.so.1:
+
+/usr/lib32/libXau.so.6:
+
+/usr/lib/libXau.so.6:
+
+/usr/lib32/libXdmcp.so.6:
+
+/usr/lib/libXdmcp.so.6:

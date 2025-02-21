@@ -1,4 +1,3 @@
-#include "config.h"
 #include "entities.h"
 #include <raylib.h>
 #include <vector>

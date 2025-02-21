@@ -394,6 +394,76 @@ CMakeFiles/autohacka.dir/src/wall.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/autohacka.dir/src/wall.cc.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dnlbs/workspace/personal/mier_autohacr/src/wall.cc -o CMakeFiles/autohacka.dir/src/wall.cc.s
 
+CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.o: CMakeFiles/autohacka.dir/flags.make
+CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.o: /home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui.cpp
+CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.o: CMakeFiles/autohacka.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building CXX object CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.o -MF CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.o.d -o CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.o -c /home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui.cpp
+
+CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui.cpp > CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.i
+
+CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui.cpp -o CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.s
+
+CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.o: CMakeFiles/autohacka.dir/flags.make
+CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.o: /home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui_draw.cpp
+CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.o: CMakeFiles/autohacka.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Building CXX object CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.o -MF CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.o.d -o CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.o -c /home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui_draw.cpp
+
+CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui_draw.cpp > CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.i
+
+CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui_draw.cpp -o CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.s
+
+CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.o: CMakeFiles/autohacka.dir/flags.make
+CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.o: /home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui_tables.cpp
+CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.o: CMakeFiles/autohacka.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Building CXX object CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.o -MF CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.o.d -o CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.o -c /home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui_tables.cpp
+
+CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui_tables.cpp > CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.i
+
+CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui_tables.cpp -o CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.s
+
+CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.o: CMakeFiles/autohacka.dir/flags.make
+CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.o: /home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui_widgets.cpp
+CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.o: CMakeFiles/autohacka.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_27) "Building CXX object CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.o -MF CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.o.d -o CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.o -c /home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui_widgets.cpp
+
+CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui_widgets.cpp > CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.i
+
+CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui_widgets.cpp -o CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.s
+
+CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.o: CMakeFiles/autohacka.dir/flags.make
+CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.o: /home/dnlbs/workspace/personal/mier_autohacr/external/rlImGui/rlImGui.cpp
+CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.o: CMakeFiles/autohacka.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_28) "Building CXX object CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.o -MF CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.o.d -o CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.o -c /home/dnlbs/workspace/personal/mier_autohacr/external/rlImGui/rlImGui.cpp
+
+CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dnlbs/workspace/personal/mier_autohacr/external/rlImGui/rlImGui.cpp > CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.i
+
+CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dnlbs/workspace/personal/mier_autohacr/external/rlImGui/rlImGui.cpp -o CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.s
+
 # Object files for target autohacka
 autohacka_OBJECTS = \
 "CMakeFiles/autohacka.dir/src/cJSON.cc.o" \
@@ -418,7 +488,12 @@ autohacka_OBJECTS = \
 "CMakeFiles/autohacka.dir/src/screen.cc.o" \
 "CMakeFiles/autohacka.dir/src/shoot.cc.o" \
 "CMakeFiles/autohacka.dir/src/textures.cc.o" \
-"CMakeFiles/autohacka.dir/src/wall.cc.o"
+"CMakeFiles/autohacka.dir/src/wall.cc.o" \
+"CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.o" \
+"CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.o" \
+"CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.o" \
+"CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.o" \
+"CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.o"
 
 # External object files for target autohacka
 autohacka_EXTERNAL_OBJECTS =
@@ -446,10 +521,16 @@ bin/autohacka: CMakeFiles/autohacka.dir/src/screen.cc.o
 bin/autohacka: CMakeFiles/autohacka.dir/src/shoot.cc.o
 bin/autohacka: CMakeFiles/autohacka.dir/src/textures.cc.o
 bin/autohacka: CMakeFiles/autohacka.dir/src/wall.cc.o
+bin/autohacka: CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.o
+bin/autohacka: CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.o
+bin/autohacka: CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.o
+bin/autohacka: CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.o
+bin/autohacka: CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.o
 bin/autohacka: CMakeFiles/autohacka.dir/build.make
 bin/autohacka: CMakeFiles/autohacka.dir/compiler_depend.ts
+bin/autohacka: /usr/lib/libraylib.so
 bin/autohacka: CMakeFiles/autohacka.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Linking CXX executable bin/autohacka"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Linking CXX executable bin/autohacka"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/autohacka.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

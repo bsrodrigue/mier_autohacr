@@ -1,9 +1,8 @@
 CMakeFiles/autohacka.dir/src/main.cc.o: \
  /home/dnlbs/workspace/personal/mier_autohacr/src/main.cc \
  /usr/include/stdc-predef.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/collision.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/config.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/entities.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/collision.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/entities.h \
  /usr/include/raylib.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/include/stdarg.h \
  /usr/include/c++/14.2.1/string \
@@ -112,28 +111,42 @@ CMakeFiles/autohacka.dir/src/main.cc.o: \
  /usr/include/c++/14.2.1/bits/stl_vector.h \
  /usr/include/c++/14.2.1/bits/stl_bvector.h \
  /usr/include/c++/14.2.1/bits/vector.tcc \
- /home/dnlbs/workspace/personal/mier_autohacr/src/common.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/draw.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/enemy.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/item_drop.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/item.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/level_editor.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/wall.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/common.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/config.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/config.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/draw.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/enemy.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/item_drop.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/item.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/level_editor.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/wall.h \
  /usr/include/c++/14.2.1/variant \
  /usr/include/c++/14.2.1/bits/enable_special_members.h \
  /usr/include/c++/14.2.1/bits/parse_numbers.h \
  /usr/include/c++/14.2.1/ext/aligned_buffer.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/entity_loader.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/gate.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/warpzone.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/game.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/inventory.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/projectiles.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/level.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/save.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/player.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/screen.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/shoot.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/enemy.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/entities.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/entity_loader.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/gate.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/warpzone.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/game.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/gate.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/imconfig.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/include/float.h \
+ /usr/include/string.h /usr/include/strings.h /usr/include/assert.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/inventory.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/projectiles.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/item_drop.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/level.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/save.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/level_editor.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/player.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/projectiles.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/save.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/screen.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/shoot.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/common.h \
  /usr/include/raymath.h /usr/include/c++/14.2.1/math.h \
  /usr/include/c++/14.2.1/cmath /usr/include/math.h \
  /usr/include/bits/math-vector.h /usr/include/bits/libm-simd-decl-stubs.h \
@@ -154,11 +167,11 @@ CMakeFiles/autohacka.dir/src/main.cc.o: \
  /usr/include/c++/14.2.1/tr1/poly_hermite.tcc \
  /usr/include/c++/14.2.1/tr1/poly_laguerre.tcc \
  /usr/include/c++/14.2.1/tr1/riemann_zeta.tcc \
- /home/dnlbs/workspace/personal/mier_autohacr/src/textures.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/textures.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/wall.h \
  /usr/include/c++/14.2.1/ctime /usr/include/time.h \
  /usr/include/bits/time.h /usr/include/bits/timex.h \
  /usr/include/bits/types/struct_tm.h \
- /usr/include/bits/types/struct_itimerspec.h /usr/include/string.h \
- /usr/include/strings.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/raygui.h \
- /usr/include/c++/14.2.1/stdlib.h
+ /usr/include/bits/types/struct_itimerspec.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/external/rlImGui/rlImGui.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/external/rlImGui/extras/IconsFontAwesome6.h

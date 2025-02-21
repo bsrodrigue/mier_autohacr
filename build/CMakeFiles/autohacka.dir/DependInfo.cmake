@@ -8,6 +8,11 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui.cpp" "CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.o" "gcc" "CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.o.d"
+  "/home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui_draw.cpp" "CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.o" "gcc" "CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.o.d"
+  "/home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui_tables.cpp" "CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.o" "gcc" "CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.o.d"
+  "/home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui_widgets.cpp" "CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.o" "gcc" "CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.o.d"
+  "/home/dnlbs/workspace/personal/mier_autohacr/external/rlImGui/rlImGui.cpp" "CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.o" "gcc" "CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.o.d"
   "/home/dnlbs/workspace/personal/mier_autohacr/src/cJSON.cc" "CMakeFiles/autohacka.dir/src/cJSON.cc.o" "gcc" "CMakeFiles/autohacka.dir/src/cJSON.cc.o.d"
   "/home/dnlbs/workspace/personal/mier_autohacr/src/camera.cc" "CMakeFiles/autohacka.dir/src/camera.cc.o" "gcc" "CMakeFiles/autohacka.dir/src/camera.cc.o.d"
   "/home/dnlbs/workspace/personal/mier_autohacr/src/collision.cc" "CMakeFiles/autohacka.dir/src/collision.cc.o" "gcc" "CMakeFiles/autohacka.dir/src/collision.cc.o.d"

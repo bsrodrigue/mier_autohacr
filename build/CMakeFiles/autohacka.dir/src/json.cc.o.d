@@ -1,14 +1,14 @@
 CMakeFiles/autohacka.dir/src/json.cc.o: \
  /home/dnlbs/workspace/personal/mier_autohacr/src/json.cc \
  /usr/include/stdc-predef.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/json.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/cJSON.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/json.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/cJSON.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/include/stddef.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/level_editor.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/config.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/enemy.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/item_drop.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/item.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/level_editor.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/config.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/enemy.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/item_drop.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/item.h \
  /usr/include/raylib.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/include/stdarg.h \
  /usr/include/c++/14.2.1/string \
@@ -112,14 +112,15 @@ CMakeFiles/autohacka.dir/src/json.cc.o: \
  /usr/include/c++/14.2.1/bits/uses_allocator.h \
  /usr/include/c++/14.2.1/bits/uses_allocator_args.h \
  /usr/include/c++/14.2.1/tuple \
- /home/dnlbs/workspace/personal/mier_autohacr/src/entities.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/entities.h \
  /usr/include/c++/14.2.1/vector \
  /usr/include/c++/14.2.1/bits/stl_uninitialized.h \
  /usr/include/c++/14.2.1/bits/stl_vector.h \
  /usr/include/c++/14.2.1/bits/stl_bvector.h \
  /usr/include/c++/14.2.1/bits/vector.tcc \
- /home/dnlbs/workspace/personal/mier_autohacr/src/wall.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/wall.h \
  /usr/include/c++/14.2.1/variant \
  /usr/include/c++/14.2.1/bits/enable_special_members.h \
  /usr/include/c++/14.2.1/bits/parse_numbers.h \
- /usr/include/c++/14.2.1/ext/aligned_buffer.h
+ /usr/include/c++/14.2.1/ext/aligned_buffer.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/level_editor.h

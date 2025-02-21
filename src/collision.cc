@@ -1,4 +1,5 @@
 #include "collision.h"
+#include "config.h"
 
 bool check_cell_collision(Vector2 cell_position, Vector2 position) {
   Rectangle rect;
@@ -9,18 +10,7 @@ bool check_cell_collision(Vector2 cell_position, Vector2 position) {
   rect.width = CELL_SIZE;
   rect.height = CELL_SIZE;
 
-#ifdef DEBUG
-#endif
-  DrawRectangleRec(rect, RED);
-
-  if (CheckCollisionPointRec(position, rect)) {
-#ifdef DEBUG
-    TraceLog(LOG_INFO, "CELL_COLLISION");
-#endif
-    return true;
-  }
-
-  return false;
+  return CheckCollisionPointRec(position, rect);
 }
 
 int check_cells_collision(std::vector<Vector2> cell_positions,

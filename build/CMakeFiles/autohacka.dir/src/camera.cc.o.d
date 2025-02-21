@@ -1,7 +1,7 @@
 CMakeFiles/autohacka.dir/src/camera.cc.o: \
  /home/dnlbs/workspace/personal/mier_autohacr/src/camera.cc \
  /usr/include/stdc-predef.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/camera.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/camera.h \
  /usr/include/raylib.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/include/stdarg.h \
  /usr/include/raymath.h /usr/include/c++/14.2.1/math.h \

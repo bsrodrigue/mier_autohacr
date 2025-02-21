@@ -129,6 +129,126 @@ autohacka/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/autohacka.dir/build.make CMakeFiles/autohacka.dir/build
 .PHONY : autohacka/fast
 
+external/imgui/imgui.o: external/imgui/imgui.cpp.o
+.PHONY : external/imgui/imgui.o
+
+# target to build an object file
+external/imgui/imgui.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/autohacka.dir/build.make CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.o
+.PHONY : external/imgui/imgui.cpp.o
+
+external/imgui/imgui.i: external/imgui/imgui.cpp.i
+.PHONY : external/imgui/imgui.i
+
+# target to preprocess a source file
+external/imgui/imgui.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/autohacka.dir/build.make CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.i
+.PHONY : external/imgui/imgui.cpp.i
+
+external/imgui/imgui.s: external/imgui/imgui.cpp.s
+.PHONY : external/imgui/imgui.s
+
+# target to generate assembly for a file
+external/imgui/imgui.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/autohacka.dir/build.make CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.s
+.PHONY : external/imgui/imgui.cpp.s
+
+external/imgui/imgui_draw.o: external/imgui/imgui_draw.cpp.o
+.PHONY : external/imgui/imgui_draw.o
+
+# target to build an object file
+external/imgui/imgui_draw.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/autohacka.dir/build.make CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.o
+.PHONY : external/imgui/imgui_draw.cpp.o
+
+external/imgui/imgui_draw.i: external/imgui/imgui_draw.cpp.i
+.PHONY : external/imgui/imgui_draw.i
+
+# target to preprocess a source file
+external/imgui/imgui_draw.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/autohacka.dir/build.make CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.i
+.PHONY : external/imgui/imgui_draw.cpp.i
+
+external/imgui/imgui_draw.s: external/imgui/imgui_draw.cpp.s
+.PHONY : external/imgui/imgui_draw.s
+
+# target to generate assembly for a file
+external/imgui/imgui_draw.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/autohacka.dir/build.make CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.s
+.PHONY : external/imgui/imgui_draw.cpp.s
+
+external/imgui/imgui_tables.o: external/imgui/imgui_tables.cpp.o
+.PHONY : external/imgui/imgui_tables.o
+
+# target to build an object file
+external/imgui/imgui_tables.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/autohacka.dir/build.make CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.o
+.PHONY : external/imgui/imgui_tables.cpp.o
+
+external/imgui/imgui_tables.i: external/imgui/imgui_tables.cpp.i
+.PHONY : external/imgui/imgui_tables.i
+
+# target to preprocess a source file
+external/imgui/imgui_tables.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/autohacka.dir/build.make CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.i
+.PHONY : external/imgui/imgui_tables.cpp.i
+
+external/imgui/imgui_tables.s: external/imgui/imgui_tables.cpp.s
+.PHONY : external/imgui/imgui_tables.s
+
+# target to generate assembly for a file
+external/imgui/imgui_tables.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/autohacka.dir/build.make CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.s
+.PHONY : external/imgui/imgui_tables.cpp.s
+
+external/imgui/imgui_widgets.o: external/imgui/imgui_widgets.cpp.o
+.PHONY : external/imgui/imgui_widgets.o
+
+# target to build an object file
+external/imgui/imgui_widgets.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/autohacka.dir/build.make CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.o
+.PHONY : external/imgui/imgui_widgets.cpp.o
+
+external/imgui/imgui_widgets.i: external/imgui/imgui_widgets.cpp.i
+.PHONY : external/imgui/imgui_widgets.i
+
+# target to preprocess a source file
+external/imgui/imgui_widgets.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/autohacka.dir/build.make CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.i
+.PHONY : external/imgui/imgui_widgets.cpp.i
+
+external/imgui/imgui_widgets.s: external/imgui/imgui_widgets.cpp.s
+.PHONY : external/imgui/imgui_widgets.s
+
+# target to generate assembly for a file
+external/imgui/imgui_widgets.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/autohacka.dir/build.make CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.s
+.PHONY : external/imgui/imgui_widgets.cpp.s
+
+external/rlImGui/rlImGui.o: external/rlImGui/rlImGui.cpp.o
+.PHONY : external/rlImGui/rlImGui.o
+
+# target to build an object file
+external/rlImGui/rlImGui.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/autohacka.dir/build.make CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.o
+.PHONY : external/rlImGui/rlImGui.cpp.o
+
+external/rlImGui/rlImGui.i: external/rlImGui/rlImGui.cpp.i
+.PHONY : external/rlImGui/rlImGui.i
+
+# target to preprocess a source file
+external/rlImGui/rlImGui.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/autohacka.dir/build.make CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.i
+.PHONY : external/rlImGui/rlImGui.cpp.i
+
+external/rlImGui/rlImGui.s: external/rlImGui/rlImGui.cpp.s
+.PHONY : external/rlImGui/rlImGui.s
+
+# target to generate assembly for a file
+external/rlImGui/rlImGui.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/autohacka.dir/build.make CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.s
+.PHONY : external/rlImGui/rlImGui.cpp.s
+
 src/cJSON.o: src/cJSON.cc.o
 .PHONY : src/cJSON.o
 
@@ -690,6 +810,21 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... autohacka"
+	@echo "... external/imgui/imgui.o"
+	@echo "... external/imgui/imgui.i"
+	@echo "... external/imgui/imgui.s"
+	@echo "... external/imgui/imgui_draw.o"
+	@echo "... external/imgui/imgui_draw.i"
+	@echo "... external/imgui/imgui_draw.s"
+	@echo "... external/imgui/imgui_tables.o"
+	@echo "... external/imgui/imgui_tables.i"
+	@echo "... external/imgui/imgui_tables.s"
+	@echo "... external/imgui/imgui_widgets.o"
+	@echo "... external/imgui/imgui_widgets.i"
+	@echo "... external/imgui/imgui_widgets.s"
+	@echo "... external/rlImGui/rlImGui.o"
+	@echo "... external/rlImGui/rlImGui.i"
+	@echo "... external/rlImGui/rlImGui.s"
 	@echo "... src/cJSON.o"
 	@echo "... src/cJSON.i"
 	@echo "... src/cJSON.s"

@@ -7,6 +7,7 @@
 #include "entity_loader.h"
 #include "game.h"
 #include "gate.h"
+#include "imgui.h"
 #include "inventory.h"
 #include "item_drop.h"
 #include "level.h"
@@ -28,9 +29,9 @@
 #include <string.h>
 #include <variant>
 #include <vector>
+#include "raylib.h"
+#include "rlImGui.h"
 
-#define RAYGUI_IMPLEMENTATION
-#include "raygui.h"
 
 ScreenManager screen_manager;
 
@@ -202,6 +203,10 @@ void handle_game_input(int pressed_key) {
 }
 
 void handle_input(int pressed_key) {
+  if (ImGui::GetIO().WantCaptureMouse || ImGui::GetIO().WantCaptureKeyboard) {
+    return;
+  }
+
   switch (screen_manager.active_screen) {
   case UNKNOWN:
     break;
@@ -465,11 +470,6 @@ void handle_enemy_behaviour() {
         enemies[i].position = next_position;
       }
     }
-
-#ifdef DEBUG
-    DrawCircleV(enemies[i].position, enemies[i].vision_radius,
-                ColorAlpha(RED, 0.5));
-#endif // DEBUG
   }
 }
 
@@ -714,6 +714,9 @@ int main(int argc, char *argv[]) {
   init_window();
   load_textures();
 
+  // Initialize ImGUI
+  rlImGuiSetup(true);
+
   game_mode = argv[1];
   level_file = argv[2];
 
@@ -724,6 +727,8 @@ int main(int argc, char *argv[]) {
 
     BeginDrawing();
     ClearBackground(BLACK);
+
+    //================================================[Game Camera]====================================================//
 
     BeginMode2D(camera);
 
@@ -746,12 +751,30 @@ int main(int argc, char *argv[]) {
 
     EndMode2D();
 
-    if (screen_manager.active_screen == LEVEL_EDITOR) {
-      render_entity_dropdown();
+    //================================================[Overlay]====================================================//
+
+    rlImGuiBegin();
+    if (screen_manager.active_screen == GAME) {
+      ImGui::SetNextWindowPos(ImVec2(WIN_WIDTH - 300, 0), ImGuiCond_Once);  // Top-left corner
+      ImGui::SetNextWindowSize(ImVec2(300, WIN_HEIGHT), ImGuiCond_Once);  // 300x200 pixels
+      ImGui::Begin("Game Debug");
+      ImGui::Text("Position: (%.1f, %.1f)", player.position.x, player.position.y);
+      ImGui::Text("Health: %.1f / %.1f", player.health, player.max_health);
+      ImGui::SliderFloat("Bullet Damage", &player_bullet_damage, 1.0f, 10.0f, "%.1f");
+      ImGui::SliderFloat("Projectile Speed", &projectile_speed, 5.0f, 20.0f, "%.1f");
+      if (ImGui::Button("Heal Player")) {
+        heal(&player, 10.0f);
+      }
+      ImGui::End();
     }
 
+    if (screen_manager.active_screen == LEVEL_EDITOR) {
+    }
+    rlImGuiEnd();
     EndDrawing();
   }
+
+  rlImGuiShutdown();
 
   CloseWindow();
   return 0;

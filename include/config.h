@@ -6,8 +6,8 @@
 // TODO: Handle heterogenous screen sizes
 #define LEVEL_WIDTH 2500
 #define LEVEL_HEIGHT 2500
-#define WIN_WIDTH 1400
-#define WIN_HEIGHT 1000
+#define WIN_WIDTH 1200
+#define WIN_HEIGHT 600
 
 #define TEXT_POS(x) x * 5
 

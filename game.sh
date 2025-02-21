@@ -1,9 +1,4 @@
 #!/bin/bash
 
-# Compile
-cd build && cmake .. && make
-
-cd -
-
-# Run
-./build/bin/autohacka game ./impel_down.hacc
+# Compile and run
+cd build && cmake .. && make && cd - && ./build/bin/autohacka game ./impel_down.hacc

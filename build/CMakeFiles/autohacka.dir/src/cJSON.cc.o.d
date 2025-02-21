@@ -86,4 +86,4 @@ CMakeFiles/autohacka.dir/src/cJSON.cc.o: \
  /usr/include/bits/stdio_lim.h /usr/include/c++/14.2.1/stdlib.h \
  /usr/include/c++/14.2.1/cstdlib /usr/include/string.h \
  /usr/include/strings.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/cJSON.h
+ /home/dnlbs/workspace/personal/mier_autohacr/include/cJSON.h

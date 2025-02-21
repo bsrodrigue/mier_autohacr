@@ -1,9 +1,9 @@
 CMakeFiles/autohacka.dir/src/enemy.cc.o: \
  /home/dnlbs/workspace/personal/mier_autohacr/src/enemy.cc \
  /usr/include/stdc-predef.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/enemy.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/item_drop.h \
- /home/dnlbs/workspace/personal/mier_autohacr/src/item.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/enemy.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/item_drop.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/item.h \
  /usr/include/raylib.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/include/stdarg.h \
  /usr/include/c++/14.2.1/string \
