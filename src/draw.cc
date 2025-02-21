@@ -40,7 +40,9 @@ void draw_floor(Vector2 position) {
 }
 
 void draw_target_cursor(Vector2 position, float rotation) {
-  draw_texture_cell(position, target_texture, rotation);
+  draw_texture_cell(
+      Vector2Subtract(position, {.x = CELL_SIZE / 2.0f, .y = CELL_SIZE / 2.0f}),
+      target_texture, rotation);
 }
 
 void draw_wall(Vector2 position, WallType type) {

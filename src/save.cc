@@ -38,6 +38,7 @@ void create_level_file(const char *filename, const char *level_name,
 
   TraceLog(LOG_INFO, "Level File Created");
 }
+
 long get_file_size(const char *filename) {
   FILE *file = fopen(filename, "r"); // Open the file in read mode
   if (file == NULL) {

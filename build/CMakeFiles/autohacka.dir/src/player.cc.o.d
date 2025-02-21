@@ -1,8 +1,8 @@
 CMakeFiles/autohacka.dir/src/player.cc.o: \
- /home/rodo/workspace/hobbies/gamedev/mier_autohacr/src/player.cc \
+ /home/dnlbs/workspace/personal/mier_autohacr/src/player.cc \
  /usr/include/stdc-predef.h \
- /home/rodo/workspace/hobbies/gamedev/mier_autohacr/src/player.h \
- /home/rodo/workspace/hobbies/gamedev/mier_autohacr/src/entities.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/src/player.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/src/entities.h \
  /usr/include/raylib.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/include/stdarg.h \
  /usr/include/c++/14.2.1/string \
@@ -111,16 +111,16 @@ CMakeFiles/autohacka.dir/src/player.cc.o: \
  /usr/include/c++/14.2.1/bits/stl_vector.h \
  /usr/include/c++/14.2.1/bits/stl_bvector.h \
  /usr/include/c++/14.2.1/bits/vector.tcc \
- /home/rodo/workspace/hobbies/gamedev/mier_autohacr/src/gate.h \
- /home/rodo/workspace/hobbies/gamedev/mier_autohacr/src/config.h \
- /home/rodo/workspace/hobbies/gamedev/mier_autohacr/src/item.h \
- /home/rodo/workspace/hobbies/gamedev/mier_autohacr/src/projectiles.h \
- /home/rodo/workspace/hobbies/gamedev/mier_autohacr/src/wall.h \
- /home/rodo/workspace/hobbies/gamedev/mier_autohacr/src/collision.h \
- /home/rodo/workspace/hobbies/gamedev/mier_autohacr/src/draw.h \
- /home/rodo/workspace/hobbies/gamedev/mier_autohacr/src/enemy.h \
- /home/rodo/workspace/hobbies/gamedev/mier_autohacr/src/item_drop.h \
- /home/rodo/workspace/hobbies/gamedev/mier_autohacr/src/level_editor.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/src/gate.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/src/config.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/src/item.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/src/projectiles.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/src/wall.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/src/collision.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/src/draw.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/src/enemy.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/src/item_drop.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/src/level_editor.h \
  /usr/include/c++/14.2.1/variant \
  /usr/include/c++/14.2.1/bits/enable_special_members.h \
  /usr/include/c++/14.2.1/bits/parse_numbers.h \
@@ -129,7 +129,7 @@ CMakeFiles/autohacka.dir/src/player.cc.o: \
  /usr/include/math.h /usr/include/bits/math-vector.h \
  /usr/include/bits/libm-simd-decl-stubs.h \
  /usr/include/bits/flt-eval-method.h /usr/include/bits/fp-logb.h \
- /usr/include/bits/fp-fast.h \
+ /usr/include/bits/fp-fast.h /usr/include/bits/mathcalls-macros.h \
  /usr/include/bits/mathcalls-helper-functions.h \
  /usr/include/bits/mathcalls.h /usr/include/bits/mathcalls-narrow.h \
  /usr/include/bits/iscanonical.h /usr/include/c++/14.2.1/bits/specfun.h \

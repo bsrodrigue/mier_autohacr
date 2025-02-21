@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/autohacka.dir/link.d"
   "bin/autohacka"
   "CMakeFiles/autohacka.dir/src/cJSON.cc.o"
   "CMakeFiles/autohacka.dir/src/cJSON.cc.o.d"

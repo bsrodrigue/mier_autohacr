@@ -1,7 +1,7 @@
 CMakeFiles/autohacka.dir/src/camera.cc.o: \
- /home/rodo/workspace/hobbies/gamedev/mier_autohacr/src/camera.cc \
+ /home/dnlbs/workspace/personal/mier_autohacr/src/camera.cc \
  /usr/include/stdc-predef.h \
- /home/rodo/workspace/hobbies/gamedev/mier_autohacr/src/camera.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/src/camera.h \
  /usr/include/raylib.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/include/stdarg.h \
  /usr/include/raymath.h /usr/include/c++/14.2.1/math.h \
@@ -16,13 +16,14 @@ CMakeFiles/autohacka.dir/src/camera.cc.o: \
  /usr/include/c++/14.2.1/x86_64-pc-linux-gnu/bits/cpu_defines.h \
  /usr/include/c++/14.2.1/pstl/pstl_config.h \
  /usr/include/c++/14.2.1/bits/cpp_type_traits.h \
+ /usr/include/c++/14.2.1/bits/version.h \
  /usr/include/c++/14.2.1/ext/type_traits.h /usr/include/math.h \
  /usr/include/bits/libc-header-start.h /usr/include/bits/types.h \
  /usr/include/bits/typesizes.h /usr/include/bits/time64.h \
  /usr/include/bits/math-vector.h /usr/include/bits/libm-simd-decl-stubs.h \
  /usr/include/bits/floatn.h /usr/include/bits/floatn-common.h \
  /usr/include/bits/flt-eval-method.h /usr/include/bits/fp-logb.h \
- /usr/include/bits/fp-fast.h \
+ /usr/include/bits/fp-fast.h /usr/include/bits/mathcalls-macros.h \
  /usr/include/bits/mathcalls-helper-functions.h \
  /usr/include/bits/mathcalls.h /usr/include/bits/mathcalls-narrow.h \
  /usr/include/bits/iscanonical.h /usr/include/c++/14.2.1/bits/std_abs.h \
@@ -44,8 +45,7 @@ CMakeFiles/autohacka.dir/src/camera.cc.o: \
  /usr/include/bits/pthreadtypes-arch.h \
  /usr/include/bits/atomic_wide_counter.h /usr/include/bits/struct_mutex.h \
  /usr/include/bits/struct_rwlock.h /usr/include/alloca.h \
- /usr/include/bits/stdlib-float.h /usr/include/c++/14.2.1/bits/version.h \
- /usr/include/c++/14.2.1/bits/specfun.h \
+ /usr/include/bits/stdlib-float.h /usr/include/c++/14.2.1/bits/specfun.h \
  /usr/include/c++/14.2.1/bits/stl_algobase.h \
  /usr/include/c++/14.2.1/bits/functexcept.h \
  /usr/include/c++/14.2.1/bits/exception_defines.h \

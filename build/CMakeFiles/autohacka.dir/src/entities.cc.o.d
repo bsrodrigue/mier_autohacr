@@ -1,7 +1,7 @@
 CMakeFiles/autohacka.dir/src/entities.cc.o: \
- /home/rodo/workspace/hobbies/gamedev/mier_autohacr/src/entities.cc \
+ /home/dnlbs/workspace/personal/mier_autohacr/src/entities.cc \
  /usr/include/stdc-predef.h \
- /home/rodo/workspace/hobbies/gamedev/mier_autohacr/src/entities.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/src/entities.h \
  /usr/include/raylib.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/include/stdarg.h \
  /usr/include/c++/14.2.1/string \

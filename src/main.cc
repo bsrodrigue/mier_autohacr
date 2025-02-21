@@ -37,6 +37,7 @@ ScreenManager screen_manager;
 Level level;
 
 char *level_file;
+char *game_mode;
 
 // TODO: Maybe create a config file for player stats
 float player_bullet_damage = 1;
@@ -592,7 +593,8 @@ void render_floor() {
 void draw_player_target() {
   Vector2 position = GetScreenToWorld2D(GetMousePosition(), camera);
 
-  draw_target_cursor(position, player.angle);
+  // TODO: Decide if player angle is needed.
+  draw_target_cursor(position, 0);
 }
 
 void draw_player_healthbar(Player player) {
@@ -624,17 +626,18 @@ void render_game() {
   render_floor();
   draw_arena(walls);
 
-  draw_projectiles(enemy_projectiles);
-  draw_projectiles(player_projectiles);
-
-  draw_player_healthbar(player);
   draw_enemies();
-  player.draw();
   draw_items();
   draw_gates();
 
   draw_warpzones();
   draw_player_target();
+
+  draw_player_healthbar(player);
+  player.draw();
+
+  draw_projectiles(enemy_projectiles);
+  draw_projectiles(player_projectiles);
 }
 
 // TODO: Optimize level loading
@@ -675,9 +678,11 @@ void ScreenManager::handle_screen_change() {
     break;
   case GAME:
     this->init_game_screen();
+    SetExitKey(KEY_ESCAPE);
     break;
   case LEVEL_EDITOR:
     this->init_level_editor_screen(level_file);
+    SetExitKey(0);
     break;
   }
 }
@@ -709,14 +714,14 @@ int main(int argc, char *argv[]) {
   init_window();
   load_textures();
 
-  char *game_mode = argv[1];
+  game_mode = argv[1];
   level_file = argv[2];
 
   set_initial_screen(game_mode);
-  SetExitKey(0);
 
   while (!WindowShouldClose()) {
     screen_manager.handle_screen_change();
+
     BeginDrawing();
     ClearBackground(BLACK);
 

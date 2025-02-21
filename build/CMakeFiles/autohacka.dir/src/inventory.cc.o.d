@@ -1,8 +1,8 @@
 CMakeFiles/autohacka.dir/src/inventory.cc.o: \
- /home/rodo/workspace/hobbies/gamedev/mier_autohacr/src/inventory.cc \
+ /home/dnlbs/workspace/personal/mier_autohacr/src/inventory.cc \
  /usr/include/stdc-predef.h \
- /home/rodo/workspace/hobbies/gamedev/mier_autohacr/src/inventory.h \
- /home/rodo/workspace/hobbies/gamedev/mier_autohacr/src/entities.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/src/inventory.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/src/entities.h \
  /usr/include/raylib.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/include/stdarg.h \
  /usr/include/c++/14.2.1/string \
@@ -111,8 +111,8 @@ CMakeFiles/autohacka.dir/src/inventory.cc.o: \
  /usr/include/c++/14.2.1/bits/stl_vector.h \
  /usr/include/c++/14.2.1/bits/stl_bvector.h \
  /usr/include/c++/14.2.1/bits/vector.tcc \
- /home/rodo/workspace/hobbies/gamedev/mier_autohacr/src/gate.h \
- /home/rodo/workspace/hobbies/gamedev/mier_autohacr/src/config.h \
- /home/rodo/workspace/hobbies/gamedev/mier_autohacr/src/item.h \
- /home/rodo/workspace/hobbies/gamedev/mier_autohacr/src/projectiles.h \
- /home/rodo/workspace/hobbies/gamedev/mier_autohacr/src/wall.h
+ /home/dnlbs/workspace/personal/mier_autohacr/src/gate.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/src/config.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/src/item.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/src/projectiles.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/src/wall.h

@@ -5,6 +5,7 @@ ScreenManager::ScreenManager() {
   this->previous_screen = UNKNOWN;
 }
 
+// This will always trigger on startup
 bool ScreenManager::screen_changed() {
   return active_screen != previous_screen;
 }
