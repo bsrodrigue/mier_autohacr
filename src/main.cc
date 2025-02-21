@@ -591,10 +591,10 @@ void render_floor() {
 }
 
 void draw_player_target() {
-  Vector2 position = GetScreenToWorld2D(GetMousePosition(), camera);
+  Vector2 mouse = get_world_mouse(camera);
 
   // TODO: Decide if player angle is needed.
-  draw_target_cursor(position, 0);
+  draw_target_cursor(mouse, 0);
 }
 
 void draw_player_healthbar(Player player) {

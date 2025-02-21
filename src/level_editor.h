@@ -117,7 +117,7 @@ public:
   // ------[ Entity Dropdown ]----- //
 
   bool entity_dropdown_is_open = false;
-  EntityType current_entity = PLAYER_ENTITY;
+  EntityType current_entity = BWALL_ENTITY;
 
   // ----[Items]
   ItemParams item_params{ItemEffect::NO_EFFECT, ItemUsage::NO_USAGE};

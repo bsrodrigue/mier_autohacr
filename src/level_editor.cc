@@ -64,6 +64,7 @@ void handle_editor_actions(Camera2D *camera, int pressed_key) {
     EditorGridCell *cell =
         &level_editor.grid[MOUSE_TO_GRID(mouse.y)][MOUSE_TO_GRID(mouse.x)];
 
+    // Clear
     cell->entity = EditorVoid{};
     cell->type = EMPTY_ENTITY;
   }
