@@ -25,6 +25,7 @@ const char *get_entity_type_name(EntityType type) {
   }
 }
 
+// Returns a string with all the entity names separated by a delimiter
 std::string get_enum_string(const char delimiter) {
   std::vector<std::string> names;
 

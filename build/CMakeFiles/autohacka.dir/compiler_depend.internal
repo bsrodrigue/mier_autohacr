@@ -3050,12 +3050,14 @@ CMakeFiles/autohacka.dir/src/level.cc.o
 
 CMakeFiles/autohacka.dir/src/level_editor.cc.o
  /home/dnlbs/workspace/personal/mier_autohacr/src/level_editor.cc
+ /home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui.h
  /home/dnlbs/workspace/personal/mier_autohacr/include/camera.h
  /home/dnlbs/workspace/personal/mier_autohacr/include/common.h
  /home/dnlbs/workspace/personal/mier_autohacr/include/config.h
  /home/dnlbs/workspace/personal/mier_autohacr/include/draw.h
  /home/dnlbs/workspace/personal/mier_autohacr/include/enemy.h
  /home/dnlbs/workspace/personal/mier_autohacr/include/entities.h
+ /home/dnlbs/workspace/personal/mier_autohacr/include/imconfig.h
  /home/dnlbs/workspace/personal/mier_autohacr/include/item.h
  /home/dnlbs/workspace/personal/mier_autohacr/include/item_drop.h
  /home/dnlbs/workspace/personal/mier_autohacr/include/level.h
@@ -3068,6 +3070,7 @@ CMakeFiles/autohacka.dir/src/level_editor.cc.o
  /usr/include/asm-generic/errno-base.h
  /usr/include/asm-generic/errno.h
  /usr/include/asm/errno.h
+ /usr/include/assert.h
  /usr/include/bits/atomic_wide_counter.h
  /usr/include/bits/byteswap.h
  /usr/include/bits/endian.h
@@ -3236,10 +3239,13 @@ CMakeFiles/autohacka.dir/src/level_editor.cc.o
  /usr/include/stdc-predef.h
  /usr/include/stdio.h
  /usr/include/stdlib.h
+ /usr/include/string.h
+ /usr/include/strings.h
  /usr/include/sys/cdefs.h
  /usr/include/sys/select.h
  /usr/include/sys/types.h
  /usr/include/wchar.h
+ /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/include/float.h
  /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/include/stdarg.h
  /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/include/stddef.h
 

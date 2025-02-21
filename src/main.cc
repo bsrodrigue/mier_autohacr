@@ -755,20 +755,10 @@ int main(int argc, char *argv[]) {
 
     rlImGuiBegin();
     if (screen_manager.active_screen == GAME) {
-      ImGui::SetNextWindowPos(ImVec2(WIN_WIDTH - 300, 0), ImGuiCond_Once);  // Top-left corner
-      ImGui::SetNextWindowSize(ImVec2(300, WIN_HEIGHT), ImGuiCond_Once);  // 300x200 pixels
-      ImGui::Begin("Game Debug");
-      ImGui::Text("Position: (%.1f, %.1f)", player.position.x, player.position.y);
-      ImGui::Text("Health: %.1f / %.1f", player.health, player.max_health);
-      ImGui::SliderFloat("Bullet Damage", &player_bullet_damage, 1.0f, 10.0f, "%.1f");
-      ImGui::SliderFloat("Projectile Speed", &projectile_speed, 5.0f, 20.0f, "%.1f");
-      if (ImGui::Button("Heal Player")) {
-        heal(&player, 10.0f);
-      }
-      ImGui::End();
     }
 
     if (screen_manager.active_screen == LEVEL_EDITOR) {
+      render_level_editor_ui();
     }
     rlImGuiEnd();
     EndDrawing();

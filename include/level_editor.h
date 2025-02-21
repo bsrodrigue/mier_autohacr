@@ -107,15 +107,15 @@ public:
   const char *filename;
 
   // ------------------------[ Editor State ]------------------------------ //
-
-  bool is_placing_warpzone_origin = true;
+  // General
   bool can_change_entity = true;
   bool placing_mode = false;
 
+  // Warpzone
+  bool is_placing_warpzone_origin = true;
   Vector2 warpzone_origin_pos = {-1, -1};
 
-  // ------[ Entity Dropdown ]----- //
-
+  // Entity Dropdown
   bool entity_dropdown_is_open = false;
   EntityType current_entity = BWALL_ENTITY;
 
@@ -123,7 +123,6 @@ public:
   ItemParams item_params{ItemEffect::NO_EFFECT, ItemUsage::NO_USAGE};
 
   // ----------------------------[ Grid ]---------------------------------- //
-
   EditorGridCell grid[CELL_COUNT][CELL_COUNT];
 
   LevelEditor() {}
@@ -141,8 +140,7 @@ public:
 };
 
 void render_level_editor(Camera2D *camera);
+void render_level_editor_ui();
 void handle_editor_input(Camera2D *camera, int pressed_key);
 void load_level_editor(const char *filename);
-void render_entity_dropdown();
-
 #endif

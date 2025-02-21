@@ -4,6 +4,7 @@
 #include "config.h"
 #include "draw.h"
 #include "entities.h"
+#include "imgui.h"
 #include "level.h"
 #include "raygui.h"
 #include "save.h"
@@ -97,16 +98,39 @@ const char *item_effect_dropdown_items = item_effect_str.c_str();
 
 bool item_effect_dropdown_is_open = false;
 
-void render_entity_dropdown() {
-  if (!level_editor.can_change_entity)
-    return;
-}
-
 void render_level_editor(Camera2D *camera) {
   Vector2 mouse = get_world_mouse(*camera);
 
   render_entities();
   render_mouse_hover_grid(level_editor.current_entity, mouse);
+}
 
-  render_hud(camera, mouse);
+static bool my_tool_active = true;
+
+void render_level_editor_ui() {
+  ImGui::SetNextWindowPos(ImVec2(WIN_WIDTH - 300, 0),
+                          ImGuiCond_Once); // Top-left corner
+  ImGui::SetNextWindowSize(ImVec2(300, WIN_HEIGHT),
+                           ImGuiCond_Once); // 300x200 pixels
+  ImGui::Begin("Level Editor", &my_tool_active,
+               ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoResize |
+                   ImGuiWindowFlags_NoMove);
+
+  if (ImGui::BeginMenuBar()) {
+    if (ImGui::BeginMenu("File")) {
+      if (ImGui::MenuItem("Save Level File")) {
+          level_editor.save_level();
+      }
+
+      ImGui::EndMenu();
+    }
+    ImGui::EndMenuBar();
+  }
+
+  int current_entity = level_editor.current_entity;
+  if (ImGui::Combo("Select Entity", &current_entity, dropdown_items, 8)) {
+    level_editor.current_entity = (EntityType)current_entity;
+    level_editor.placing_mode = true;
+  }
+  ImGui::End();
 }
