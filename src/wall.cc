@@ -6,7 +6,7 @@
 
 Wall create_breakable_wall(Vector2 position) {
   Wall wall;
-  wall.type = BREAKABLE;
+  wall.type = BREAKABLE_WALL;
   wall.health = BREAKABLE_WALL_HEALTH;
   wall.position = position;
 
@@ -15,20 +15,11 @@ Wall create_breakable_wall(Vector2 position) {
 
 Wall create_ubreakable_wall(Vector2 position) {
   Wall wall;
-  wall.type = UNBREAKABLE;
+  wall.type = UNBREAKABLE_WALL;
   wall.health = 0;
   wall.position = position;
 
   return wall;
-}
-
-void draw_wall(Vector2 position, Texture2D texture) {
-  DrawTexturePro(texture, {.x = 0, .y = 0, .width = 32, .height = 32},
-                 {.x = (position.x),
-                  .y = (position.y),
-                  .width = CELL_SIZE,
-                  .height = CELL_SIZE},
-                 {0, 0}, 0, WHITE);
 }
 
 // Just a wrapper around check_cells_collision

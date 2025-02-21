@@ -1,5 +1,6 @@
 #include "player.h"
 #include "collision.h"
+#include "draw.h"
 #include "entities.h"
 #include <raylib.h>
 #include <raymath.h>
@@ -64,9 +65,4 @@ void Player::handle_player_movement(std::vector<Vector2> wall_positions) {
   this->position = get_confirmed_position(next_position, wall_positions);
 }
 
-void Player::draw() {
-  DrawTexturePro(
-      texture, {.x = 0, .y = 0, .width = 32, .height = 32},
-      {.x = (position.x), .y = (position.y), .width = 32, .height = 32},
-      {16, 16}, angle + 90, WHITE);
-}
+void Player::draw() { draw_ship(position, angle); }

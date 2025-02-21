@@ -1,10 +1,14 @@
 #include "collision.h"
 #include "common.h"
 #include "config.h"
+#include "draw.h"
 #include "enemy.h"
 #include "entities.h"
+#include "entity_loader.h"
 #include "game.h"
 #include "gate.h"
+#include "imgui.h"
+#include "inventory.h"
 #include "item_drop.h"
 #include "level.h"
 #include "level_editor.h"
@@ -12,32 +16,29 @@
 #include "projectiles.h"
 #include "save.h"
 #include "screen.h"
+#include "shoot.h"
 #include "textures.h"
 #include "wall.h"
+#include "warpzone.h"
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
+#include <ctime>
 #include <raylib.h>
 #include <raymath.h>
 #include <string.h>
+#include <variant>
 #include <vector>
+#include "raylib.h"
+#include "rlImGui.h"
 
-Texture2D player_texture;
-Texture2D ubwall_texture;
-Texture2D bwall_texture;
-Texture2D floor_texture;
-Texture2D target_texture;
-Texture2D sentinel_texture;
-Texture2D sentinel_head_texture;
-Texture2D sentinel_barrel_texture;
-Texture2D warzone_texture;
-Texture2D projectile_texture;
 
 ScreenManager screen_manager;
 
 Level level;
 
 char *level_file;
+char *game_mode;
 
 // TODO: Maybe create a config file for player stats
 float player_bullet_damage = 1;
@@ -59,98 +60,35 @@ Enemy enemies[MAX_ENEMIES];
 static int item_count = 0;
 BaseItem items[MAX_ITEMS];
 
+static int warpzone_count = 0;
+Warpzone warpzones[10];
+
 ProjectilePool player_projectiles;
 ProjectilePool enemy_projectiles;
 
 Player player;
 
-void shoot_target(Vector2 source, Vector2 target, ProjectilePool &pool) {
-  int index = pool.get_free_projectile();
-
-  if (index != -1) {
-    pool.allocate_projectile(index);
-
-    pool.pool[index].position = source;
-    pool.pool[index].direction =
-        Vector2Normalize(Vector2Subtract(target, source));
-
-    pool.pool[index].angle = get_angle_relative_to(target, source);
-  }
-}
-
-void shoot_straight(Vector2 source, Vector2 direction, ProjectilePool &pool) {
-  int index = pool.get_free_projectile();
-
-  if (index != -1) {
-    pool.allocate_projectile(index);
-
-    pool.pool[index].position = source;
-    pool.pool[index].direction = direction;
-
-    float angle_rad = atan2f(direction.y, direction.x);
-
-    pool.pool[index].angle = angle_rad * RAD2DEG;
-  }
-}
+Inventory inventory;
 
 void player_shoot() {
   Vector2 mouse = get_world_mouse(camera);
   shoot_target(player.position, mouse, player_projectiles);
 }
 
-Vector2 get_offset_position(float x, float y) {
-  return {(float)CELL_OFFSET(x), (float)CELL_OFFSET(y)};
-}
-
 void load_entities() {
+  EntityLoader loader({0, 0}, walls, wall_positions, gates, gate_positions,
+                      enemies, enemy_count, warpzones, warpzone_count, items,
+                      item_count);
+
   for (int y = 0; y < CELL_COUNT; y++) {
     for (int x = 0; x < CELL_COUNT; x++) {
-      int type = level.grid[y][x].type;
+      const EditorGridCell &cell = level.grid[y][x];
+      loader.position = get_absolute_position_from_grid_position(x, y);
 
-      // Currently, the entity loader is creating entities with default settings
-
-      if (type == UBWALL) {
-        Wall w = create_ubreakable_wall(get_offset_position(x, y));
-        walls.push_back(w);
-        wall_positions.push_back(w.position);
-      }
-
-      else if (type == BWALL) {
-        Wall w = create_breakable_wall(get_offset_position(x, y));
-        walls.push_back(w);
-        wall_positions.push_back(w.position);
-      }
-
-      else if (type == BASE_ENEMY) {
-        Enemy enemy = create_enemy(get_offset_position(x, y), BASE);
-        enemies[enemy_count++] = enemy;
-      }
-
-      else if (type == ITEM) {
-        BaseItem item = create_base_item(HEALING_EFFECT, INSTANT_USAGE,
-                                         get_offset_position(x, y));
-        items[item_count++] = item;
-      }
-
-      else if (type == GATE) {
-        Gate gate;
-
-        gate.opened = false;
-        gate.type = BASE_GATE;
-        gate.position = get_offset_position(x, y);
-
-        gates.push_back(gate);
-        gate_positions.push_back(gate.position);
-      }
+      std::visit([&](const Entity &entity) { entity.accept(loader); },
+                 cell.entity);
     }
   }
-}
-
-void draw_game_texture(Vector2 position, float angle, Texture2D texture) {
-  DrawTexturePro(
-      texture, {.x = 0, .y = 0, .width = 32, .height = 32},
-      {.x = (position.x), .y = (position.y), .width = 32, .height = 32},
-      {16, 16}, angle, WHITE);
 }
 
 void die(const char *message) {
@@ -173,7 +111,53 @@ void init_window() {
 
   SetTargetFPS(FPS);
 
-  HideCursor();
+  // HideCursor();
+}
+
+template <typename T>
+int get_close_entity_index(const std::vector<T> &entities,
+                           const Vector2 &position,
+                           float proximity_radius = 20.0f,
+                           float entity_radius = 12.5f) {
+  int entity_index = -1;
+
+  for (int i = 0; i < entities.size(); i++) {
+    if (CheckCollisionPointCircle(
+            position,
+            {
+                .x = entities[i].position.x + entity_radius,
+                .y = entities[i].position.y + entity_radius,
+            },
+            proximity_radius)) {
+      entity_index = i;
+      break;
+    }
+  }
+
+  return entity_index;
+}
+
+void handle_gate_opening() {
+  int gate_index = get_close_entity_index(gates, player.position);
+
+  if (gate_index == -1)
+    return;
+
+  if (IsKeyPressed(KEY_SPACE)) {
+
+    int key_item_index = find_iventory_item_by_effect(inventory, KEY_EFFECT);
+
+    if (key_item_index == -1 || inventory.items[key_item_index].used) {
+      // Don't have a key? Fight some enemies, some of them drop keys...
+      TraceLog(LOG_INFO, "You don't have a key");
+      return;
+    }
+
+    gates[gate_index].opened = true;
+
+    gate_positions.erase(gate_positions.begin() + gate_index);
+    gates.erase(gates.begin() + gate_index);
+  }
 }
 
 void handle_game_input(int pressed_key) {
@@ -194,29 +178,35 @@ void handle_game_input(int pressed_key) {
 
   player.handle_player_movement(colliders);
 
-  int gate_index = -1;
+  // Handle Gate opening logic
+  handle_gate_opening();
 
-  for (int i = 0; i < gates.size(); i++) {
+  // Handle Warpzone logic
+  int warpzone_index = -1;
+  for (int i = 0; i < warpzone_count; i++) {
     if (CheckCollisionPointCircle(player.position,
                                   {
-                                      .x = gates[i].position.x + 12.5f,
-                                      .y = gates[i].position.y + 12.5f,
+                                      .x = warpzones[i].position.x + 12.5f,
+                                      .y = warpzones[i].position.y + 12.5f,
                                   },
-                                  20)) {
-      gate_index = i;
+                                  12.5f)) {
+      warpzone_index = i;
       break;
     }
   }
 
-  if (IsKeyPressed(KEY_SPACE) && (gate_index != -1)) {
-    gates[gate_index].opened = true;
+  if (warpzone_index != -1) {
+    const Vector2 destination = warpzones[warpzone_index].destination;
 
-    gate_positions.erase(gate_positions.begin() + gate_index);
-    gates.erase(gates.begin() + gate_index);
+    player.position = destination;
   }
 }
 
 void handle_input(int pressed_key) {
+  if (ImGui::GetIO().WantCaptureMouse || ImGui::GetIO().WantCaptureKeyboard) {
+    return;
+  }
+
   switch (screen_manager.active_screen) {
   case UNKNOWN:
     break;
@@ -260,17 +250,31 @@ void pick_item(int index, Player *player) {
   if (item.usage == INSTANT_USAGE)
     use_item(player, item.effect);
 
+  else {
+    inventory_add_item(&inventory, item);
+  }
+
+  TraceLog(LOG_INFO, "Picked item %d", index);
+
   items[index].picked = true;
 }
 
 void handle_enemy_death(Enemy *enemy) {
   if (enemy->drops_items) {
 
+    float drop_radius = 20.0f;
+
     // Drop all items
     for (int i = 0; i < enemy->item_drop.count; i++) {
-      // TODO: Drop item randomly around the origin (enemy position)
+      float drop_angle = GetRandomValue(0, 360);
+
+      Vector2 drop_position = {
+          .x = enemy->position.x + cosf(drop_angle * DEG2RAD) * drop_radius,
+          .y = enemy->position.y + sinf(drop_angle * DEG2RAD) * drop_radius,
+      };
 
       BaseItem item = drop(enemy->item_drop, enemy->position);
+      item.position = drop_position;
       items[item_count++] = item;
     }
   }
@@ -346,11 +350,11 @@ void update_enemy_projectiles() {
 
     if (touched != -1) {
       switch (walls[touched].type) {
-      case BREAKABLE:
+      case BREAKABLE_WALL:
         // Should enemies be able to destroy walls?
         damage_wall(touched);
         break;
-      case UNBREAKABLE:
+      case UNBREAKABLE_WALL:
         break;
       }
 
@@ -387,10 +391,10 @@ void update_player_projectiles() {
 
     if (touched != -1) {
       switch (walls[touched].type) {
-      case BREAKABLE:
+      case BREAKABLE_WALL:
         damage_wall(touched);
         break;
-      case UNBREAKABLE:
+      case UNBREAKABLE_WALL:
         break;
       }
       player_projectiles.deallocate_projectile(i);
@@ -412,7 +416,7 @@ void handle_enemy_shoot(Enemy *enemy) {
     enemy->last_shot = time;
 
     switch (enemy->type) {
-    case BASE:
+    case BASE_ENEMY:
       if (enemy->tracks_player) {
         shoot_target(enemy->position, player.position, enemy_projectiles);
       }
@@ -432,7 +436,7 @@ void handle_enemy_shoot(Enemy *enemy) {
           shooting_angle += 10;
         }
 
-        enemy->shooting_angle += 10;
+        enemy->shooting_angle += 1;
       }
       break;
     }
@@ -466,11 +470,6 @@ void handle_enemy_behaviour() {
         enemies[i].position = next_position;
       }
     }
-
-#ifdef DEBUG
-    DrawCircleV(enemies[i].position, enemies[i].vision_radius,
-                ColorAlpha(RED, 0.5));
-#endif // DEBUG
   }
 }
 
@@ -511,13 +510,16 @@ void handle_updates() {
 void draw_items() {
   for (int i = 0; i < MAX_ITEMS; i++) {
     if (!items[i].picked) {
-
-      DrawCircleV(
-          {
-              items[i].position.x,
-              items[i].position.y,
-          },
-          10, ColorAlpha(GREEN, 1));
+      switch (items[i].texture) {
+      case NO_TEXTURE:
+        break;
+      case HEALING_CHIP_TEXTURE:
+        draw_healing_chip(items[i].position, 0);
+        break;
+      case KEY_TEXTURE:
+        draw_gate_key(items[i].position, 0);
+        break;
+      }
     }
   }
 }
@@ -525,13 +527,7 @@ void draw_items() {
 void draw_gates() {
   for (int i = 0; i < gates.size(); i++) {
     if (!gates[i].opened) {
-
-      DrawCircleV(
-          {
-              gate_positions[i].x + 12.5f,
-              gate_positions[i].y + 12.5f,
-          },
-          12.5f, ColorAlpha(ORANGE, 1));
+      draw_warpzone(gates[i].position);
     }
   }
 }
@@ -539,9 +535,8 @@ void draw_gates() {
 void draw_projectiles(ProjectilePool projectile_pool) {
   for (int i = 0; i < MAX_PROJECTILES; i++) {
     if (projectile_pool.pool[i].is_shooting) {
-      TraceLog(LOG_INFO, "projectile %d", i);
-      draw_game_texture(projectile_pool.pool[i].position,
-                        projectile_pool.pool[i].angle + 90, projectile_texture);
+      draw_projectile(projectile_pool.pool[i].position,
+                      projectile_pool.pool[i].angle);
     }
   }
 }
@@ -576,37 +571,30 @@ void draw_enemies() {
       continue;
 
     switch (enemies[i].type) {
-    case BASE: {
+    case BASE_ENEMY: {
       Vector2 position = enemies[i].position;
       draw_healthbar(position, enemies[i].max_health, enemies[i].health, 32,
                      32);
-      DrawTexturePro(
-          sentinel_barrel_texture, {.x = 0, .y = 0, .width = 32, .height = 32},
-          {.x = (position.x), .y = (position.y), .width = 32, .height = 32},
-          {16, 32}, enemies[i].shooting_angle + 90, WHITE);
 
-      draw_game_texture(enemies[i].position, enemies[i].shooting_angle + 90,
-                        sentinel_head_texture);
+      draw_base_enemy(enemies[i].position, enemies[i].shooting_angle);
     } break;
     }
   }
 }
 
-void draw_floor() {
+void render_floor() {
   for (int y = 0; y < CELL_COUNT; y++) {
     for (int x = 0; x < CELL_COUNT; x++) {
-      draw_wall(get_offset_position(x, y), floor_texture);
+      draw_floor(get_absolute_position_from_grid_position(x, y));
     }
   }
 }
 
 void draw_player_target() {
-  Vector2 position = GetScreenToWorld2D(GetMousePosition(), camera);
+  Vector2 mouse = get_world_mouse(camera);
 
-  DrawTexturePro(
-      target_texture, {.x = 0, .y = 0, .width = 32, .height = 32},
-      {.x = (position.x), .y = (position.y), .width = 32, .height = 32},
-      {16, 16}, player.angle + 90, WHITE);
+  // TODO: Decide if player angle is needed.
+  draw_target_cursor(mouse, 0);
 }
 
 void draw_player_healthbar(Player player) {
@@ -628,74 +616,43 @@ void draw_player_healthbar(Player player) {
                 5, color);
 }
 
+void draw_warpzones() {
+  for (int i = 0; i < warpzone_count; i++) {
+    draw_warpzone(warpzones[i].position);
+  }
+}
+
 void render_game() {
-  draw_floor();
-  draw_arena(walls, ubwall_texture, bwall_texture);
+  render_floor();
+  draw_arena(walls);
 
-  draw_projectiles(enemy_projectiles);
-  draw_projectiles(player_projectiles);
-
-  draw_player_healthbar(player);
   draw_enemies();
-  player.draw();
   draw_items();
   draw_gates();
 
+  draw_warpzones();
   draw_player_target();
-}
 
-const char *get_current_screen_title() {
-  switch (screen_manager.active_screen) {
-  case UNKNOWN:
-    return "unkown";
-  case MENU:
-    return "menu";
-  case GAME:
-    return "game";
-  case LEVEL_EDITOR:
-    return "level-editor";
-    break;
-  default:
-    return "unkown";
-  }
-}
+  draw_player_healthbar(player);
+  player.draw();
 
-void render_current_screen() {
-  DrawText(get_current_screen_title(), TEXT_POS(1), TEXT_POS(1), 14, WHITE);
-}
-
-void render_global() { render_current_screen(); }
-
-void render() {
-  switch (screen_manager.active_screen) {
-  case UNKNOWN:
-    break;
-  case MENU:
-    break;
-  case GAME:
-    render_game();
-    break;
-  case LEVEL_EDITOR:
-    render_level_editor(&camera);
-    break;
-  }
-
-  // Global HUD
-  render_global();
+  draw_projectiles(enemy_projectiles);
+  draw_projectiles(player_projectiles);
 }
 
 // TODO: Optimize level loading
 void load_level() { load_entities(); }
 
 void init_player() {
-  player.load_texture(player_texture);
-  player.position = get_player_position(level.grid);
+  player.position = get_player_position_for_game(level.grid);
 }
 
 void ScreenManager::init_game_screen() {
   level.filename = level_file;
   level.load_level_data();
   init_player();
+
+  init_inventory(&inventory);
   load_level();
   init_game_camera();
 }
@@ -721,9 +678,11 @@ void ScreenManager::handle_screen_change() {
     break;
   case GAME:
     this->init_game_screen();
+    SetExitKey(KEY_ESCAPE);
     break;
   case LEVEL_EDITOR:
     this->init_level_editor_screen(level_file);
+    SetExitKey(0);
     break;
   }
 }
@@ -738,25 +697,39 @@ void set_initial_screen(const char *game_mode) {
   }
 }
 
+bool show_message = false;
+
 int main(int argc, char *argv[]) {
 
   if (argc != 3) {
-    printf("usage: autohacka [gamemode] [level_file]\n");
+    printf("usage: autohacka [mode] [level_file]\n");
+    printf("possible modes: game, editor\n");
     return 1;
   }
+
+  unsigned int seed = time(0);
+
+  SetRandomSeed(seed);
 
   init_window();
   load_textures();
 
-  char *game_mode = argv[1];
+  // Initialize ImGUI
+  rlImGuiSetup(true);
+
+  game_mode = argv[1];
   level_file = argv[2];
 
   set_initial_screen(game_mode);
 
   while (!WindowShouldClose()) {
     screen_manager.handle_screen_change();
+
     BeginDrawing();
     ClearBackground(BLACK);
+
+    //================================================[Game Camera]====================================================//
+
     BeginMode2D(camera);
 
     int pressed_key = GetKeyPressed();
@@ -768,11 +741,30 @@ int main(int argc, char *argv[]) {
     handle_updates();
 
     // UI
-    render();
+    if (screen_manager.active_screen == GAME) {
+      render_game();
+    }
+
+    if (screen_manager.active_screen == LEVEL_EDITOR) {
+      render_level_editor(&camera);
+    }
 
     EndMode2D();
+
+    //================================================[Overlay]====================================================//
+
+    rlImGuiBegin();
+    if (screen_manager.active_screen == GAME) {
+    }
+
+    if (screen_manager.active_screen == LEVEL_EDITOR) {
+      render_level_editor_ui(&camera);
+    }
+    rlImGuiEnd();
     EndDrawing();
   }
+
+  rlImGuiShutdown();
 
   CloseWindow();
   return 0;

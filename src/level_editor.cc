@@ -4,7 +4,9 @@
 #include "config.h"
 #include "draw.h"
 #include "entities.h"
+#include "imgui.h"
 #include "level.h"
+#include "raygui.h"
 #include "save.h"
 #include "textures.h"
 #include "wall.h"
@@ -12,20 +14,7 @@
 #include <raymath.h>
 
 // TODO: Define flexible level structure and editing
-// TODO: Provide simple GUI to switch between entity types
 // TODO: Add undo action
-
-Vector2 get_player_position(EditorGridCell (*grid)[100]) {
-  for (int y = 0; y < CELL_COUNT; y++) {
-    for (int x = 0; x < CELL_COUNT; x++) {
-      EntityType type = grid[y][x].type;
-      if (type == PLAYER)
-        return {(float)(x * CELL_SIZE), (float)(y * CELL_SIZE)};
-    }
-  }
-
-  return {-1, -1};
-}
 
 LevelEditor level_editor;
 
@@ -43,31 +32,59 @@ void load_level_editor(const char *filename) {
 void render_entities() {
   for (int y = 0; y < CELL_COUNT; y++) {
     for (int x = 0; x < CELL_COUNT; x++) {
-      int type = level_editor.grid[y][x].type;
-      draw_editor_entity((EntityType)type, {(float)x, (float)y});
+
+      // Fill entire space with floor texture beforehand
+      draw_floor(get_absolute_position_from_grid_position(x, y));
+
+      EditorGridCell cell = level_editor.grid[y][x];
+      draw_editor_entity(cell, get_absolute_position_from_grid_position(x, y));
     }
   }
 }
 
 void handle_editor_actions(Camera2D *camera, int pressed_key) {
   switch (pressed_key) {
-  case KEY_M:
-    level_editor.save_level();
+  case KEY_ESCAPE:
+    level_editor.placing_mode = false;
+    level_editor.current_entity = EMPTY_ENTITY;
+    level_editor.inspected_cell = nullptr;
     break;
-  case KEY_SPACE:
-    level_editor.next_type();
+  default:
     break;
   }
 
-  if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-    Vector2 mouse = get_world_mouse(*camera);
-    level_editor.place_entity(mouse);
+  if (level_editor.placing_mode) {
+    // Shift for continuous placing
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) ||
+        (IsKeyDown(KEY_LEFT_SHIFT) && IsMouseButtonDown(MOUSE_BUTTON_LEFT))) {
+      Vector2 mouse = get_world_mouse(*camera);
+
+      level_editor.place_entity(mouse);
+    }
+
+    if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
+      Vector2 mouse = get_world_mouse(*camera);
+
+      EditorGridCell *cell =
+          &level_editor.grid[MOUSE_TO_GRID(mouse.y)][MOUSE_TO_GRID(mouse.x)];
+
+      // Clear
+      cell->entity = EditorVoid{};
+      cell->type = EMPTY_ENTITY;
+    }
   }
 
-  if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
-    Vector2 mouse = get_world_mouse(*camera);
-    level_editor.grid[MOUSE_TO_GRID(mouse.y)][MOUSE_TO_GRID(mouse.x)].type =
-        EMPTY;
+  else {
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+      Vector2 mouse = get_world_mouse(*camera);
+      EditorGridCell *cell =
+          &level_editor.grid[MOUSE_TO_GRID(mouse.y)][MOUSE_TO_GRID(mouse.x)];
+
+      level_editor.inspected_cell =
+          (cell->type != EMPTY_ENTITY) ? cell : nullptr;
+      level_editor.inspected_cell_row = MOUSE_TO_GRID(mouse.y);
+      level_editor.inspected_cell_col = MOUSE_TO_GRID(mouse.x);
+    }
   }
 }
 
@@ -77,37 +94,111 @@ void handle_editor_input(Camera2D *camera, int pressed_key) {
   handle_camera_movement(camera);
 }
 
-void render_mouse_position(Camera2D camera, Vector2 mouse) {
-  Vector2 hud_position = camera.target;
+std::string entity_types_str = get_enum_string();
+std::string item_effect_str = get_item_effect_enum_string();
 
-  const char *message = TextFormat("CELL: (%d,%d)", MOUSE_TO_GRID(mouse.x),
-                                   MOUSE_TO_GRID(mouse.y));
+const char *dropdown_items = entity_types_str.c_str();
+const char *item_effect_dropdown_items = item_effect_str.c_str();
 
-  DrawText(message, hud_position.x, hud_position.y, 14, RED);
-}
-
-void render_current_entity_type(Camera2D camera) {
-  Vector2 hud_position = camera.target;
-  float offset = 20;
-
-  const char *message =
-      TextFormat("ENTITY TYPE: %s",
-                 get_entity_type_name(
-                     level_editor.types[level_editor.current_entity_index]));
-
-  DrawText(message, hud_position.x, hud_position.y + offset, 14, RED);
-}
-
-void render_hud(Camera2D *camera, Vector2 mouse) {
-  render_mouse_position(*camera, mouse);
-  render_current_entity_type(*camera);
-}
+bool item_effect_dropdown_is_open = false;
 
 void render_level_editor(Camera2D *camera) {
   Vector2 mouse = get_world_mouse(*camera);
 
   render_entities();
-  render_mouse_hover_grid(
-      mouse, level_editor.types[level_editor.current_entity_index]);
-  render_hud(camera, mouse);
+
+  // TODO: Create utility function for this
+  bool out_of_bounds =
+      MOUSE_TO_GRID(mouse.x) < 0 || MOUSE_TO_GRID(mouse.x) >= CELL_COUNT ||
+      MOUSE_TO_GRID(mouse.y) < 0 || MOUSE_TO_GRID(mouse.y) >= CELL_COUNT;
+
+  if (level_editor.placing_mode) {
+    render_mouse_hover_grid(level_editor.current_entity, mouse);
+  }
+
+  else if (!level_editor.placing_mode && !out_of_bounds) {
+    // Inspect Entity
+    EditorGridCell *cell =
+        &level_editor.grid[MOUSE_TO_GRID(mouse.y)][MOUSE_TO_GRID(mouse.x)];
+
+    level_editor.hovered_cell = (cell->type == EMPTY_ENTITY) ? nullptr : cell;
+  }
+}
+
+static bool my_tool_active = true;
+
+void render_level_editor_ui(Camera2D *camera) {
+  ImGui::SetNextWindowPos(ImVec2(WIN_WIDTH - 300, 0),
+                          ImGuiCond_Once); // Top-left corner
+  ImGui::SetNextWindowSize(ImVec2(300, WIN_HEIGHT),
+                           ImGuiCond_Once); // 300x200 pixels
+  ImGui::Begin("Level Editor", &my_tool_active,
+               ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoResize |
+                   ImGuiWindowFlags_NoMove);
+
+  // Menu Bar
+  if (ImGui::BeginMenuBar()) {
+    if (ImGui::BeginMenu("File")) {
+      if (ImGui::MenuItem("Save Level File")) {
+        level_editor.save_level();
+      }
+
+      ImGui::EndMenu();
+    }
+    ImGui::EndMenuBar();
+  }
+
+  ImGui::Separator();
+
+  // Current Position
+  Vector2 mouse = get_world_mouse(*camera);
+  ImGui::Text("Current Position: (%d, %d)", MOUSE_TO_GRID(mouse.x),
+              MOUSE_TO_GRID(mouse.y));
+
+  ImGui::Separator();
+
+  // Current Hovered Cell
+  if (level_editor.hovered_cell != nullptr) {
+    ImGui::Text("Entity Type: %s",
+                get_entity_type_name(level_editor.hovered_cell->type));
+  }
+
+  ImGui::Separator();
+
+  // Entity
+  int current_entity = level_editor.current_entity;
+  if (ImGui::Combo("Select Entity", &current_entity, dropdown_items, 8)) {
+    level_editor.current_entity = (EntityType)current_entity;
+    level_editor.placing_mode = true;
+    level_editor.inspected_cell = nullptr;
+  }
+
+  //--- Entity Specific Parameters
+  switch (level_editor.current_entity) {
+  case BASE_ENEMY_ENTITY:
+    ImGui::InputFloat("Enemy Health", &level_editor.enemy_health);
+    break;
+
+  default:
+    break;
+  }
+
+  //--- Inspected Entity
+  if (level_editor.inspected_cell != nullptr) {
+    ImGui::Text("Inspected Entity");
+    ImGui::Text("Entity Type: %s",
+                get_entity_type_name(level_editor.inspected_cell->type));
+
+    EditorGridCell cell = *level_editor.inspected_cell;
+    if (auto *enemy = std::get_if<EditorEnemy>(&cell.entity)) {
+      if (ImGui::InputFloat("Enemy Health", &enemy->enemy_health)) {
+        level_editor
+            .grid[level_editor.inspected_cell_row]
+                 [level_editor.inspected_cell_col]
+            .entity = *enemy;
+      }
+    }
+  }
+
+  ImGui::End();
 }
