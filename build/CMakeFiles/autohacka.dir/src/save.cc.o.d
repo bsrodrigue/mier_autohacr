@@ -4,6 +4,7 @@ CMakeFiles/autohacka.dir/src/save.cc.o: \
  /home/dnlbs/workspace/personal/mier_autohacr/include/save.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/config.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/level_editor.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/editor_entities.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/enemy.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/item_drop.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/item.h \
@@ -126,9 +127,15 @@ CMakeFiles/autohacka.dir/src/save.cc.o: \
  /home/dnlbs/workspace/personal/mier_autohacr/include/entities.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/json.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/cJSON.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/json_utils.h \
+ /usr/include/c++/14.2.1/stdexcept /usr/include/c++/14.2.1/exception \
+ /usr/include/c++/14.2.1/bits/exception_ptr.h \
+ /usr/include/c++/14.2.1/bits/cxxabi_init_exception.h \
+ /usr/include/c++/14.2.1/typeinfo \
+ /usr/include/c++/14.2.1/bits/nested_exception.h \
  /usr/include/c++/14.2.1/functional \
  /usr/include/c++/14.2.1/bits/std_function.h \
- /usr/include/c++/14.2.1/typeinfo /usr/include/c++/14.2.1/unordered_map \
+ /usr/include/c++/14.2.1/unordered_map \
  /usr/include/c++/14.2.1/bits/unordered_map.h \
  /usr/include/c++/14.2.1/bits/hashtable.h \
  /usr/include/c++/14.2.1/bits/hashtable_policy.h \

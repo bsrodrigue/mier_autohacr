@@ -1,5 +1,5 @@
 #include "enemy.h"
-#include "level_editor.h"
+#include "editor_entities.h"
 
 // TODO: Find a more flexible way to handle dynamic entity creation
 Enemy create_enemy_from_level_data(Vector2 position,

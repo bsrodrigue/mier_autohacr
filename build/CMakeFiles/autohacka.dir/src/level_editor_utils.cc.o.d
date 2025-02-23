@@ -4,6 +4,7 @@ CMakeFiles/autohacka.dir/src/level_editor_utils.cc.o: \
  /home/dnlbs/workspace/personal/mier_autohacr/include/config.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/level_editor.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/config.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/editor_entities.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/enemy.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/item_drop.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/item.h \

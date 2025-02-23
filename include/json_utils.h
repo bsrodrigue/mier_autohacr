@@ -1,10 +1,18 @@
 #pragma once
 
 #include "cJSON.h"
-#include "level_editor.h"
+#include "editor_entities.h"
 #include <raylib.h>
 #include <stdexcept>
 #include <string>
+
+struct ParseResult {
+  Vector2 position;
+  std::variant<EditorVoid, EditorWall, EditorEnemy, EditorWarpzone,
+               EditorPlayer, EditorItem, EditorGate>
+      entity;
+  EntityType type;
+};
 
 //============================================== Error handling
 //==============================================//
@@ -29,3 +37,5 @@ bool json_validate_entity_type(cJSON *json, EntityType expected_type);
 bool json_get_bool(cJSON *json, const char *key, bool default_value);
 
 Vector2 parse_vector2(cJSON *json);
+
+cJSON *serialize_vector2(const Vector2 &vec);

@@ -3,6 +3,7 @@
 //============================================== Utility functions
 //==============================================//
 
+
 bool json_has_valid_number(cJSON *json, const char *field_name) {
   if (!json)
     return false;
@@ -42,4 +43,15 @@ Vector2 parse_vector2(cJSON *json) {
   vec.x = (float)json_get_double(json, "pos_x");
   vec.y = (float)json_get_double(json, "pos_y");
   return vec;
+}
+
+cJSON *serialize_vector2(const Vector2 &vec) {
+  cJSON *json_vector = cJSON_CreateObject();
+  if (!json_vector) {
+    throw JsonParseException("Failed to create JSON object for Vector2");
+  }
+
+  cJSON_AddNumberToObject(json_vector, "pos_x", vec.x);
+  cJSON_AddNumberToObject(json_vector, "pos_y", vec.y);
+  return json_vector;
 }

@@ -11,7 +11,7 @@
       {
         "name": "type",
         "type": "EnemyType",
-        "required": true,
+        "required": false,
         "default": "BASE_ENEMY"
       },
       {
@@ -38,7 +38,12 @@
     "name": "EditorWall",
     "entity_type": "BWALL_ENTITY or UBWALL_ENTITY",
     "fields": [
-      { "name": "type", "type": "WallType", "required": true, "default": null },
+      {
+        "name": "type",
+        "type": "WallType",
+        "required": true,
+        "default": null
+      },
       {
         "name": "entity_type",
         "type": "EntityType",
@@ -59,5 +64,33 @@
         "default": null
       }
     ]
+  },
+  {
+    "name": "EditorItem",
+    "entity_type": "ITEM_ENTITY",
+    "fields": [
+      {
+        "name": "effect",
+        "type": "ItemEffect",
+        "required": true,
+        "default": null
+      },
+      {
+        "name": "usage",
+        "type": "ItemUsage",
+        "required": true,
+        "default": null
+      }
+    ]
+  },
+  {
+    "name": "EditorGate",
+    "entity_type": "GATE_ENTITY",
+    "fields": []
+  },
+  {
+    "name": "EditorPlayer",
+    "entity_type": "PLAYER_ENTITY",
+    "fields": []
   }
 ]

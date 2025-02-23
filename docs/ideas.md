@@ -6,6 +6,10 @@
 ## LEVEL DESIGN
 
 - Teleportation across the map
+- Richer environments: (with effects like damage)
+  - Water
+  - Lava
+  - Ice
 
 ## ENEMIES
 

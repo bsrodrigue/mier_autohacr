@@ -2,7 +2,6 @@
 #include "common.h"
 #include "config.h"
 #include "entities.h"
-#include "level_editor.h"
 #include "textures.h"
 #include "wall.h"
 #include <raylib.h>

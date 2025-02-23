@@ -35,6 +35,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/autohacka.dir/src/item_drop.cc.o.d"
   "CMakeFiles/autohacka.dir/src/json.cc.o"
   "CMakeFiles/autohacka.dir/src/json.cc.o.d"
+  "CMakeFiles/autohacka.dir/src/json_utils.cc.o"
+  "CMakeFiles/autohacka.dir/src/json_utils.cc.o.d"
   "CMakeFiles/autohacka.dir/src/level.cc.o"
   "CMakeFiles/autohacka.dir/src/level.cc.o.d"
   "CMakeFiles/autohacka.dir/src/level_editor.cc.o"

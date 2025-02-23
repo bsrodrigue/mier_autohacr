@@ -537,6 +537,30 @@ src/json.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/autohacka.dir/build.make CMakeFiles/autohacka.dir/src/json.cc.s
 .PHONY : src/json.cc.s
 
+src/json_utils.o: src/json_utils.cc.o
+.PHONY : src/json_utils.o
+
+# target to build an object file
+src/json_utils.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/autohacka.dir/build.make CMakeFiles/autohacka.dir/src/json_utils.cc.o
+.PHONY : src/json_utils.cc.o
+
+src/json_utils.i: src/json_utils.cc.i
+.PHONY : src/json_utils.i
+
+# target to preprocess a source file
+src/json_utils.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/autohacka.dir/build.make CMakeFiles/autohacka.dir/src/json_utils.cc.i
+.PHONY : src/json_utils.cc.i
+
+src/json_utils.s: src/json_utils.cc.s
+.PHONY : src/json_utils.s
+
+# target to generate assembly for a file
+src/json_utils.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/autohacka.dir/build.make CMakeFiles/autohacka.dir/src/json_utils.cc.s
+.PHONY : src/json_utils.cc.s
+
 src/level.o: src/level.cc.o
 .PHONY : src/level.o
 
@@ -861,6 +885,9 @@ help:
 	@echo "... src/json.o"
 	@echo "... src/json.i"
 	@echo "... src/json.s"
+	@echo "... src/json_utils.o"
+	@echo "... src/json_utils.i"
+	@echo "... src/json_utils.s"
 	@echo "... src/level.o"
 	@echo "... src/level.i"
 	@echo "... src/level.s"

@@ -1,7 +1,6 @@
 #include "common.h"
 #include "draw.h"
 #include "entities.h"
-#include "level_editor.h"
 #include "wall.h"
 #include <raylib.h>
 #include <vector>

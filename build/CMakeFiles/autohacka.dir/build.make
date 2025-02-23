@@ -240,10 +240,24 @@ CMakeFiles/autohacka.dir/src/json.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/autohacka.dir/src/json.cc.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dnlbs/workspace/personal/mier_autohacr/src/json.cc -o CMakeFiles/autohacka.dir/src/json.cc.s
 
+CMakeFiles/autohacka.dir/src/json_utils.cc.o: CMakeFiles/autohacka.dir/flags.make
+CMakeFiles/autohacka.dir/src/json_utils.cc.o: /home/dnlbs/workspace/personal/mier_autohacr/src/json_utils.cc
+CMakeFiles/autohacka.dir/src/json_utils.cc.o: CMakeFiles/autohacka.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/autohacka.dir/src/json_utils.cc.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/autohacka.dir/src/json_utils.cc.o -MF CMakeFiles/autohacka.dir/src/json_utils.cc.o.d -o CMakeFiles/autohacka.dir/src/json_utils.cc.o -c /home/dnlbs/workspace/personal/mier_autohacr/src/json_utils.cc
+
+CMakeFiles/autohacka.dir/src/json_utils.cc.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/autohacka.dir/src/json_utils.cc.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dnlbs/workspace/personal/mier_autohacr/src/json_utils.cc > CMakeFiles/autohacka.dir/src/json_utils.cc.i
+
+CMakeFiles/autohacka.dir/src/json_utils.cc.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/autohacka.dir/src/json_utils.cc.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dnlbs/workspace/personal/mier_autohacr/src/json_utils.cc -o CMakeFiles/autohacka.dir/src/json_utils.cc.s
+
 CMakeFiles/autohacka.dir/src/level.cc.o: CMakeFiles/autohacka.dir/flags.make
 CMakeFiles/autohacka.dir/src/level.cc.o: /home/dnlbs/workspace/personal/mier_autohacr/src/level.cc
 CMakeFiles/autohacka.dir/src/level.cc.o: CMakeFiles/autohacka.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/autohacka.dir/src/level.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/autohacka.dir/src/level.cc.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/autohacka.dir/src/level.cc.o -MF CMakeFiles/autohacka.dir/src/level.cc.o.d -o CMakeFiles/autohacka.dir/src/level.cc.o -c /home/dnlbs/workspace/personal/mier_autohacr/src/level.cc
 
 CMakeFiles/autohacka.dir/src/level.cc.i: cmake_force
@@ -257,7 +271,7 @@ CMakeFiles/autohacka.dir/src/level.cc.s: cmake_force
 CMakeFiles/autohacka.dir/src/level_editor.cc.o: CMakeFiles/autohacka.dir/flags.make
 CMakeFiles/autohacka.dir/src/level_editor.cc.o: /home/dnlbs/workspace/personal/mier_autohacr/src/level_editor.cc
 CMakeFiles/autohacka.dir/src/level_editor.cc.o: CMakeFiles/autohacka.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/autohacka.dir/src/level_editor.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/autohacka.dir/src/level_editor.cc.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/autohacka.dir/src/level_editor.cc.o -MF CMakeFiles/autohacka.dir/src/level_editor.cc.o.d -o CMakeFiles/autohacka.dir/src/level_editor.cc.o -c /home/dnlbs/workspace/personal/mier_autohacr/src/level_editor.cc
 
 CMakeFiles/autohacka.dir/src/level_editor.cc.i: cmake_force
@@ -271,7 +285,7 @@ CMakeFiles/autohacka.dir/src/level_editor.cc.s: cmake_force
 CMakeFiles/autohacka.dir/src/level_editor_utils.cc.o: CMakeFiles/autohacka.dir/flags.make
 CMakeFiles/autohacka.dir/src/level_editor_utils.cc.o: /home/dnlbs/workspace/personal/mier_autohacr/src/level_editor_utils.cc
 CMakeFiles/autohacka.dir/src/level_editor_utils.cc.o: CMakeFiles/autohacka.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/autohacka.dir/src/level_editor_utils.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/autohacka.dir/src/level_editor_utils.cc.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/autohacka.dir/src/level_editor_utils.cc.o -MF CMakeFiles/autohacka.dir/src/level_editor_utils.cc.o.d -o CMakeFiles/autohacka.dir/src/level_editor_utils.cc.o -c /home/dnlbs/workspace/personal/mier_autohacr/src/level_editor_utils.cc
 
 CMakeFiles/autohacka.dir/src/level_editor_utils.cc.i: cmake_force
@@ -285,7 +299,7 @@ CMakeFiles/autohacka.dir/src/level_editor_utils.cc.s: cmake_force
 CMakeFiles/autohacka.dir/src/main.cc.o: CMakeFiles/autohacka.dir/flags.make
 CMakeFiles/autohacka.dir/src/main.cc.o: /home/dnlbs/workspace/personal/mier_autohacr/src/main.cc
 CMakeFiles/autohacka.dir/src/main.cc.o: CMakeFiles/autohacka.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/autohacka.dir/src/main.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/autohacka.dir/src/main.cc.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/autohacka.dir/src/main.cc.o -MF CMakeFiles/autohacka.dir/src/main.cc.o.d -o CMakeFiles/autohacka.dir/src/main.cc.o -c /home/dnlbs/workspace/personal/mier_autohacr/src/main.cc
 
 CMakeFiles/autohacka.dir/src/main.cc.i: cmake_force
@@ -299,7 +313,7 @@ CMakeFiles/autohacka.dir/src/main.cc.s: cmake_force
 CMakeFiles/autohacka.dir/src/player.cc.o: CMakeFiles/autohacka.dir/flags.make
 CMakeFiles/autohacka.dir/src/player.cc.o: /home/dnlbs/workspace/personal/mier_autohacr/src/player.cc
 CMakeFiles/autohacka.dir/src/player.cc.o: CMakeFiles/autohacka.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/autohacka.dir/src/player.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/autohacka.dir/src/player.cc.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/autohacka.dir/src/player.cc.o -MF CMakeFiles/autohacka.dir/src/player.cc.o.d -o CMakeFiles/autohacka.dir/src/player.cc.o -c /home/dnlbs/workspace/personal/mier_autohacr/src/player.cc
 
 CMakeFiles/autohacka.dir/src/player.cc.i: cmake_force
@@ -313,7 +327,7 @@ CMakeFiles/autohacka.dir/src/player.cc.s: cmake_force
 CMakeFiles/autohacka.dir/src/projectiles.cc.o: CMakeFiles/autohacka.dir/flags.make
 CMakeFiles/autohacka.dir/src/projectiles.cc.o: /home/dnlbs/workspace/personal/mier_autohacr/src/projectiles.cc
 CMakeFiles/autohacka.dir/src/projectiles.cc.o: CMakeFiles/autohacka.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/autohacka.dir/src/projectiles.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/autohacka.dir/src/projectiles.cc.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/autohacka.dir/src/projectiles.cc.o -MF CMakeFiles/autohacka.dir/src/projectiles.cc.o.d -o CMakeFiles/autohacka.dir/src/projectiles.cc.o -c /home/dnlbs/workspace/personal/mier_autohacr/src/projectiles.cc
 
 CMakeFiles/autohacka.dir/src/projectiles.cc.i: cmake_force
@@ -327,7 +341,7 @@ CMakeFiles/autohacka.dir/src/projectiles.cc.s: cmake_force
 CMakeFiles/autohacka.dir/src/save.cc.o: CMakeFiles/autohacka.dir/flags.make
 CMakeFiles/autohacka.dir/src/save.cc.o: /home/dnlbs/workspace/personal/mier_autohacr/src/save.cc
 CMakeFiles/autohacka.dir/src/save.cc.o: CMakeFiles/autohacka.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/autohacka.dir/src/save.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object CMakeFiles/autohacka.dir/src/save.cc.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/autohacka.dir/src/save.cc.o -MF CMakeFiles/autohacka.dir/src/save.cc.o.d -o CMakeFiles/autohacka.dir/src/save.cc.o -c /home/dnlbs/workspace/personal/mier_autohacr/src/save.cc
 
 CMakeFiles/autohacka.dir/src/save.cc.i: cmake_force
@@ -341,7 +355,7 @@ CMakeFiles/autohacka.dir/src/save.cc.s: cmake_force
 CMakeFiles/autohacka.dir/src/screen.cc.o: CMakeFiles/autohacka.dir/flags.make
 CMakeFiles/autohacka.dir/src/screen.cc.o: /home/dnlbs/workspace/personal/mier_autohacr/src/screen.cc
 CMakeFiles/autohacka.dir/src/screen.cc.o: CMakeFiles/autohacka.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object CMakeFiles/autohacka.dir/src/screen.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object CMakeFiles/autohacka.dir/src/screen.cc.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/autohacka.dir/src/screen.cc.o -MF CMakeFiles/autohacka.dir/src/screen.cc.o.d -o CMakeFiles/autohacka.dir/src/screen.cc.o -c /home/dnlbs/workspace/personal/mier_autohacr/src/screen.cc
 
 CMakeFiles/autohacka.dir/src/screen.cc.i: cmake_force
@@ -355,7 +369,7 @@ CMakeFiles/autohacka.dir/src/screen.cc.s: cmake_force
 CMakeFiles/autohacka.dir/src/shoot.cc.o: CMakeFiles/autohacka.dir/flags.make
 CMakeFiles/autohacka.dir/src/shoot.cc.o: /home/dnlbs/workspace/personal/mier_autohacr/src/shoot.cc
 CMakeFiles/autohacka.dir/src/shoot.cc.o: CMakeFiles/autohacka.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object CMakeFiles/autohacka.dir/src/shoot.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building CXX object CMakeFiles/autohacka.dir/src/shoot.cc.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/autohacka.dir/src/shoot.cc.o -MF CMakeFiles/autohacka.dir/src/shoot.cc.o.d -o CMakeFiles/autohacka.dir/src/shoot.cc.o -c /home/dnlbs/workspace/personal/mier_autohacr/src/shoot.cc
 
 CMakeFiles/autohacka.dir/src/shoot.cc.i: cmake_force
@@ -369,7 +383,7 @@ CMakeFiles/autohacka.dir/src/shoot.cc.s: cmake_force
 CMakeFiles/autohacka.dir/src/textures.cc.o: CMakeFiles/autohacka.dir/flags.make
 CMakeFiles/autohacka.dir/src/textures.cc.o: /home/dnlbs/workspace/personal/mier_autohacr/src/textures.cc
 CMakeFiles/autohacka.dir/src/textures.cc.o: CMakeFiles/autohacka.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building CXX object CMakeFiles/autohacka.dir/src/textures.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building CXX object CMakeFiles/autohacka.dir/src/textures.cc.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/autohacka.dir/src/textures.cc.o -MF CMakeFiles/autohacka.dir/src/textures.cc.o.d -o CMakeFiles/autohacka.dir/src/textures.cc.o -c /home/dnlbs/workspace/personal/mier_autohacr/src/textures.cc
 
 CMakeFiles/autohacka.dir/src/textures.cc.i: cmake_force
@@ -383,7 +397,7 @@ CMakeFiles/autohacka.dir/src/textures.cc.s: cmake_force
 CMakeFiles/autohacka.dir/src/wall.cc.o: CMakeFiles/autohacka.dir/flags.make
 CMakeFiles/autohacka.dir/src/wall.cc.o: /home/dnlbs/workspace/personal/mier_autohacr/src/wall.cc
 CMakeFiles/autohacka.dir/src/wall.cc.o: CMakeFiles/autohacka.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building CXX object CMakeFiles/autohacka.dir/src/wall.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building CXX object CMakeFiles/autohacka.dir/src/wall.cc.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/autohacka.dir/src/wall.cc.o -MF CMakeFiles/autohacka.dir/src/wall.cc.o.d -o CMakeFiles/autohacka.dir/src/wall.cc.o -c /home/dnlbs/workspace/personal/mier_autohacr/src/wall.cc
 
 CMakeFiles/autohacka.dir/src/wall.cc.i: cmake_force
@@ -397,7 +411,7 @@ CMakeFiles/autohacka.dir/src/wall.cc.s: cmake_force
 CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.o: CMakeFiles/autohacka.dir/flags.make
 CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.o: /home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui.cpp
 CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.o: CMakeFiles/autohacka.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building CXX object CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Building CXX object CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.o -MF CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.o.d -o CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.o -c /home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui.cpp
 
 CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.i: cmake_force
@@ -411,7 +425,7 @@ CMakeFiles/autohacka.dir/external/imgui/imgui.cpp.s: cmake_force
 CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.o: CMakeFiles/autohacka.dir/flags.make
 CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.o: /home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui_draw.cpp
 CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.o: CMakeFiles/autohacka.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Building CXX object CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Building CXX object CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.o -MF CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.o.d -o CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.o -c /home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui_draw.cpp
 
 CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.i: cmake_force
@@ -425,7 +439,7 @@ CMakeFiles/autohacka.dir/external/imgui/imgui_draw.cpp.s: cmake_force
 CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.o: CMakeFiles/autohacka.dir/flags.make
 CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.o: /home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui_tables.cpp
 CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.o: CMakeFiles/autohacka.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Building CXX object CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_27) "Building CXX object CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.o -MF CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.o.d -o CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.o -c /home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui_tables.cpp
 
 CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.i: cmake_force
@@ -439,7 +453,7 @@ CMakeFiles/autohacka.dir/external/imgui/imgui_tables.cpp.s: cmake_force
 CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.o: CMakeFiles/autohacka.dir/flags.make
 CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.o: /home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui_widgets.cpp
 CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.o: CMakeFiles/autohacka.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_27) "Building CXX object CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_28) "Building CXX object CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.o -MF CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.o.d -o CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.o -c /home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui_widgets.cpp
 
 CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.i: cmake_force
@@ -453,7 +467,7 @@ CMakeFiles/autohacka.dir/external/imgui/imgui_widgets.cpp.s: cmake_force
 CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.o: CMakeFiles/autohacka.dir/flags.make
 CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.o: /home/dnlbs/workspace/personal/mier_autohacr/external/rlImGui/rlImGui.cpp
 CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.o: CMakeFiles/autohacka.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_28) "Building CXX object CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Building CXX object CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.o -MF CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.o.d -o CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.o -c /home/dnlbs/workspace/personal/mier_autohacr/external/rlImGui/rlImGui.cpp
 
 CMakeFiles/autohacka.dir/external/rlImGui/rlImGui.cpp.i: cmake_force
@@ -478,6 +492,7 @@ autohacka_OBJECTS = \
 "CMakeFiles/autohacka.dir/src/item.cc.o" \
 "CMakeFiles/autohacka.dir/src/item_drop.cc.o" \
 "CMakeFiles/autohacka.dir/src/json.cc.o" \
+"CMakeFiles/autohacka.dir/src/json_utils.cc.o" \
 "CMakeFiles/autohacka.dir/src/level.cc.o" \
 "CMakeFiles/autohacka.dir/src/level_editor.cc.o" \
 "CMakeFiles/autohacka.dir/src/level_editor_utils.cc.o" \
@@ -510,6 +525,7 @@ bin/autohacka: CMakeFiles/autohacka.dir/src/inventory.cc.o
 bin/autohacka: CMakeFiles/autohacka.dir/src/item.cc.o
 bin/autohacka: CMakeFiles/autohacka.dir/src/item_drop.cc.o
 bin/autohacka: CMakeFiles/autohacka.dir/src/json.cc.o
+bin/autohacka: CMakeFiles/autohacka.dir/src/json_utils.cc.o
 bin/autohacka: CMakeFiles/autohacka.dir/src/level.cc.o
 bin/autohacka: CMakeFiles/autohacka.dir/src/level_editor.cc.o
 bin/autohacka: CMakeFiles/autohacka.dir/src/level_editor_utils.cc.o
@@ -530,7 +546,7 @@ bin/autohacka: CMakeFiles/autohacka.dir/build.make
 bin/autohacka: CMakeFiles/autohacka.dir/compiler_depend.ts
 bin/autohacka: /usr/lib/libraylib.so
 bin/autohacka: CMakeFiles/autohacka.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Linking CXX executable bin/autohacka"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/dnlbs/workspace/personal/mier_autohacr/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_30) "Linking CXX executable bin/autohacka"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/autohacka.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

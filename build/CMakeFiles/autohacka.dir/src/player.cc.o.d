@@ -122,6 +122,7 @@ CMakeFiles/autohacka.dir/src/player.cc.o: \
  /home/dnlbs/workspace/personal/mier_autohacr/include/enemy.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/item_drop.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/level_editor.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/editor_entities.h \
  /usr/include/c++/14.2.1/variant \
  /usr/include/c++/14.2.1/bits/enable_special_members.h \
  /usr/include/c++/14.2.1/bits/parse_numbers.h \

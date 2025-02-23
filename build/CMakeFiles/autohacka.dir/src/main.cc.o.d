@@ -119,6 +119,7 @@ CMakeFiles/autohacka.dir/src/main.cc.o: \
  /home/dnlbs/workspace/personal/mier_autohacr/include/item_drop.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/item.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/level_editor.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/editor_entities.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/wall.h \
  /usr/include/c++/14.2.1/variant \
  /usr/include/c++/14.2.1/bits/enable_special_members.h \
@@ -141,6 +142,8 @@ CMakeFiles/autohacka.dir/src/main.cc.o: \
  /home/dnlbs/workspace/personal/mier_autohacr/include/save.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/player.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/projectiles.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/external/rlImGui/rlImGui.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/external/rlImGui/extras/IconsFontAwesome6.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/save.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/screen.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/shoot.h \
@@ -170,6 +173,4 @@ CMakeFiles/autohacka.dir/src/main.cc.o: \
  /usr/include/c++/14.2.1/ctime /usr/include/time.h \
  /usr/include/bits/time.h /usr/include/bits/timex.h \
  /usr/include/bits/types/struct_tm.h \
- /usr/include/bits/types/struct_itimerspec.h \
- /home/dnlbs/workspace/personal/mier_autohacr/external/rlImGui/rlImGui.h \
- /home/dnlbs/workspace/personal/mier_autohacr/external/rlImGui/extras/IconsFontAwesome6.h
+ /usr/include/bits/types/struct_itimerspec.h

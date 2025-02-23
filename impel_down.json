@@ -66,6 +66,36 @@
 			"entity_type":	1
 		}, {
 			"type":	1,
+			"pos_x":	14,
+			"pos_y":	1,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	15,
+			"pos_y":	1,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	16,
+			"pos_y":	1,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	17,
+			"pos_y":	1,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	18,
+			"pos_y":	1,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	19,
+			"pos_y":	1,
+			"entity_type":	1
+		}, {
+			"type":	1,
 			"pos_x":	1,
 			"pos_y":	2,
 			"entity_type":	1
@@ -82,6 +112,11 @@
 		}, {
 			"type":	1,
 			"pos_x":	13,
+			"pos_y":	2,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	19,
 			"pos_y":	2,
 			"entity_type":	1
 		}, {
@@ -116,6 +151,11 @@
 			"entity_type":	1
 		}, {
 			"type":	1,
+			"pos_x":	19,
+			"pos_y":	3,
+			"entity_type":	1
+		}, {
+			"type":	1,
 			"pos_x":	1,
 			"pos_y":	4,
 			"entity_type":	1
@@ -136,6 +176,11 @@
 			"entity_type":	1
 		}, {
 			"type":	1,
+			"pos_x":	19,
+			"pos_y":	4,
+			"entity_type":	1
+		}, {
+			"type":	1,
 			"pos_x":	1,
 			"pos_y":	5,
 			"entity_type":	1
@@ -152,6 +197,31 @@
 		}, {
 			"type":	1,
 			"pos_x":	13,
+			"pos_y":	5,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	14,
+			"pos_y":	5,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	15,
+			"pos_y":	5,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	16,
+			"pos_y":	5,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	17,
+			"pos_y":	5,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	19,
 			"pos_y":	5,
 			"entity_type":	1
 		}, {
@@ -196,6 +266,11 @@
 			"entity_type":	1
 		}, {
 			"type":	1,
+			"pos_x":	19,
+			"pos_y":	6,
+			"entity_type":	1
+		}, {
+			"type":	1,
 			"pos_x":	1,
 			"pos_y":	7,
 			"entity_type":	1
@@ -207,6 +282,11 @@
 		}, {
 			"type":	1,
 			"pos_x":	13,
+			"pos_y":	7,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	19,
 			"pos_y":	7,
 			"entity_type":	1
 		}, {
@@ -251,6 +331,11 @@
 			"entity_type":	1
 		}, {
 			"type":	1,
+			"pos_x":	19,
+			"pos_y":	8,
+			"entity_type":	1
+		}, {
+			"type":	1,
 			"pos_x":	1,
 			"pos_y":	9,
 			"entity_type":	1
@@ -262,6 +347,11 @@
 		}, {
 			"type":	1,
 			"pos_x":	13,
+			"pos_y":	9,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	19,
 			"pos_y":	9,
 			"entity_type":	1
 		}, {
@@ -286,6 +376,31 @@
 			"entity_type":	1
 		}, {
 			"type":	1,
+			"pos_x":	15,
+			"pos_y":	10,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	16,
+			"pos_y":	10,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	17,
+			"pos_y":	10,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	18,
+			"pos_y":	10,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	19,
+			"pos_y":	10,
+			"entity_type":	1
+		}, {
+			"type":	1,
 			"pos_x":	1,
 			"pos_y":	11,
 			"entity_type":	1
@@ -306,6 +421,16 @@
 			"entity_type":	1
 		}, {
 			"type":	1,
+			"pos_x":	15,
+			"pos_y":	11,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	19,
+			"pos_y":	11,
+			"entity_type":	1
+		}, {
+			"type":	1,
 			"pos_x":	1,
 			"pos_y":	12,
 			"entity_type":	1
@@ -322,6 +447,16 @@
 		}, {
 			"type":	1,
 			"pos_x":	13,
+			"pos_y":	12,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	15,
+			"pos_y":	12,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	19,
 			"pos_y":	12,
 			"entity_type":	1
 		}, {
@@ -352,6 +487,16 @@
 		}, {
 			"type":	1,
 			"pos_x":	13,
+			"pos_y":	13,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	15,
+			"pos_y":	13,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	19,
 			"pos_y":	13,
 			"entity_type":	1
 		}, {
@@ -360,8 +505,33 @@
 			"pos_y":	14,
 			"entity_type":	1
 		}, {
+			"type":	0,
+			"pos_x":	7,
+			"pos_y":	14,
+			"entity_type":	2
+		}, {
+			"type":	0,
+			"pos_x":	8,
+			"pos_y":	14,
+			"entity_type":	2
+		}, {
+			"type":	0,
+			"pos_x":	9,
+			"pos_y":	14,
+			"entity_type":	2
+		}, {
+			"type":	0,
+			"pos_x":	10,
+			"pos_y":	14,
+			"entity_type":	2
+		}, {
 			"type":	1,
 			"pos_x":	13,
+			"pos_y":	14,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	19,
 			"pos_y":	14,
 			"entity_type":	1
 		}, {
@@ -429,6 +599,121 @@
 			"pos_x":	13,
 			"pos_y":	15,
 			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	19,
+			"pos_y":	15,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	1,
+			"pos_y":	16,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	13,
+			"pos_y":	16,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	19,
+			"pos_y":	16,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	1,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	2,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	3,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	4,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	5,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	6,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	7,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	8,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	9,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	10,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	11,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	12,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	13,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	14,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	15,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	16,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	17,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	18,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	19,
+			"pos_y":	17,
+			"entity_type":	1
 		}],
 	"players":	[{
 			"pos_x":	3,
@@ -437,30 +722,30 @@
 		}],
 	"enemies":	[{
 			"type":	0,
-			"pos_x":	11,
-			"pos_y":	6,
-			"entity_type":	4,
-			"enemy_health":	50,
-			"shooting_interval":	0,
-			"tracks_player":	false
-		}, {
-			"type":	0,
-			"pos_x":	4,
-			"pos_y":	11,
-			"entity_type":	4,
-			"enemy_health":	5,
+			"enemy_health":	10,
 			"shooting_interval":	0.10000000149011612,
-			"tracks_player":	true
+			"tracks_player":	false,
+			"pos_x":	10,
+			"pos_y":	7,
+			"entity_type":	4
 		}, {
 			"type":	0,
-			"pos_x":	8,
+			"enemy_health":	5,
+			"shooting_interval":	1,
+			"tracks_player":	false,
+			"pos_x":	4,
 			"pos_y":	12,
-			"entity_type":	4,
-			"enemy_health":	100,
-			"shooting_interval":	0,
-			"tracks_player":	false
+			"entity_type":	4
 		}],
 	"items":	[],
-	"warpzones":	[],
+	"warpzones":	[{
+			"destination":	{
+				"pos_x":	368,
+				"pos_y":	378
+			},
+			"pos_x":	10,
+			"pos_y":	2,
+			"entity_type":	5
+		}],
 	"gates":	[]
 }

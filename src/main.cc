@@ -14,6 +14,8 @@
 #include "level_editor.h"
 #include "player.h"
 #include "projectiles.h"
+#include "raylib.h"
+#include "rlImGui.h"
 #include "save.h"
 #include "screen.h"
 #include "shoot.h"
@@ -29,9 +31,6 @@
 #include <string.h>
 #include <variant>
 #include <vector>
-#include "raylib.h"
-#include "rlImGui.h"
-
 
 ScreenManager screen_manager;
 
@@ -42,9 +41,9 @@ char *game_mode;
 
 // TODO: Maybe create a config file for player stats
 float player_bullet_damage = 1;
-float projectile_speed = 10;
+float projectile_speed = 5;
 float last_shot = 0;
-float shooting_interval = 0.1;
+float shooting_interval = 1;
 
 static Camera2D camera;
 
@@ -168,8 +167,6 @@ void handle_game_input(int pressed_key) {
     player_shoot();
     last_shot = now;
   }
-
-  Vector2 next_position = player.get_next_position();
 
   std::vector<Vector2> colliders = wall_positions;
 
@@ -728,7 +725,8 @@ int main(int argc, char *argv[]) {
     BeginDrawing();
     ClearBackground(BLACK);
 
-    //================================================[Game Camera]====================================================//
+    //================================================[Game
+    //Camera]====================================================//
 
     BeginMode2D(camera);
 
