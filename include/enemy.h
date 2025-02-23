@@ -1,12 +1,12 @@
+#pragma once
+
 #include "item_drop.h"
 #include <raylib.h>
-
-#ifndef ENEMY_H
-#define ENEMY_H
 
 #define MAX_ENEMIES 50
 
 struct Hitbox;
+struct EditorEnemy;
 
 typedef enum {
   BASE_ENEMY,
@@ -62,6 +62,5 @@ typedef struct {
   ItemDrop item_drop;
 } Enemy;
 
-Enemy create_enemy(Vector2 position, EnemyType type, float enemy_health);
-
-#endif
+Enemy create_enemy_from_level_data(Vector2 position,
+                                   const EditorEnemy &editor_enemy);

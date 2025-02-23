@@ -123,11 +123,9 @@ CMakeFiles/autohacka.dir/src/save.cc.o: \
  /usr/include/c++/14.2.1/ext/aligned_buffer.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/common.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/config.h \
- /home/dnlbs/workspace/personal/mier_autohacr/include/enemy.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/entities.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/json.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/cJSON.h \
- /home/dnlbs/workspace/personal/mier_autohacr/include/level_editor.h \
  /usr/include/c++/14.2.1/functional \
  /usr/include/c++/14.2.1/bits/std_function.h \
  /usr/include/c++/14.2.1/typeinfo /usr/include/c++/14.2.1/unordered_map \

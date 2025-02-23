@@ -2,60 +2,11 @@
 
 #include "json.h"
 #include "cJSON.h"
+#include "json_utils.h"
 #include "level_editor.h"
-#include <stdexcept>
-#include <string>
-
-//============================================== Error handling
-//==============================================//
-
-class JsonParseException : public std::runtime_error {
-public:
-  JsonParseException(const std::string &what) : std::runtime_error(what) {}
-};
-
-//============================================== Utility functions
-//==============================================//
-
-bool json_has_valid_number(cJSON *json, const char *field_name) {
-  if (!json)
-    return false;
-  cJSON *item = cJSON_GetObjectItem(json, field_name);
-  return item && cJSON_IsNumber(item);
-}
-
-int json_get_int(cJSON *json, const char *field_name, int default_value = 0) {
-  if (!json_has_valid_number(json, field_name))
-    return default_value;
-  return cJSON_GetObjectItem(json, field_name)->valueint;
-}
-
-double json_get_double(cJSON *json, const char *field_name,
-                       double default_value = 0.0) {
-  if (!json_has_valid_number(json, field_name))
-    return default_value;
-  return cJSON_GetObjectItem(json, field_name)->valuedouble;
-}
-
-bool json_validate_entity_type(cJSON *json, EntityType expected_type) {
-  int entity_type = json_get_int(json, "entity_type", -1);
-  return entity_type == expected_type;
-}
 
 //============================================== Parsing
 //==============================================//
-
-Vector2 parse_vector2(cJSON *json) {
-  Vector2 vec = {0, 0}; // Default value
-  if (!json || !cJSON_IsObject(json)) {
-    return vec;
-  }
-
-  vec.x = (float)json_get_double(json, "pos_x");
-  vec.y = (float)json_get_double(json, "pos_y");
-  return vec;
-}
-
 ParseResult parse_editor_void(cJSON *json) {
   if (!json) {
     throw JsonParseException("Null JSON object passed to parse_editor_void");
@@ -149,9 +100,13 @@ ParseResult parse_editor_enemy(cJSON *json) {
     throw JsonParseException("Invalid entity type for enemy");
   }
 
-  float enemy_health = (float)json_get_double(json, "enemy_health", 1.0);
+  EditorEnemy enemy;
+  enemy.enemy_health = (float)json_get_double(json, "enemy_health", 0.0);
+  enemy.shooting_interval =
+      (float)json_get_double(json, "shooting_interval", 0.0);
+  enemy.tracks_player = json_get_bool(json, "tracks_player", false);
 
-  return {position, EditorEnemy(type, enemy_health), BASE_ENEMY_ENTITY};
+  return {position, enemy, BASE_ENEMY_ENTITY};
 }
 
 ParseResult parse_editor_gate(cJSON *json) {
@@ -235,6 +190,9 @@ cJSON *serialize_editor_enemy(const EditorEnemy &enemy, int pos_y, int pos_x) {
   cJSON_AddNumberToObject(json_enemy, "pos_y", pos_y);
   cJSON_AddNumberToObject(json_enemy, "entity_type", BASE_ENEMY_ENTITY);
   cJSON_AddNumberToObject(json_enemy, "enemy_health", enemy.enemy_health);
+  cJSON_AddNumberToObject(json_enemy, "shooting_interval",
+                          enemy.shooting_interval);
+  cJSON_AddBoolToObject(json_enemy, "tracks_player", enemy.tracks_player);
   return json_enemy;
 }
 

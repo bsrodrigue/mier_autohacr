@@ -12,8 +12,6 @@ struct ParseResult {
   EntityType type;
 };
 
-Vector2 parse_vector2(cJSON *json);
-
 ParseResult parse_editor_void(cJSON *json);
 
 ParseResult parse_editor_warpzone(cJSON *json);

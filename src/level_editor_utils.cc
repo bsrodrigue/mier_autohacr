@@ -67,7 +67,7 @@ void LevelEditor::handle_entity_placement(Vector2 mouse, EntityType type) {
     cell->entity = EditorWall{BREAKABLE_WALL};
     break;
   case BASE_ENEMY_ENTITY:
-    cell->entity = EditorEnemy{BASE_ENEMY};
+    cell->entity = EditorEnemy{};
     break;
   }
 }

@@ -1,5 +1,4 @@
-#ifndef LEVEL_EDITOR_H
-#define LEVEL_EDITOR_H
+#pragma once
 
 #include "config.h"
 #include "enemy.h"
@@ -76,10 +75,13 @@ struct EditorWall : public Entity {
 };
 
 struct EditorEnemy : public Entity {
-  EnemyType type;
-  float enemy_health;
+  EnemyType type = BASE_ENEMY;
+  float enemy_health = 0;
+  float shooting_interval = 0;
 
-  EditorEnemy(EnemyType t, float h = 0) : type(t), enemy_health(h) {}
+  bool tracks_player = false;
+
+  EditorEnemy() {}
 
   void accept(EntityVisitor &visitor) const override { visitor.visit(*this); }
 };
@@ -154,4 +156,3 @@ void render_level_editor(Camera2D *camera);
 void render_level_editor_ui(Camera2D *camera);
 void handle_editor_input(Camera2D *camera, int pressed_key);
 void load_level_editor(const char *filename);
-#endif

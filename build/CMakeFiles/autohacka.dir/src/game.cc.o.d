@@ -123,5 +123,4 @@ CMakeFiles/autohacka.dir/src/game.cc.o: \
  /usr/include/c++/14.2.1/bits/parse_numbers.h \
  /usr/include/c++/14.2.1/ext/aligned_buffer.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/entities.h \
- /home/dnlbs/workspace/personal/mier_autohacr/include/level_editor.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/wall.h

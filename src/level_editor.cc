@@ -191,7 +191,9 @@ void render_level_editor_ui(Camera2D *camera) {
 
     EditorGridCell cell = *level_editor.inspected_cell;
     if (auto *enemy = std::get_if<EditorEnemy>(&cell.entity)) {
-      if (ImGui::InputFloat("Enemy Health", &enemy->enemy_health)) {
+      if (ImGui::InputFloat("Enemy Health", &enemy->enemy_health) ||
+          ImGui::InputFloat("Shooting Interval", &enemy->shooting_interval) ||
+          ImGui::Checkbox("Tracks Player", &enemy->tracks_player)) {
         level_editor
             .grid[level_editor.inspected_cell_row]
                  [level_editor.inspected_cell_col]

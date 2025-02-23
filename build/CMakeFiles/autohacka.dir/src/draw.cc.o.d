@@ -124,7 +124,6 @@ CMakeFiles/autohacka.dir/src/draw.cc.o: \
  /home/dnlbs/workspace/personal/mier_autohacr/include/common.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/config.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/entities.h \
- /home/dnlbs/workspace/personal/mier_autohacr/include/level_editor.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/textures.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/wall.h \
  /usr/include/raymath.h /usr/include/c++/14.2.1/math.h \

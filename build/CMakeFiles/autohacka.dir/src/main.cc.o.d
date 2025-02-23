@@ -124,7 +124,6 @@ CMakeFiles/autohacka.dir/src/main.cc.o: \
  /usr/include/c++/14.2.1/bits/enable_special_members.h \
  /usr/include/c++/14.2.1/bits/parse_numbers.h \
  /usr/include/c++/14.2.1/ext/aligned_buffer.h \
- /home/dnlbs/workspace/personal/mier_autohacr/include/enemy.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/entities.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/entity_loader.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/gate.h \
@@ -140,7 +139,6 @@ CMakeFiles/autohacka.dir/src/main.cc.o: \
  /home/dnlbs/workspace/personal/mier_autohacr/include/item_drop.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/level.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/save.h \
- /home/dnlbs/workspace/personal/mier_autohacr/include/level_editor.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/player.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/projectiles.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/save.h \

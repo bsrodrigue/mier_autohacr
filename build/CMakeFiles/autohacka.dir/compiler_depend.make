@@ -1804,9 +1804,13 @@ CMakeFiles/autohacka.dir/src/draw.cc.o: /home/dnlbs/workspace/personal/mier_auto
   /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/include/stddef.h
 
 CMakeFiles/autohacka.dir/src/enemy.cc.o: /home/dnlbs/workspace/personal/mier_autohacr/src/enemy.cc \
+  /home/dnlbs/workspace/personal/mier_autohacr/include/config.h \
   /home/dnlbs/workspace/personal/mier_autohacr/include/enemy.h \
+  /home/dnlbs/workspace/personal/mier_autohacr/include/entities.h \
   /home/dnlbs/workspace/personal/mier_autohacr/include/item.h \
   /home/dnlbs/workspace/personal/mier_autohacr/include/item_drop.h \
+  /home/dnlbs/workspace/personal/mier_autohacr/include/level_editor.h \
+  /home/dnlbs/workspace/personal/mier_autohacr/include/wall.h \
   /usr/include/alloca.h \
   /usr/include/asm-generic/errno-base.h \
   /usr/include/asm-generic/errno.h \
@@ -1870,6 +1874,7 @@ CMakeFiles/autohacka.dir/src/enemy.cc.o: /home/dnlbs/workspace/personal/mier_aut
   /usr/include/c++/14.2.1/bits/concept_check.h \
   /usr/include/c++/14.2.1/bits/cpp_type_traits.h \
   /usr/include/c++/14.2.1/bits/cxxabi_forced.h \
+  /usr/include/c++/14.2.1/bits/enable_special_members.h \
   /usr/include/c++/14.2.1/bits/exception.h \
   /usr/include/c++/14.2.1/bits/exception_defines.h \
   /usr/include/c++/14.2.1/bits/functexcept.h \
@@ -1882,6 +1887,7 @@ CMakeFiles/autohacka.dir/src/enemy.cc.o: /home/dnlbs/workspace/personal/mier_aut
   /usr/include/c++/14.2.1/bits/move.h \
   /usr/include/c++/14.2.1/bits/new_allocator.h \
   /usr/include/c++/14.2.1/bits/ostream_insert.h \
+  /usr/include/c++/14.2.1/bits/parse_numbers.h \
   /usr/include/c++/14.2.1/bits/postypes.h \
   /usr/include/c++/14.2.1/bits/predefined_ops.h \
   /usr/include/c++/14.2.1/bits/ptr_traits.h \
@@ -1890,17 +1896,21 @@ CMakeFiles/autohacka.dir/src/enemy.cc.o: /home/dnlbs/workspace/personal/mier_aut
   /usr/include/c++/14.2.1/bits/requires_hosted.h \
   /usr/include/c++/14.2.1/bits/std_abs.h \
   /usr/include/c++/14.2.1/bits/stl_algobase.h \
+  /usr/include/c++/14.2.1/bits/stl_bvector.h \
   /usr/include/c++/14.2.1/bits/stl_construct.h \
   /usr/include/c++/14.2.1/bits/stl_function.h \
   /usr/include/c++/14.2.1/bits/stl_iterator.h \
   /usr/include/c++/14.2.1/bits/stl_iterator_base_funcs.h \
   /usr/include/c++/14.2.1/bits/stl_iterator_base_types.h \
   /usr/include/c++/14.2.1/bits/stl_pair.h \
+  /usr/include/c++/14.2.1/bits/stl_uninitialized.h \
+  /usr/include/c++/14.2.1/bits/stl_vector.h \
   /usr/include/c++/14.2.1/bits/string_view.tcc \
   /usr/include/c++/14.2.1/bits/stringfwd.h \
   /usr/include/c++/14.2.1/bits/uses_allocator.h \
   /usr/include/c++/14.2.1/bits/uses_allocator_args.h \
   /usr/include/c++/14.2.1/bits/utility.h \
+  /usr/include/c++/14.2.1/bits/vector.tcc \
   /usr/include/c++/14.2.1/bits/version.h \
   /usr/include/c++/14.2.1/cctype \
   /usr/include/c++/14.2.1/cerrno \
@@ -1912,6 +1922,7 @@ CMakeFiles/autohacka.dir/src/enemy.cc.o: /home/dnlbs/workspace/personal/mier_aut
   /usr/include/c++/14.2.1/cwchar \
   /usr/include/c++/14.2.1/debug/assertions.h \
   /usr/include/c++/14.2.1/debug/debug.h \
+  /usr/include/c++/14.2.1/ext/aligned_buffer.h \
   /usr/include/c++/14.2.1/ext/alloc_traits.h \
   /usr/include/c++/14.2.1/ext/numeric_traits.h \
   /usr/include/c++/14.2.1/ext/string_conversions.h \
@@ -1924,6 +1935,8 @@ CMakeFiles/autohacka.dir/src/enemy.cc.o: /home/dnlbs/workspace/personal/mier_aut
   /usr/include/c++/14.2.1/string_view \
   /usr/include/c++/14.2.1/tuple \
   /usr/include/c++/14.2.1/type_traits \
+  /usr/include/c++/14.2.1/variant \
+  /usr/include/c++/14.2.1/vector \
   /usr/include/c++/14.2.1/x86_64-pc-linux-gnu/bits/c++allocator.h \
   /usr/include/c++/14.2.1/x86_64-pc-linux-gnu/bits/c++config.h \
   /usr/include/c++/14.2.1/x86_64-pc-linux-gnu/bits/c++locale.h \
