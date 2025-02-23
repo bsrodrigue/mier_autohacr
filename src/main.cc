@@ -40,10 +40,13 @@ char *level_file;
 char *game_mode;
 
 // TODO: Maybe create a config file for player stats
-float player_bullet_damage = 1;
-float projectile_speed = 5;
+float player_bullet_damage = 0.1;
+float projectile_speed = 10;
 float last_shot = 0;
-float shooting_interval = 1;
+float shooting_interval = 0.05;
+
+// Experimentative Gameplay
+int kill_count = 0;
 
 static Camera2D camera;
 
@@ -168,6 +171,11 @@ void handle_game_input(int pressed_key) {
     last_shot = now;
   }
 
+  // Teleportation
+  if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
+    player.start_dash(get_world_mouse(camera));
+  }
+
   std::vector<Vector2> colliders = wall_positions;
 
   colliders.insert(colliders.end(), gate_positions.begin(),
@@ -280,8 +288,11 @@ void handle_enemy_death(Enemy *enemy) {
 void damage_enemy(int index) {
   if ((enemies[index].health - player_bullet_damage) <= 0) {
     enemies[index].state = DEAD;
-
     handle_enemy_death(&enemies[index]);
+
+    // Experimentative Gameplay
+    kill_count++;
+    player_bullet_damage += 0.01;
   }
 
   enemies[index].health = enemies[index].health - player_bullet_damage;
@@ -726,7 +737,7 @@ int main(int argc, char *argv[]) {
     ClearBackground(BLACK);
 
     //================================================[Game
-    //Camera]====================================================//
+    // Camera]====================================================//
 
     BeginMode2D(camera);
 

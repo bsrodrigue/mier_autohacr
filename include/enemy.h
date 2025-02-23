@@ -3,7 +3,7 @@
 #include "item_drop.h"
 #include <raylib.h>
 
-#define MAX_ENEMIES 50
+#define MAX_ENEMIES 500
 
 struct Hitbox;
 struct EditorEnemy;

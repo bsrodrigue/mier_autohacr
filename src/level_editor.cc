@@ -43,14 +43,24 @@ void render_entities() {
 }
 
 void handle_editor_actions(Camera2D *camera, int pressed_key) {
-  switch (pressed_key) {
-  case KEY_ESCAPE:
+  // Reset
+  if (pressed_key == KEY_ESCAPE) {
     level_editor.placing_mode = false;
     level_editor.current_entity = EMPTY_ENTITY;
     level_editor.inspected_cell = nullptr;
-    break;
-  default:
-    break;
+  }
+
+  if (IsKeyDown(KEY_LEFT_CONTROL)) {
+    // Camera Zoom
+    float mouse_scroll = GetMouseWheelMove();
+    if (mouse_scroll != 0) {
+      camera->zoom += mouse_scroll * 0.3f;
+    }
+
+    // Save
+    if (pressed_key == KEY_S) {
+      level_editor.save_level();
+    }
   }
 
   if (level_editor.placing_mode) {

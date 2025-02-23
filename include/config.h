@@ -20,6 +20,6 @@
 #define CELL_OFFSET(x) (x * (CELL_SIZE))
 #define MOUSE_TO_GRID(x) (int)(x / CELL_SIZE)
 
-#define BREAKABLE_WALL_HEALTH 1
+#define BREAKABLE_WALL_HEALTH 0.1
 
 #endif
