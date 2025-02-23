@@ -171,9 +171,9 @@ void handle_game_input(int pressed_key) {
     last_shot = now;
   }
 
-  // Teleportation
+  // Dashing ?
   if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
-    player.start_dash(get_world_mouse(camera));
+    // player.start_dash(get_world_mouse(camera));
   }
 
   std::vector<Vector2> colliders = wall_positions;
@@ -350,6 +350,8 @@ void update_enemy_projectiles() {
     if (CheckCollisionCircles(enemy_projectiles.pool[i].position, 5,
                               player.position, 10)) {
       damage_player(1);
+      enemy_projectiles.deallocate_projectile(i);
+      continue;
     }
 
     // Find better way to check many-to-many collisions
@@ -631,21 +633,28 @@ void draw_warpzones() {
 }
 
 void render_game() {
+  // Background
   render_floor();
+
+  // Environment
   draw_arena(walls);
 
-  draw_enemies();
-  draw_items();
+  // Interactibles
   draw_gates();
-
   draw_warpzones();
-  draw_player_target();
+  draw_items();
 
-  draw_player_healthbar(player);
-  player.draw();
-
+  // Projectiles
   draw_projectiles(enemy_projectiles);
   draw_projectiles(player_projectiles);
+
+  // Actors
+  draw_enemies();
+  player.draw();
+
+  // HUD
+  draw_player_target();
+  draw_player_healthbar(player);
 }
 
 // TODO: Optimize level loading
