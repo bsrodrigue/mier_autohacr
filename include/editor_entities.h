@@ -74,6 +74,7 @@ struct EditorEnemy : public Entity {
   float shooting_interval = 0;
 
   bool tracks_player = false;
+  bool follows_player = false;
 
   EditorEnemy() {}
 

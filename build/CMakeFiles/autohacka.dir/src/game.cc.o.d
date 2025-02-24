@@ -6,6 +6,7 @@ CMakeFiles/autohacka.dir/src/game.cc.o: \
  /usr/include/raylib.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/include/stdarg.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/draw.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/editor_entities.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/enemy.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/item_drop.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/item.h \
@@ -112,8 +113,6 @@ CMakeFiles/autohacka.dir/src/game.cc.o: \
  /usr/include/c++/14.2.1/bits/uses_allocator_args.h \
  /usr/include/c++/14.2.1/tuple \
  /home/dnlbs/workspace/personal/mier_autohacr/include/entities.h \
- /home/dnlbs/workspace/personal/mier_autohacr/include/level_editor.h \
- /home/dnlbs/workspace/personal/mier_autohacr/include/editor_entities.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/wall.h \
  /usr/include/c++/14.2.1/vector \
  /usr/include/c++/14.2.1/bits/stl_uninitialized.h \

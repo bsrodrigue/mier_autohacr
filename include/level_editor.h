@@ -30,6 +30,9 @@ public:
   // ----[Entities]
   // Enemies
   float enemy_health = 0;
+  float shooting_interval = 1.0f;
+  bool tracks_player = false;
+  bool follows_player = false;
 
   // Warpzone
   bool is_placing_warpzone_origin = true;

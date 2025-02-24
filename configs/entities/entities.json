@@ -31,6 +31,12 @@
         "type": "bool",
         "required": false,
         "default": "false"
+      },
+      {
+        "name": "follows_player",
+        "type": "bool",
+        "required": false,
+        "default": "false"
       }
     ]
   },

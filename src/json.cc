@@ -26,6 +26,7 @@ ParseResult parse_editor_enemy(cJSON *json) {
   editor_enemy.enemy_health = (float)json_get_double(json, "enemy_health", 0.0);
   editor_enemy.shooting_interval = (float)json_get_double(json, "shooting_interval", 0.0);
   editor_enemy.tracks_player = json_get_bool(json, "tracks_player", false);
+  editor_enemy.follows_player = json_get_bool(json, "follows_player", false);
 
   if (!json_validate_entity_type(json, BASE_ENEMY_ENTITY)) { throw JsonParseException("Invalid entity type for enemy"); }
 
@@ -134,6 +135,7 @@ cJSON *serialize_editor_enemy(const EditorEnemy &editor_enemy, int pos_y, int po
   cJSON_AddNumberToObject(enemy_json, "enemy_health", editor_enemy.enemy_health);
   cJSON_AddNumberToObject(enemy_json, "shooting_interval", editor_enemy.shooting_interval);
   cJSON_AddBoolToObject(enemy_json, "tracks_player", editor_enemy.tracks_player);
+  cJSON_AddBoolToObject(enemy_json, "follows_player", editor_enemy.follows_player);
 
   cJSON_AddNumberToObject(enemy_json, "pos_x", pos_x);
   cJSON_AddNumberToObject(enemy_json, "pos_y", pos_y);
@@ -207,3 +209,4 @@ cJSON *serialize_editor_player(const EditorPlayer &editor_player, int pos_y, int
   cJSON_AddNumberToObject(player_json, "entity_type", PLAYER_ENTITY);
   return player_json;
 }
+

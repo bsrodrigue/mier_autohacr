@@ -8,7 +8,6 @@
 #include "level.h"
 #include "raygui.h"
 #include "save.h"
-#include "textures.h"
 #include "wall.h"
 #include <raylib.h>
 #include <raymath.h>
@@ -185,9 +184,15 @@ void render_level_editor_ui(Camera2D *camera) {
 
   //--- Entity Specific Parameters
   switch (level_editor.current_entity) {
-  case BASE_ENEMY_ENTITY:
-    ImGui::InputFloat("Enemy Health", &level_editor.enemy_health);
-    break;
+  case BASE_ENEMY_ENTITY: {
+    if (ImGui::InputFloat("Enemy Health", &level_editor.enemy_health) ||
+        ImGui::InputFloat("Shooting Interval",
+                          &level_editor.shooting_interval) ||
+        ImGui::Checkbox("Tracks Player", &level_editor.tracks_player) ||
+        ImGui::Checkbox("Follows Player", &level_editor.follows_player)) {
+      // TODO: Something?
+    }
+  } break;
 
   default:
     break;
@@ -203,7 +208,8 @@ void render_level_editor_ui(Camera2D *camera) {
     if (auto *enemy = std::get_if<EditorEnemy>(&cell.entity)) {
       if (ImGui::InputFloat("Enemy Health", &enemy->enemy_health) ||
           ImGui::InputFloat("Shooting Interval", &enemy->shooting_interval) ||
-          ImGui::Checkbox("Tracks Player", &enemy->tracks_player)) {
+          ImGui::Checkbox("Tracks Player", &enemy->tracks_player) ||
+          ImGui::Checkbox("Follows Player", &enemy->follows_player)) {
         level_editor
             .grid[level_editor.inspected_cell_row]
                  [level_editor.inspected_cell_col]

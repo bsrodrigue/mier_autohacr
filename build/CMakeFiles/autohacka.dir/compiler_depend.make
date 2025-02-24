@@ -1622,7 +1622,6 @@ CMakeFiles/autohacka.dir/src/draw.cc.o: /home/dnlbs/workspace/personal/mier_auto
   /home/dnlbs/workspace/personal/mier_autohacr/include/entities.h \
   /home/dnlbs/workspace/personal/mier_autohacr/include/item.h \
   /home/dnlbs/workspace/personal/mier_autohacr/include/item_drop.h \
-  /home/dnlbs/workspace/personal/mier_autohacr/include/level_editor.h \
   /home/dnlbs/workspace/personal/mier_autohacr/include/textures.h \
   /home/dnlbs/workspace/personal/mier_autohacr/include/wall.h \
   /usr/include/alloca.h \
@@ -2120,7 +2119,6 @@ CMakeFiles/autohacka.dir/src/game.cc.o: /home/dnlbs/workspace/personal/mier_auto
   /home/dnlbs/workspace/personal/mier_autohacr/include/entities.h \
   /home/dnlbs/workspace/personal/mier_autohacr/include/item.h \
   /home/dnlbs/workspace/personal/mier_autohacr/include/item_drop.h \
-  /home/dnlbs/workspace/personal/mier_autohacr/include/level_editor.h \
   /home/dnlbs/workspace/personal/mier_autohacr/include/wall.h \
   /usr/include/alloca.h \
   /usr/include/asm-generic/errno-base.h \
@@ -3233,7 +3231,6 @@ CMakeFiles/autohacka.dir/src/level_editor.cc.o: /home/dnlbs/workspace/personal/m
   /home/dnlbs/workspace/personal/mier_autohacr/include/level_editor.h \
   /home/dnlbs/workspace/personal/mier_autohacr/include/raygui.h \
   /home/dnlbs/workspace/personal/mier_autohacr/include/save.h \
-  /home/dnlbs/workspace/personal/mier_autohacr/include/textures.h \
   /home/dnlbs/workspace/personal/mier_autohacr/include/wall.h \
   /usr/include/alloca.h \
   /usr/include/asm-generic/errno-base.h \
@@ -3806,7 +3803,6 @@ CMakeFiles/autohacka.dir/src/player.cc.o: /home/dnlbs/workspace/personal/mier_au
   /home/dnlbs/workspace/personal/mier_autohacr/include/gate.h \
   /home/dnlbs/workspace/personal/mier_autohacr/include/item.h \
   /home/dnlbs/workspace/personal/mier_autohacr/include/item_drop.h \
-  /home/dnlbs/workspace/personal/mier_autohacr/include/level_editor.h \
   /home/dnlbs/workspace/personal/mier_autohacr/include/player.h \
   /home/dnlbs/workspace/personal/mier_autohacr/include/projectiles.h \
   /home/dnlbs/workspace/personal/mier_autohacr/include/wall.h \
@@ -4689,6 +4685,8 @@ CMakeFiles/autohacka.dir/src/enemy.cc.o:
 
 /home/dnlbs/workspace/personal/mier_autohacr/include/raygui.h:
 
+/home/dnlbs/workspace/personal/mier_autohacr/include/level_editor.h:
+
 /home/dnlbs/workspace/personal/mier_autohacr/src/json_utils.cc:
 
 /usr/include/c++/14.2.1/stdexcept:
@@ -4720,8 +4718,6 @@ CMakeFiles/autohacka.dir/src/enemy.cc.o:
 /usr/include/c++/14.2.1/bits/enable_special_members.h:
 
 /home/dnlbs/workspace/personal/mier_autohacr/include/wall.h:
-
-/home/dnlbs/workspace/personal/mier_autohacr/include/level_editor.h:
 
 /home/dnlbs/workspace/personal/mier_autohacr/include/item_drop.h:
 

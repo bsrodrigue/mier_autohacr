@@ -21,3 +21,4 @@ cJSON *serialize_editor_warpzone(const EditorWarpzone &editor_warpzone, int pos_
 cJSON *serialize_editor_item(const EditorItem &editor_item, int pos_y, int pos_x);
 cJSON *serialize_editor_gate(const EditorGate &editor_gate, int pos_y, int pos_x);
 cJSON *serialize_editor_player(const EditorPlayer &editor_player, int pos_y, int pos_x);
+

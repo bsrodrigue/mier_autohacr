@@ -21,7 +21,7 @@ Enemy create_enemy_from_level_data(Vector2 position,
   enemy.state = ALIVE;
 
   // Flags
-  enemy.can_move = false;
+  enemy.can_move = editor_enemy.follows_player;
   enemy.tracks_player = editor_enemy.tracks_player;
   enemy.aimless_shooting = true;
 

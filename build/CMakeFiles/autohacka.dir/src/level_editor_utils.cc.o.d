@@ -2,8 +2,6 @@ CMakeFiles/autohacka.dir/src/level_editor_utils.cc.o: \
  /home/dnlbs/workspace/personal/mier_autohacr/src/level_editor_utils.cc \
  /usr/include/stdc-predef.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/config.h \
- /home/dnlbs/workspace/personal/mier_autohacr/include/level_editor.h \
- /home/dnlbs/workspace/personal/mier_autohacr/include/config.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/editor_entities.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/enemy.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/item_drop.h \
@@ -122,4 +120,6 @@ CMakeFiles/autohacka.dir/src/level_editor_utils.cc.o: \
  /usr/include/c++/14.2.1/bits/enable_special_members.h \
  /usr/include/c++/14.2.1/bits/parse_numbers.h \
  /usr/include/c++/14.2.1/ext/aligned_buffer.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/level_editor.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/config.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/save.h

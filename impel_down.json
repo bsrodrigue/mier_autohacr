@@ -146,6 +146,86 @@
 			"entity_type":	1
 		}, {
 			"type":	1,
+			"pos_x":	30,
+			"pos_y":	1,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	31,
+			"pos_y":	1,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	32,
+			"pos_y":	1,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	33,
+			"pos_y":	1,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	34,
+			"pos_y":	1,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	35,
+			"pos_y":	1,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	36,
+			"pos_y":	1,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	37,
+			"pos_y":	1,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	38,
+			"pos_y":	1,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	39,
+			"pos_y":	1,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	40,
+			"pos_y":	1,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	41,
+			"pos_y":	1,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	42,
+			"pos_y":	1,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	43,
+			"pos_y":	1,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	44,
+			"pos_y":	1,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	45,
+			"pos_y":	1,
+			"entity_type":	1
+		}, {
+			"type":	1,
 			"pos_x":	1,
 			"pos_y":	2,
 			"entity_type":	1
@@ -167,6 +247,11 @@
 		}, {
 			"type":	1,
 			"pos_x":	29,
+			"pos_y":	2,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	45,
 			"pos_y":	2,
 			"entity_type":	1
 		}, {
@@ -206,6 +291,11 @@
 			"entity_type":	1
 		}, {
 			"type":	1,
+			"pos_x":	45,
+			"pos_y":	3,
+			"entity_type":	1
+		}, {
+			"type":	1,
 			"pos_x":	1,
 			"pos_y":	4,
 			"entity_type":	1
@@ -231,6 +321,11 @@
 			"entity_type":	1
 		}, {
 			"type":	1,
+			"pos_x":	45,
+			"pos_y":	4,
+			"entity_type":	1
+		}, {
+			"type":	1,
 			"pos_x":	1,
 			"pos_y":	5,
 			"entity_type":	1
@@ -252,6 +347,11 @@
 		}, {
 			"type":	1,
 			"pos_x":	29,
+			"pos_y":	5,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	45,
 			"pos_y":	5,
 			"entity_type":	1
 		}, {
@@ -311,6 +411,11 @@
 			"entity_type":	1
 		}, {
 			"type":	1,
+			"pos_x":	45,
+			"pos_y":	6,
+			"entity_type":	1
+		}, {
+			"type":	1,
 			"pos_x":	1,
 			"pos_y":	7,
 			"entity_type":	1
@@ -337,6 +442,11 @@
 		}, {
 			"type":	1,
 			"pos_x":	29,
+			"pos_y":	7,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	45,
 			"pos_y":	7,
 			"entity_type":	1
 		}, {
@@ -386,6 +496,11 @@
 			"entity_type":	1
 		}, {
 			"type":	1,
+			"pos_x":	45,
+			"pos_y":	8,
+			"entity_type":	1
+		}, {
+			"type":	1,
 			"pos_x":	1,
 			"pos_y":	9,
 			"entity_type":	1
@@ -406,6 +521,11 @@
 			"entity_type":	1
 		}, {
 			"type":	1,
+			"pos_x":	45,
+			"pos_y":	9,
+			"entity_type":	1
+		}, {
+			"type":	1,
 			"pos_x":	1,
 			"pos_y":	10,
 			"entity_type":	1
@@ -426,6 +546,11 @@
 			"entity_type":	1
 		}, {
 			"type":	1,
+			"pos_x":	45,
+			"pos_y":	10,
+			"entity_type":	1
+		}, {
+			"type":	1,
 			"pos_x":	1,
 			"pos_y":	11,
 			"entity_type":	1
@@ -442,6 +567,11 @@
 		}, {
 			"type":	1,
 			"pos_x":	29,
+			"pos_y":	11,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	45,
 			"pos_y":	11,
 			"entity_type":	1
 		}, {
@@ -462,6 +592,11 @@
 		}, {
 			"type":	1,
 			"pos_x":	29,
+			"pos_y":	12,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	45,
 			"pos_y":	12,
 			"entity_type":	1
 		}, {
@@ -491,6 +626,11 @@
 			"entity_type":	1
 		}, {
 			"type":	1,
+			"pos_x":	45,
+			"pos_y":	13,
+			"entity_type":	1
+		}, {
+			"type":	1,
 			"pos_x":	1,
 			"pos_y":	14,
 			"entity_type":	1
@@ -512,6 +652,11 @@
 		}, {
 			"type":	1,
 			"pos_x":	29,
+			"pos_y":	14,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	45,
 			"pos_y":	14,
 			"entity_type":	1
 		}, {
@@ -586,6 +731,11 @@
 			"entity_type":	1
 		}, {
 			"type":	1,
+			"pos_x":	45,
+			"pos_y":	15,
+			"entity_type":	1
+		}, {
+			"type":	1,
 			"pos_x":	1,
 			"pos_y":	16,
 			"entity_type":	1
@@ -597,6 +747,11 @@
 		}, {
 			"type":	1,
 			"pos_x":	29,
+			"pos_y":	16,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	45,
 			"pos_y":	16,
 			"entity_type":	1
 		}, {
@@ -744,6 +899,86 @@
 			"pos_x":	29,
 			"pos_y":	17,
 			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	30,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	31,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	32,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	33,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	34,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	35,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	36,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	37,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	38,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	39,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	40,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	41,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	42,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	43,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	44,
+			"pos_y":	17,
+			"entity_type":	1
+		}, {
+			"type":	1,
+			"pos_x":	45,
+			"pos_y":	17,
+			"entity_type":	1
 		}],
 	"players":	[{
 			"pos_x":	3,
@@ -755,6 +990,7 @@
 			"enemy_health":	10,
 			"shooting_interval":	0.5,
 			"tracks_player":	true,
+			"follows_player":	false,
 			"pos_x":	21,
 			"pos_y":	4,
 			"entity_type":	4
@@ -763,7 +999,44 @@
 			"enemy_health":	5,
 			"shooting_interval":	0.5,
 			"tracks_player":	false,
+			"follows_player":	false,
 			"pos_x":	4,
+			"pos_y":	12,
+			"entity_type":	4
+		}, {
+			"type":	0,
+			"enemy_health":	100,
+			"shooting_interval":	0.5,
+			"tracks_player":	true,
+			"follows_player":	true,
+			"pos_x":	18,
+			"pos_y":	12,
+			"entity_type":	4
+		}, {
+			"type":	0,
+			"enemy_health":	100,
+			"shooting_interval":	0.5,
+			"tracks_player":	true,
+			"follows_player":	true,
+			"pos_x":	21,
+			"pos_y":	12,
+			"entity_type":	4
+		}, {
+			"type":	0,
+			"enemy_health":	100,
+			"shooting_interval":	0.5,
+			"tracks_player":	true,
+			"follows_player":	true,
+			"pos_x":	24,
+			"pos_y":	12,
+			"entity_type":	4
+		}, {
+			"type":	0,
+			"enemy_health":	50,
+			"shooting_interval":	0.300000011920929,
+			"tracks_player":	true,
+			"follows_player":	false,
+			"pos_x":	41,
 			"pos_y":	12,
 			"entity_type":	4
 		}],
@@ -774,6 +1047,14 @@
 				"pos_y":	378
 			},
 			"pos_x":	10,
+			"pos_y":	2,
+			"entity_type":	5
+		}, {
+			"destination":	{
+				"pos_x":	754,
+				"pos_y":	56
+			},
+			"pos_x":	28,
 			"pos_y":	2,
 			"entity_type":	5
 		}],
