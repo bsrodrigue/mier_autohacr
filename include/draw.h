@@ -1,6 +1,5 @@
-#include "enemy.h"
+#include "editor_entities.h"
 #include "entities.h"
-#include "level_editor.h"
 #include "raylib.h"
 #include "wall.h"
 
@@ -15,7 +14,7 @@ void draw_floor(Vector2 position);
 void draw_wall(Vector2 position, WallType type);
 void draw_texture_cell(Vector2 position, Texture2D texture, float rotation);
 
-void draw_game_texture(Vector2 position, Texture2D texture, float rotation = 0,
+void draw_texture_cell_centered(Vector2 position, Texture2D texture, float rotation = 0,
                        float width = GAME_TEXTURE_SIZE,
                        float height = GAME_TEXTURE_SIZE,
                        Vector2 origin = {(GAME_TEXTURE_SIZE / 2.0f),

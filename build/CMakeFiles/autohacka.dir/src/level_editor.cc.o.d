@@ -3,6 +3,7 @@ CMakeFiles/autohacka.dir/src/level_editor.cc.o: \
  /usr/include/stdc-predef.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/level_editor.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/config.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/editor_entities.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/enemy.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/item_drop.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/item.h \
@@ -124,7 +125,6 @@ CMakeFiles/autohacka.dir/src/level_editor.cc.o: \
  /home/dnlbs/workspace/personal/mier_autohacr/include/common.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/config.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/draw.h \
- /home/dnlbs/workspace/personal/mier_autohacr/include/level_editor.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/entities.h \
  /home/dnlbs/workspace/personal/mier_autohacr/external/imgui/imgui.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/imconfig.h \
@@ -134,7 +134,6 @@ CMakeFiles/autohacka.dir/src/level_editor.cc.o: \
  /home/dnlbs/workspace/personal/mier_autohacr/include/save.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/raygui.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/save.h \
- /home/dnlbs/workspace/personal/mier_autohacr/include/textures.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/wall.h \
  /usr/include/raymath.h /usr/include/c++/14.2.1/math.h \
  /usr/include/c++/14.2.1/cmath /usr/include/math.h \

@@ -5,56 +5,82 @@
 #include <raylib.h>
 #include <raymath.h>
 
-#define PLAYER_HEALTH 20
-
-Player::Player() {
-  this->position = {0, 0};
-  this->direction = {0, 0};
-  this->angle = 0;
-  this->speed = 3;
-  this->health = PLAYER_HEALTH;
-  this->max_health = PLAYER_HEALTH;
-}
-
 Player::Player(Vector2 position) {
   this->position = position;
-  this->direction = position;
+  this->velocity = {0, 0}; // Initialize velocity
   this->angle = 0;
-  this->speed = 3;
-  this->health = PLAYER_HEALTH;
-  this->max_health = PLAYER_HEALTH;
+  this->speed = 200.0f;        // Max speed (units per second)
+  this->acceleration = 800.0f; // Acceleration (units per second squared)
+  this->deceleration =
+      400.0f; // Deceleration/friction (units per second squared)
+  this->health = 10000;
+  this->max_health = 10000;
 }
 
 void Player::load_texture(Texture2D texture) { this->texture = texture; }
 
 Vector2 Player::get_next_position() {
-  Vector2 movement = {0, 0};
-
+  // Get input direction
+  Vector2 input_direction = {0, 0};
   if (IsKeyDown(KEY_W))
-    movement.y = -speed;
+    input_direction.y -= 1.0f; // Up
   if (IsKeyDown(KEY_S))
-    movement.y = speed;
+    input_direction.y += 1.0f; // Down
   if (IsKeyDown(KEY_A))
-    movement.x = -speed;
+    input_direction.x -= 1.0f; // Left
   if (IsKeyDown(KEY_D))
-    movement.x = speed;
+    input_direction.x += 1.0f; // Right
 
-  Vector2 next_position = Vector2Add(position, movement);
+  // Normalize direction to prevent faster diagonal movement
+  if (Vector2Length(input_direction) > 0.0f) {
+    input_direction = Vector2Normalize(input_direction);
+  }
 
-  return next_position;
+  // Apply acceleration based on input
+  float delta_time = GetFrameTime();
+  if (Vector2Length(input_direction) > 0.0f) {
+    velocity = Vector2Add(
+        velocity, Vector2Scale(input_direction, acceleration * delta_time));
+  }
+
+  // Apply deceleration (friction) when no input or to slow down
+  if (Vector2Length(velocity) > 0.0f) {
+    Vector2 friction =
+        Vector2Scale(Vector2Normalize(velocity), -deceleration * delta_time);
+    if (Vector2Length(velocity) < Vector2Length(friction)) {
+      velocity = {0, 0}; // Stop if friction would overshoot
+    } else {
+      velocity = Vector2Add(velocity, friction);
+    }
+  }
+
+  // Cap the velocity at max_speed
+  if (Vector2Length(velocity) > speed) {
+    velocity = Vector2Scale(Vector2Normalize(velocity), speed);
+  }
+
+  // Calculate next position based on velocity
+  return Vector2Add(position, Vector2Scale(velocity, delta_time));
 }
 
 Vector2 Player::get_confirmed_position(Vector2 next_position,
-                                       std::vector<Vector2> cell_positions) {
-
+                                       std::vector<Vector2> wall_positions) {
   Vector2 confirmed_position = this->position;
-  if (check_cells_collision(cell_positions, {position.x, next_position.y}) ==
+
+  // Check Y movement (vertical)
+  if (check_cells_collision(wall_positions, {position.x, next_position.y}) ==
       -1) {
     confirmed_position.y = next_position.y;
+  } else {
+    velocity.y = 0; // Stop vertical velocity on collision
   }
-  if (check_cells_collision(cell_positions, {next_position.x, position.y}) ==
+
+  // Check X movement (horizontal)
+  if (check_cells_collision(wall_positions, {next_position.x, position.y}) ==
       -1) {
     confirmed_position.x = next_position.x;
+  } else {
+    velocity.x = 0; // Stop horizontal velocity on collision
   }
 
   return confirmed_position;

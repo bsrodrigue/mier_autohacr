@@ -1,12 +1,12 @@
+#pragma once
+
 #include "item_drop.h"
 #include <raylib.h>
 
-#ifndef ENEMY_H
-#define ENEMY_H
-
-#define MAX_ENEMIES 50
+#define MAX_ENEMIES 500
 
 struct Hitbox;
+struct EditorEnemy;
 
 typedef enum {
   BASE_ENEMY,
@@ -48,13 +48,22 @@ typedef struct {
   EnemyType type;
   EnemyState state;
 
+  // Shooting Behaviour
   int projectile_rate;    // How many projectiles per shot
   float projectile_angle; // Angle between each projectile
+
   float shooting_interval;
+  float last_shot_time; // For continuous shooting
+  float first_shot_time;
+  float last_cooldown_time;
+
+  float shooting_duration;          // Shoot during given time
+  float shooting_cooldown_duration; // Cooldown before shooting again
+
   float shooting_angle; // Where projectiles are pointing
-  float last_shot;
 
   bool tracks_player;
+  bool is_first_shot;
   // Does not need to aim for player to shoot
   bool aimless_shooting;
 
@@ -62,6 +71,5 @@ typedef struct {
   ItemDrop item_drop;
 } Enemy;
 
-Enemy create_enemy(Vector2 position, EnemyType type, float enemy_health);
-
-#endif
+Enemy create_enemy_from_level_data(Vector2 position,
+                                   const EditorEnemy &editor_enemy);

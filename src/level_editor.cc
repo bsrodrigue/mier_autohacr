@@ -8,7 +8,6 @@
 #include "level.h"
 #include "raygui.h"
 #include "save.h"
-#include "textures.h"
 #include "wall.h"
 #include <raylib.h>
 #include <raymath.h>
@@ -43,14 +42,24 @@ void render_entities() {
 }
 
 void handle_editor_actions(Camera2D *camera, int pressed_key) {
-  switch (pressed_key) {
-  case KEY_ESCAPE:
+  // Reset
+  if (pressed_key == KEY_ESCAPE) {
     level_editor.placing_mode = false;
     level_editor.current_entity = EMPTY_ENTITY;
     level_editor.inspected_cell = nullptr;
-    break;
-  default:
-    break;
+  }
+
+  if (IsKeyDown(KEY_LEFT_CONTROL)) {
+    // Camera Zoom
+    float mouse_scroll = GetMouseWheelMove();
+    if (mouse_scroll != 0) {
+      camera->zoom += mouse_scroll * 0.3f;
+    }
+
+    // Save
+    if (pressed_key == KEY_S) {
+      level_editor.save_level();
+    }
   }
 
   if (level_editor.placing_mode) {
@@ -127,6 +136,19 @@ void render_level_editor(Camera2D *camera) {
 
 static bool my_tool_active = true;
 
+template <typename A> bool EnemyEditorUI(A *attributes_source) {
+  return ImGui::InputFloat("Enemy Health", &attributes_source->enemy_health) ||
+         ImGui::InputFloat("Shooting Interval",
+                           &attributes_source->shooting_interval) ||
+         ImGui::Checkbox("Tracks Player", &attributes_source->tracks_player) ||
+         ImGui::Checkbox("Follows Player",
+                         &attributes_source->follows_player) ||
+         ImGui::InputFloat("Shooting Duration",
+                           &attributes_source->shooting_duration) ||
+         ImGui::InputFloat("Shooting Cooldown",
+                           &attributes_source->shooting_cooldown);
+}
+
 void render_level_editor_ui(Camera2D *camera) {
   ImGui::SetNextWindowPos(ImVec2(WIN_WIDTH - 300, 0),
                           ImGuiCond_Once); // Top-left corner
@@ -158,10 +180,10 @@ void render_level_editor_ui(Camera2D *camera) {
   ImGui::Separator();
 
   // Current Hovered Cell
-  if (level_editor.hovered_cell != nullptr) {
-    ImGui::Text("Entity Type: %s",
-                get_entity_type_name(level_editor.hovered_cell->type));
-  }
+  ImGui::Text("Entity Type: %s",
+              (level_editor.hovered_cell != nullptr)
+                  ? get_entity_type_name(level_editor.hovered_cell->type)
+                  : "Empty");
 
   ImGui::Separator();
 
@@ -175,9 +197,11 @@ void render_level_editor_ui(Camera2D *camera) {
 
   //--- Entity Specific Parameters
   switch (level_editor.current_entity) {
-  case BASE_ENEMY_ENTITY:
-    ImGui::InputFloat("Enemy Health", &level_editor.enemy_health);
-    break;
+  case BASE_ENEMY_ENTITY: {
+    if (EnemyEditorUI(&level_editor)) {
+      // TODO: Something?
+    }
+  } break;
 
   default:
     break;
@@ -191,7 +215,8 @@ void render_level_editor_ui(Camera2D *camera) {
 
     EditorGridCell cell = *level_editor.inspected_cell;
     if (auto *enemy = std::get_if<EditorEnemy>(&cell.entity)) {
-      if (ImGui::InputFloat("Enemy Health", &enemy->enemy_health)) {
+      if (EnemyEditorUI(enemy)) {
+        TraceLog(LOG_INFO, "Update Enemy");
         level_editor
             .grid[level_editor.inspected_cell_row]
                  [level_editor.inspected_cell_col]

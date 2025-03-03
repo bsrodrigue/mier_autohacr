@@ -2,7 +2,6 @@
 #include "common.h"
 #include "config.h"
 #include "entities.h"
-#include "level_editor.h"
 #include "textures.h"
 #include "wall.h"
 #include <raylib.h>
@@ -20,14 +19,9 @@ void draw_texture_cell(Vector2 position, Texture2D texture,
       {0, 0}, rotation, WHITE);
 }
 
-void draw_game_texture_editor(Vector2 position, Texture2D texture,
-                              float rotation, Vector2 origin) {
-
-  draw_game_texture(position, texture, rotation, CELL_SIZE, CELL_SIZE, origin);
-}
-
-void draw_game_texture(Vector2 position, Texture2D texture, float rotation,
-                       float width, float height, Vector2 origin) {
+void draw_texture_cell_centered(Vector2 position, Texture2D texture,
+                                float rotation, float width, float height,
+                                Vector2 origin) {
   DrawTexturePro(
       texture,
       {.x = 0, .y = 0, .width = GAME_TEXTURE_SIZE, .height = GAME_TEXTURE_SIZE},
@@ -51,41 +45,44 @@ void draw_wall(Vector2 position, WallType type) {
     draw_texture_cell(position, bwall_texture);
     break;
   case UNBREAKABLE_WALL:
-    draw_texture_cell(position, ubwall_texture);
+    draw_texture_cell(position, wall_texture);
     break;
   }
 }
 
 void draw_warpzone(Vector2 position) {
-  draw_texture_cell(position, warpzone_texture);
+  draw_texture_cell(position, Warpzone_texture);
 }
+
 void draw_gate_key(Vector2 position, float rotation) {
-  draw_game_texture(position, gate_key_texture, rotation, 15, 15);
+  draw_texture_cell_centered(position, gate_key_texture, rotation, 15, 15);
 }
 
 void draw_ship(Vector2 position, float rotation) {
-  draw_game_texture(position, player_texture, rotation);
+  draw_texture_cell_centered(position, ship_texture, rotation);
 }
 
 void draw_ship_editor(Vector2 position, float rotation) {
-  draw_texture_cell(position, player_texture, rotation);
+  draw_texture_cell(position, ship_texture, rotation);
 }
 
 void draw_base_enemy(Vector2 position, float rotation = 0) {
 
-  draw_game_texture(Vector2Add(position, {0, 0}), sentinel_barrel_texture,
-                    rotation, GAME_TEXTURE_SIZE, GAME_TEXTURE_SIZE,
-                    {.x = (GAME_TEXTURE_SIZE / 2.0f), .y = GAME_TEXTURE_SIZE});
+  // draw_texture_cell_centered(
+  //     Vector2Add(position, {0, 0}), Sentinel_Barrel_texture, rotation,
+  //     GAME_TEXTURE_SIZE, GAME_TEXTURE_SIZE,
+  //     {.x = (GAME_TEXTURE_SIZE / 2.0f), .y = GAME_TEXTURE_SIZE});
 
-  draw_game_texture(position, sentinel_head_texture, rotation);
+  // draw_texture_cell_centered(position, Sentinel_Head_texture, rotation);
+  draw_texture_cell(position, Sentinel_Head_texture);
 }
 
 void draw_projectile(Vector2 position, float rotation) {
-  draw_game_texture(position, projectile_texture, rotation);
+  draw_texture_cell_centered(position, Projectile_texture, rotation);
 }
 
 void draw_healing_chip(Vector2 position, float rotation) {
-  draw_game_texture(position, healing_chip_texture, rotation, 15, 15);
+  draw_texture_cell_centered(position, healing_chip_texture, rotation, 15, 15);
 }
 
 void draw_editor_entity(EditorGridCell cell, Vector2 position) {
@@ -102,8 +99,9 @@ void draw_editor_entity(EditorGridCell cell, Vector2 position) {
   else if (std::holds_alternative<EditorEnemy>(cell.entity)) {
     // const EditorEnemy &enemy = std::get<EditorEnemy>(cell.entity);
 
-    Vector2 offset = {GAME_TEXTURE_SIZE / 2.0f, GAME_TEXTURE_SIZE / 2.0f};
-    draw_base_enemy(Vector2Add(position, offset));
+    // Vector2 offset = {GAME_TEXTURE_SIZE / 2.0f, GAME_TEXTURE_SIZE / 2.0f};
+    // draw_base_enemy(Vector2Add(position, offset));
+    draw_base_enemy(position);
   }
 
   else if (std::holds_alternative<EditorWarpzone>(cell.entity)) {
@@ -131,8 +129,8 @@ void draw_editor_entity(EditorGridCell cell, Vector2 position) {
 }
 
 void render_mouse_hover_grid(EntityType type, Vector2 mouse) {
-  Vector2 position =
-      get_absolute_position_from_grid_position(MOUSE_TO_GRID(mouse.x), MOUSE_TO_GRID(mouse.y));
+  Vector2 position = get_absolute_position_from_grid_position(
+      MOUSE_TO_GRID(mouse.x), MOUSE_TO_GRID(mouse.y));
 
   switch (type) {
   case EMPTY_ENTITY:
@@ -145,11 +143,12 @@ void render_mouse_hover_grid(EntityType type, Vector2 mouse) {
     draw_wall(position, BREAKABLE_WALL);
     break;
   case PLAYER_ENTITY:
-    draw_texture_cell(position, player_texture);
+    draw_texture_cell(position, ship_texture);
     break;
   case BASE_ENEMY_ENTITY: {
-    Vector2 offset = {GAME_TEXTURE_SIZE / 2.0f, GAME_TEXTURE_SIZE / 2.0f};
-    draw_base_enemy(Vector2Add(position, offset));
+    // Vector2 offset = {GAME_TEXTURE_SIZE / 2.0f, GAME_TEXTURE_SIZE / 2.0f};
+    // draw_base_enemy(Vector2Add(position, offset));
+    draw_base_enemy(position);
   } break;
   case WARPZONE_ENTITY:
     draw_warpzone(position);

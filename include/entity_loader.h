@@ -1,8 +1,8 @@
 #pragma once
 
+#include "editor_entities.h"
 #include "gate.h"
 #include "item.h"
-#include "level_editor.h"
 #include "warpzone.h"
 #include <raylib.h>
 #include <vector>
@@ -11,6 +11,7 @@ class EntityLoader : public EntityVisitor {
 public:
   Vector2 position;
 
+  // Game State
   EntityLoader(Vector2 position, std::vector<Wall> &walls,
                std::vector<Vector2> &wall_positions, std::vector<Gate> &gates,
                std::vector<Vector2> &gate_positions, Enemy *enemies,
@@ -37,7 +38,7 @@ public:
   }
 
   void visit(const EditorEnemy &enemy) override {
-    Enemy e = create_enemy(position, enemy.type, enemy.enemy_health);
+    Enemy e = create_enemy_from_level_data(position, enemy);
     enemies[enemy_count++] = e;
   }
 

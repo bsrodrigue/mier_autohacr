@@ -1,7 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define FPS 60
+#define FPS 60 // Better than Pokemon
 
 // TODO: Handle heterogenous screen sizes
 #define LEVEL_WIDTH 2500
@@ -20,6 +20,6 @@
 #define CELL_OFFSET(x) (x * (CELL_SIZE))
 #define MOUSE_TO_GRID(x) (int)(x / CELL_SIZE)
 
-#define BREAKABLE_WALL_HEALTH 1
+#define BREAKABLE_WALL_HEALTH 0.1
 
 #endif

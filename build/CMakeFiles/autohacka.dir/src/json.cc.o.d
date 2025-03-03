@@ -4,8 +4,8 @@ CMakeFiles/autohacka.dir/src/json.cc.o: \
  /home/dnlbs/workspace/personal/mier_autohacr/include/json.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/cJSON.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/include/stddef.h \
- /home/dnlbs/workspace/personal/mier_autohacr/include/level_editor.h \
- /home/dnlbs/workspace/personal/mier_autohacr/include/config.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/json_utils.h \
+ /home/dnlbs/workspace/personal/mier_autohacr/include/editor_entities.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/enemy.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/item_drop.h \
  /home/dnlbs/workspace/personal/mier_autohacr/include/item.h \
@@ -122,8 +122,6 @@ CMakeFiles/autohacka.dir/src/json.cc.o: \
  /usr/include/c++/14.2.1/bits/enable_special_members.h \
  /usr/include/c++/14.2.1/bits/parse_numbers.h \
  /usr/include/c++/14.2.1/ext/aligned_buffer.h \
- /home/dnlbs/workspace/personal/mier_autohacr/include/cJSON.h \
- /home/dnlbs/workspace/personal/mier_autohacr/include/level_editor.h \
  /usr/include/c++/14.2.1/stdexcept /usr/include/c++/14.2.1/exception \
  /usr/include/c++/14.2.1/bits/exception_ptr.h \
  /usr/include/c++/14.2.1/bits/cxxabi_init_exception.h \

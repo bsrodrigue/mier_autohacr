@@ -1,0 +1,114 @@
+[
+  {
+    "name": "EditorVoid",
+    "entity_type": "EMPTY_ENTITY",
+    "fields": []
+  },
+  {
+    "name": "EditorEnemy",
+    "entity_type": "BASE_ENEMY_ENTITY",
+    "fields": [
+      {
+        "name": "type",
+        "type": "EnemyType",
+        "required": false,
+        "default": "BASE_ENEMY"
+      },
+      {
+        "name": "enemy_health",
+        "type": "float",
+        "required": false,
+        "default": "0.0"
+      },
+      {
+        "name": "shooting_interval",
+        "type": "float",
+        "required": false,
+        "default": "0.0"
+      },
+      {
+        "name": "shooting_duration",
+        "type": "float",
+        "required": false,
+        "default": "5.0"
+      },
+      {
+        "name": "shooting_cooldown",
+        "type": "float",
+        "required": false,
+        "default": "2.0"
+      },
+      {
+        "name": "tracks_player",
+        "type": "bool",
+        "required": false,
+        "default": "false"
+      },
+      {
+        "name": "follows_player",
+        "type": "bool",
+        "required": false,
+        "default": "false"
+      }
+    ]
+  },
+  {
+    "name": "EditorWall",
+    "entity_type": "BWALL_ENTITY or UBWALL_ENTITY",
+    "fields": [
+      {
+        "name": "type",
+        "type": "WallType",
+        "required": true,
+        "default": null
+      },
+      {
+        "name": "entity_type",
+        "type": "EntityType",
+        "required": true,
+        "default": null,
+        "validator": "wall_type_validator"
+      }
+    ]
+  },
+  {
+    "name": "EditorWarpzone",
+    "entity_type": "WARPZONE_ENTITY",
+    "fields": [
+      {
+        "name": "destination",
+        "type": "Vector2",
+        "required": true,
+        "default": null
+      }
+    ]
+  },
+  {
+    "name": "EditorItem",
+    "entity_type": "ITEM_ENTITY",
+    "fields": [
+      {
+        "name": "effect",
+        "type": "ItemEffect",
+        "required": true,
+        "default": null
+      },
+      {
+        "name": "usage",
+        "type": "ItemUsage",
+        "required": true,
+        "default": null
+      }
+    ]
+  },
+  {
+    "name": "EditorGate",
+    "entity_type": "GATE_ENTITY",
+    "fields": []
+  },
+  {
+    "name": "EditorPlayer",
+    "entity_type": "PLAYER_ENTITY",
+    "fields": []
+  }
+]

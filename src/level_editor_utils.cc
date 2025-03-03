@@ -1,4 +1,5 @@
 #include "config.h"
+#include "editor_entities.h"
 #include "level_editor.h"
 #include "save.h"
 #include <raylib.h>
@@ -67,7 +68,14 @@ void LevelEditor::handle_entity_placement(Vector2 mouse, EntityType type) {
     cell->entity = EditorWall{BREAKABLE_WALL};
     break;
   case BASE_ENEMY_ENTITY:
-    cell->entity = EditorEnemy{BASE_ENEMY};
+    EditorEnemy enemy = EditorEnemy{};
+
+    enemy.enemy_health = enemy_health;
+    enemy.shooting_interval = shooting_interval;
+    enemy.tracks_player = tracks_player;
+    enemy.follows_player = follows_player;
+
+    cell->entity = enemy;
     break;
   }
 }
@@ -84,6 +92,7 @@ void LevelEditor::place_entity(Vector2 mouse) {
   if (type == PLAYER_ENTITY)
     handle_player_position_clearing();
 
+  // Warpzones are more complex
   if (type == WARPZONE_ENTITY) {
 
     if (is_placing_warpzone_origin) {

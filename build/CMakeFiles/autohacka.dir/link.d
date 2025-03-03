@@ -14,6 +14,7 @@ bin/autohacka: \
   CMakeFiles/autohacka.dir/src/item.cc.o \
   CMakeFiles/autohacka.dir/src/item_drop.cc.o \
   CMakeFiles/autohacka.dir/src/json.cc.o \
+  CMakeFiles/autohacka.dir/src/json_utils.cc.o \
   CMakeFiles/autohacka.dir/src/level.cc.o \
   CMakeFiles/autohacka.dir/src/level_editor.cc.o \
   CMakeFiles/autohacka.dir/src/level_editor_utils.cc.o \
@@ -103,6 +104,8 @@ CMakeFiles/autohacka.dir/src/item.cc.o:
 CMakeFiles/autohacka.dir/src/item_drop.cc.o:
 
 CMakeFiles/autohacka.dir/src/json.cc.o:
+
+CMakeFiles/autohacka.dir/src/json_utils.cc.o:
 
 CMakeFiles/autohacka.dir/src/level.cc.o:
 

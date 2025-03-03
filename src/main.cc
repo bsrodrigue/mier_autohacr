@@ -14,10 +14,13 @@
 #include "level_editor.h"
 #include "player.h"
 #include "projectiles.h"
+#include "raylib.h"
+#include "rlImGui.h"
 #include "save.h"
 #include "screen.h"
 #include "shoot.h"
 #include "textures.h"
+// #include "shaders.h"
 #include "wall.h"
 #include "warpzone.h"
 #include <cmath>
@@ -29,9 +32,6 @@
 #include <string.h>
 #include <variant>
 #include <vector>
-#include "raylib.h"
-#include "rlImGui.h"
-
 
 ScreenManager screen_manager;
 
@@ -41,10 +41,13 @@ char *level_file;
 char *game_mode;
 
 // TODO: Maybe create a config file for player stats
-float player_bullet_damage = 1;
+float player_bullet_damage = 0.1;
 float projectile_speed = 10;
 float last_shot = 0;
-float shooting_interval = 0.1;
+float shooting_interval = 0.05;
+
+// Experimentative Gameplay
+int kill_count = 0;
 
 static Camera2D camera;
 
@@ -104,7 +107,7 @@ void init_game_camera() {
 }
 
 void init_window() {
-  InitWindow(WIN_WIDTH, WIN_HEIGHT, "Project Autohacker");
+  InitWindow(WIN_WIDTH, WIN_HEIGHT, "Rapid Shooter");
 
   if (!IsWindowReady())
     die("Failed to initialize window\n");
@@ -169,7 +172,10 @@ void handle_game_input(int pressed_key) {
     last_shot = now;
   }
 
-  Vector2 next_position = player.get_next_position();
+  // Dashing ?
+  if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
+    // player.start_dash(get_world_mouse(camera));
+  }
 
   std::vector<Vector2> colliders = wall_positions;
 
@@ -283,8 +289,11 @@ void handle_enemy_death(Enemy *enemy) {
 void damage_enemy(int index) {
   if ((enemies[index].health - player_bullet_damage) <= 0) {
     enemies[index].state = DEAD;
-
     handle_enemy_death(&enemies[index]);
+
+    // Experimentative Gameplay
+    kill_count++;
+    player_bullet_damage += 0.01;
   }
 
   enemies[index].health = enemies[index].health - player_bullet_damage;
@@ -342,6 +351,8 @@ void update_enemy_projectiles() {
     if (CheckCollisionCircles(enemy_projectiles.pool[i].position, 5,
                               player.position, 10)) {
       damage_player(1);
+      enemy_projectiles.deallocate_projectile(i);
+      continue;
     }
 
     // Find better way to check many-to-many collisions
@@ -412,8 +423,27 @@ void update_player_projectiles() {
 void handle_enemy_shoot(Enemy *enemy) {
   float time = GetTime();
 
-  if ((time - enemy->last_shot) >= enemy->shooting_interval) {
-    enemy->last_shot = time;
+  if (enemy->shooting_duration != 0) {
+    if ((time - enemy->last_cooldown_time) < enemy->shooting_cooldown_duration)
+      return;
+
+    if (enemy->is_first_shot) {
+      enemy->first_shot_time = time;
+      enemy->is_first_shot = false;
+    }
+
+    else {
+      // Shooting Duration Exceeded
+      if ((time - enemy->first_shot_time) >= enemy->shooting_duration) {
+        enemy->is_first_shot = true;
+        enemy->last_cooldown_time = time;
+        return;
+      }
+    }
+  }
+
+  if ((time - enemy->last_shot_time) >= enemy->shooting_interval) {
+    enemy->last_shot_time = time;
 
     switch (enemy->type) {
     case BASE_ENEMY:
@@ -563,8 +593,8 @@ void draw_healthbar(Vector2 position, float max_health, float health, int width,
                 5, color);
 }
 
-// TODO: Use this and think about creating maybe a universal utility for drawing
-// entities
+// TODO: Use this and think about creating maybe a universal utility for
+// drawing entities
 void draw_enemies() {
   for (int i = 0; i < enemy_count; i++) {
     if (enemies[i].state == DEAD)
@@ -623,21 +653,28 @@ void draw_warpzones() {
 }
 
 void render_game() {
+  // Background
   render_floor();
+
+  // Environment
   draw_arena(walls);
 
-  draw_enemies();
-  draw_items();
+  // Interactibles
   draw_gates();
-
   draw_warpzones();
-  draw_player_target();
+  draw_items();
 
-  draw_player_healthbar(player);
-  player.draw();
-
+  // Projectiles
   draw_projectiles(enemy_projectiles);
   draw_projectiles(player_projectiles);
+
+  // Actors
+  draw_enemies();
+  player.draw();
+
+  // HUD
+  draw_player_target();
+  draw_player_healthbar(player);
 }
 
 // TODO: Optimize level loading
@@ -713,6 +750,7 @@ int main(int argc, char *argv[]) {
 
   init_window();
   load_textures();
+  // load_shaders();
 
   // Initialize ImGUI
   rlImGuiSetup(true);
@@ -728,7 +766,8 @@ int main(int argc, char *argv[]) {
     BeginDrawing();
     ClearBackground(BLACK);
 
-    //================================================[Game Camera]====================================================//
+    //================================================[Game
+    // Camera]====================================================//
 
     BeginMode2D(camera);
 

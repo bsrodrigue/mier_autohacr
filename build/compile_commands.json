@@ -73,6 +73,12 @@
 },
 {
   "directory": "/home/dnlbs/workspace/personal/mier_autohacr/build",
+  "command": "/usr/bin/c++  -I/home/dnlbs/workspace/personal/mier_autohacr/include -I/home/dnlbs/workspace/personal/mier_autohacr/external/imgui -I/home/dnlbs/workspace/personal/mier_autohacr/external/rlImGui -std=gnu++17 -Wall -Wextra -g -o CMakeFiles/autohacka.dir/src/json_utils.cc.o -c /home/dnlbs/workspace/personal/mier_autohacr/src/json_utils.cc",
+  "file": "/home/dnlbs/workspace/personal/mier_autohacr/src/json_utils.cc",
+  "output": "CMakeFiles/autohacka.dir/src/json_utils.cc.o"
+},
+{
+  "directory": "/home/dnlbs/workspace/personal/mier_autohacr/build",
   "command": "/usr/bin/c++  -I/home/dnlbs/workspace/personal/mier_autohacr/include -I/home/dnlbs/workspace/personal/mier_autohacr/external/imgui -I/home/dnlbs/workspace/personal/mier_autohacr/external/rlImGui -std=gnu++17 -Wall -Wextra -g -o CMakeFiles/autohacka.dir/src/level.cc.o -c /home/dnlbs/workspace/personal/mier_autohacr/src/level.cc",
   "file": "/home/dnlbs/workspace/personal/mier_autohacr/src/level.cc",
   "output": "CMakeFiles/autohacka.dir/src/level.cc.o"
