@@ -1,8 +1,8 @@
 #pragma once
 
+#include "editor_entities.h"
 #include "gate.h"
 #include "item.h"
-#include "level_editor.h"
 #include "warpzone.h"
 #include <raylib.h>
 #include <vector>

@@ -29,8 +29,10 @@ public:
 
   // ----[Entities]
   // Enemies
-  float enemy_health = 0;
+  float enemy_health = 0.0f;
   float shooting_interval = 1.0f;
+  float shooting_duration = 1.0f;
+  float shooting_cooldown = 1.0f;
   bool tracks_player = false;
   bool follows_player = false;
 

@@ -48,13 +48,22 @@ typedef struct {
   EnemyType type;
   EnemyState state;
 
+  // Shooting Behaviour
   int projectile_rate;    // How many projectiles per shot
   float projectile_angle; // Angle between each projectile
+
   float shooting_interval;
+  float last_shot_time; // For continuous shooting
+  float first_shot_time;
+  float last_cooldown_time;
+
+  float shooting_duration;          // Shoot during given time
+  float shooting_cooldown_duration; // Cooldown before shooting again
+
   float shooting_angle; // Where projectiles are pointing
-  float last_shot;
 
   bool tracks_player;
+  bool is_first_shot;
   // Does not need to aim for player to shoot
   bool aimless_shooting;
 

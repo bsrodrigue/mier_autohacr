@@ -25,6 +25,8 @@ ParseResult parse_editor_enemy(cJSON *json) {
   editor_enemy.type = (EnemyType)json_get_double(json, "type", BASE_ENEMY);
   editor_enemy.enemy_health = (float)json_get_double(json, "enemy_health", 0.0);
   editor_enemy.shooting_interval = (float)json_get_double(json, "shooting_interval", 0.0);
+  editor_enemy.shooting_duration = (float)json_get_double(json, "shooting_duration", 5.0);
+  editor_enemy.shooting_cooldown = (float)json_get_double(json, "shooting_cooldown", 2.0);
   editor_enemy.tracks_player = json_get_bool(json, "tracks_player", false);
   editor_enemy.follows_player = json_get_bool(json, "follows_player", false);
 
@@ -134,6 +136,8 @@ cJSON *serialize_editor_enemy(const EditorEnemy &editor_enemy, int pos_y, int po
   cJSON_AddNumberToObject(enemy_json, "type", static_cast<int>(editor_enemy.type));
   cJSON_AddNumberToObject(enemy_json, "enemy_health", editor_enemy.enemy_health);
   cJSON_AddNumberToObject(enemy_json, "shooting_interval", editor_enemy.shooting_interval);
+  cJSON_AddNumberToObject(enemy_json, "shooting_duration", editor_enemy.shooting_duration);
+  cJSON_AddNumberToObject(enemy_json, "shooting_cooldown", editor_enemy.shooting_cooldown);
   cJSON_AddBoolToObject(enemy_json, "tracks_player", editor_enemy.tracks_player);
   cJSON_AddBoolToObject(enemy_json, "follows_player", editor_enemy.follows_player);
 

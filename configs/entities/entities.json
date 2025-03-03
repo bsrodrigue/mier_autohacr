@@ -27,6 +27,18 @@
         "default": "0.0"
       },
       {
+        "name": "shooting_duration",
+        "type": "float",
+        "required": false,
+        "default": "5.0"
+      },
+      {
+        "name": "shooting_cooldown",
+        "type": "float",
+        "required": false,
+        "default": "2.0"
+      },
+      {
         "name": "tracks_player",
         "type": "bool",
         "required": false,

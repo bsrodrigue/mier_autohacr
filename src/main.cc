@@ -20,6 +20,7 @@
 #include "screen.h"
 #include "shoot.h"
 #include "textures.h"
+// #include "shaders.h"
 #include "wall.h"
 #include "warpzone.h"
 #include <cmath>
@@ -106,7 +107,7 @@ void init_game_camera() {
 }
 
 void init_window() {
-  InitWindow(WIN_WIDTH, WIN_HEIGHT, "Project Autohacker");
+  InitWindow(WIN_WIDTH, WIN_HEIGHT, "Rapid Shooter");
 
   if (!IsWindowReady())
     die("Failed to initialize window\n");
@@ -422,8 +423,27 @@ void update_player_projectiles() {
 void handle_enemy_shoot(Enemy *enemy) {
   float time = GetTime();
 
-  if ((time - enemy->last_shot) >= enemy->shooting_interval) {
-    enemy->last_shot = time;
+  if (enemy->shooting_duration != 0) {
+    if ((time - enemy->last_cooldown_time) < enemy->shooting_cooldown_duration)
+      return;
+
+    if (enemy->is_first_shot) {
+      enemy->first_shot_time = time;
+      enemy->is_first_shot = false;
+    }
+
+    else {
+      // Shooting Duration Exceeded
+      if ((time - enemy->first_shot_time) >= enemy->shooting_duration) {
+        enemy->is_first_shot = true;
+        enemy->last_cooldown_time = time;
+        return;
+      }
+    }
+  }
+
+  if ((time - enemy->last_shot_time) >= enemy->shooting_interval) {
+    enemy->last_shot_time = time;
 
     switch (enemy->type) {
     case BASE_ENEMY:
@@ -573,8 +593,8 @@ void draw_healthbar(Vector2 position, float max_health, float health, int width,
                 5, color);
 }
 
-// TODO: Use this and think about creating maybe a universal utility for drawing
-// entities
+// TODO: Use this and think about creating maybe a universal utility for
+// drawing entities
 void draw_enemies() {
   for (int i = 0; i < enemy_count; i++) {
     if (enemies[i].state == DEAD)
@@ -730,6 +750,7 @@ int main(int argc, char *argv[]) {
 
   init_window();
   load_textures();
+  // load_shaders();
 
   // Initialize ImGUI
   rlImGuiSetup(true);

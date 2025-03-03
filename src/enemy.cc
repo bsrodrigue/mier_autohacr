@@ -11,11 +11,18 @@ Enemy create_enemy_from_level_data(Vector2 position,
   enemy.health = editor_enemy.enemy_health;
   enemy.max_health = enemy.health;
   enemy.shooting_interval = editor_enemy.shooting_interval;
-  enemy.last_shot = 0;
+  enemy.last_shot_time = 0;
+  enemy.last_cooldown_time = 0;
   enemy.vision_radius = 50 * 50;
   enemy.shooting_angle = 0;
 
   enemy.projectile_rate = 1;
+
+  // Shooting Parameters
+  enemy.shooting_duration = editor_enemy.shooting_duration;
+  enemy.shooting_cooldown_duration = editor_enemy.shooting_cooldown;
+
+  enemy.is_first_shot = true;
 
   enemy.type = BASE_ENEMY;
   enemy.state = ALIVE;

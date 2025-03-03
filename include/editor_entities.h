@@ -71,10 +71,14 @@ struct EditorWall : public Entity {
 struct EditorEnemy : public Entity {
   EnemyType type = BASE_ENEMY;
   float enemy_health = 0;
-  float shooting_interval = 0;
 
   bool tracks_player = false;
   bool follows_player = false;
+
+  // Shooting Parameters
+  float shooting_interval = 0;
+  float shooting_duration = 10;
+  float shooting_cooldown = 1;
 
   EditorEnemy() {}
 

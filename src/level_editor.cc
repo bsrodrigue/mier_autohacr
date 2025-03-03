@@ -136,6 +136,19 @@ void render_level_editor(Camera2D *camera) {
 
 static bool my_tool_active = true;
 
+template <typename A> bool EnemyEditorUI(A *attributes_source) {
+  return ImGui::InputFloat("Enemy Health", &attributes_source->enemy_health) ||
+         ImGui::InputFloat("Shooting Interval",
+                           &attributes_source->shooting_interval) ||
+         ImGui::Checkbox("Tracks Player", &attributes_source->tracks_player) ||
+         ImGui::Checkbox("Follows Player",
+                         &attributes_source->follows_player) ||
+         ImGui::InputFloat("Shooting Duration",
+                           &attributes_source->shooting_duration) ||
+         ImGui::InputFloat("Shooting Cooldown",
+                           &attributes_source->shooting_cooldown);
+}
+
 void render_level_editor_ui(Camera2D *camera) {
   ImGui::SetNextWindowPos(ImVec2(WIN_WIDTH - 300, 0),
                           ImGuiCond_Once); // Top-left corner
@@ -167,10 +180,10 @@ void render_level_editor_ui(Camera2D *camera) {
   ImGui::Separator();
 
   // Current Hovered Cell
-  if (level_editor.hovered_cell != nullptr) {
-    ImGui::Text("Entity Type: %s",
-                get_entity_type_name(level_editor.hovered_cell->type));
-  }
+  ImGui::Text("Entity Type: %s",
+              (level_editor.hovered_cell != nullptr)
+                  ? get_entity_type_name(level_editor.hovered_cell->type)
+                  : "Empty");
 
   ImGui::Separator();
 
@@ -185,11 +198,7 @@ void render_level_editor_ui(Camera2D *camera) {
   //--- Entity Specific Parameters
   switch (level_editor.current_entity) {
   case BASE_ENEMY_ENTITY: {
-    if (ImGui::InputFloat("Enemy Health", &level_editor.enemy_health) ||
-        ImGui::InputFloat("Shooting Interval",
-                          &level_editor.shooting_interval) ||
-        ImGui::Checkbox("Tracks Player", &level_editor.tracks_player) ||
-        ImGui::Checkbox("Follows Player", &level_editor.follows_player)) {
+    if (EnemyEditorUI(&level_editor)) {
       // TODO: Something?
     }
   } break;
@@ -206,10 +215,8 @@ void render_level_editor_ui(Camera2D *camera) {
 
     EditorGridCell cell = *level_editor.inspected_cell;
     if (auto *enemy = std::get_if<EditorEnemy>(&cell.entity)) {
-      if (ImGui::InputFloat("Enemy Health", &enemy->enemy_health) ||
-          ImGui::InputFloat("Shooting Interval", &enemy->shooting_interval) ||
-          ImGui::Checkbox("Tracks Player", &enemy->tracks_player) ||
-          ImGui::Checkbox("Follows Player", &enemy->follows_player)) {
+      if (EnemyEditorUI(enemy)) {
+        TraceLog(LOG_INFO, "Update Enemy");
         level_editor
             .grid[level_editor.inspected_cell_row]
                  [level_editor.inspected_cell_col]

@@ -42,7 +42,8 @@ TextureInfo textures[20] = {
     {"assets/textures/items/healing_chip.png", &healing_chip_texture},
     {"assets/textures/gates/OFFICEDOOR.png", &OFFICEDOOR_texture},
     {"assets/textures/gates/SPOOKYDOOR.png", &SPOOKYDOOR_texture},
-    {"assets/textures/gates/CREAKYDOOR.png", &CREAKYDOOR_texture}};
+    {"assets/textures/gates/CREAKYDOOR.png", &CREAKYDOOR_texture}
+};
 
 void load_textures() {
   for (int i = 0; i < NUM_TEXTURES; i++) {
